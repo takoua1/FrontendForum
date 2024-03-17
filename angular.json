@@ -1,5 +1,8 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "cli": {
+    "analytics": "6be72486-f953-489a-9ef1-f297d05260e9"
+  },
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
@@ -68,10 +71,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "TunisiaForum:build:production"
+              "buildTarget": "TunisiaForum:build:production"
             },
             "development": {
-              "browserTarget": "TunisiaForum:build:development"
+              "buildTarget": "TunisiaForum:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -79,7 +82,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "TunisiaForum:build"
+            "buildTarget": "TunisiaForum:build"
           }
         },
         "test": {
@@ -101,6 +104,6 @@
         }
       }
     }
-  },
-  "defaultProject": "TunisiaForum"
+  }
+  
 }
