@@ -1,0 +1,398 @@
+* {
+    margin: 0;
+    padding: 0;
+  
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+  }
+
+body {
+  
+    margin: 0;
+    padding: 0;
+    height: 90vh;
+    background-color: #f4f4f9;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Container */
+.container {
+    width: 90%;
+    max-width: 1000px;
+    margin: 6.5rem auto;
+    padding: 1.5rem;
+    background: #fff;
+    height: 85vh;
+    overflow-y: scroll;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+.container::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: #F5F5F5;
+  border-radius: 5px
+}
+
+.container::-webkit-scrollbar
+{
+	width: 10px;
+	background-color: #F5F5F5;
+  border-radius: 5px
+}
+
+.container::-webkit-scrollbar-thumb
+{
+	background-color: #66a6ff;
+	border: 2px solid#66a6ff;
+  border-radius: 5px
+}
+
+/* Header */
+.header {
+    background: linear-gradient(135deg, #4dc7d9, #66a6ff 100%);
+    color: #ffffff;
+    padding: 1rem;
+    border-radius: 12px 12px 0 0;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 23px;
+    font-weight: 600;
+}
+
+/* Mail List */
+.mail-list {
+    margin-top: 1.5rem;
+}
+
+.mail-item {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+  /*  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15), inset 0 0 5px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ddd;
+    border-radius: 8px;*/
+    background-color: rgba(0, 0, 0, 0.1);
+     box-shadow: 12px 17px 51px rgba(0, 0, 0, 0.22);
+     backdrop-filter: blur(6px);
+     border-radius: 17px;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+  
+}
+
+.mail-item:hover {
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
+    transform: translateY(-5px) scale(1.02);
+}
+
+
+.mail-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    font-size: 10px;
+    color: #555;
+}
+ .boite-close {
+    position: relative;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    top:-1rem;
+    left: 1rem;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #F0F2F5;
+    font-size: 18px;
+    box-shadow: 12px 17px 51px rgba(0, 0, 0, 0.22);
+    backdrop-filter: blur(6px);
+    z-index: 111;
+}
+
+.sender {
+    font-weight: 700;
+    font-size: 16px;
+    color: #333;
+}
+
+.red-text {
+    color: red;
+  }
+  
+  .green-text {
+    color: green;
+  }
+.date {
+    font-size: 12px;
+    margin-left: 40rem;
+    color: #888;
+}
+
+.mail-body h2 {
+    margin: 0;
+    font-size: 15px;
+    color: #66a6ff ;
+    line-height: 1.4;
+}
+
+.mail-body p {
+    margin: 10px 0;
+    font-size: 13px;
+    color: #555;
+    line-height: 1.6;
+    
+}
+.bx-show-alt{
+
+    font-size: 1.5rem;
+}
+.details-btn {
+ /*   align-self: flex-start;
+    padding: 12px 24px;
+    border: none;
+    background-color: #0044cc;
+    color: #ffffff;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;*/
+    font-size: 12px;
+
+  
+    float: right;
+      padding: 0.5rem 1rem;
+      background: linear-gradient(to bottom, #4dc7d9 0%, #66a6ff 100%);
+      color: white;
+      width: 7rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      border-radius: 25px;
+      box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+      transition: all 1s;
+}
+
+.details-btn:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Popup */
+.popup {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+}
+
+.popup-content {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 2rem;
+    width: 90%;
+    max-width: 800px;
+    position: relative;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    animation: slideIn 0.3s ease;
+}
+
+.popup-content h2 {
+    margin-top: 0;
+    font-size: 24px;
+    color: #0044cc;
+}
+
+.popup-body p {
+    margin: 1rem 0;
+    color: #333;
+    font-size: 16px;
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #333;
+    transition: color 0.3s ease;
+}
+
+.close-btn:hover {
+    color: #0044cc;
+}
+
+/* Animations */
+keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.mail-item {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+/* Animation for popup entrance */
+@keyframes popupEntrance {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.popup-content {
+    animation: popupEntrance 0.3s ease-out;
+}
+
+.popupDelete {
+    position: fixed;
+    top: 50%;
+    left: 40%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    display: none;
+    z-index: 10000;
+  }
+  
+  .popupDelete .cardDelete {
+    position: absolute;
+    box-sizing: border-box;
+  
+    display: flex;
+    width: 300px;
+    height: 130px;
+    background: rgba(255, 253, 253, 0.829);
+    border: 1px solid white;
+    box-shadow: 12px 17px 51px rgba(0, 0, 0, 0.22);
+    backdrop-filter: blur(6px);
+    border-radius: 17px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.5s;
+  
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    font-weight: bolder;
+    color: black;
+    top: 10px;
+  
+  }
+  
+  .popupDelete .cardDelete:hover {
+  
+    transform: scale(1.05);
+  }
+  
+  .popupDelete .cardDelete p {
+    position: absolute;
+    top: 10px;
+    font-size: 15px;
+    color: #97b7e3;
+  }
+  
+  .popupDelete .cardDelete button {
+    position: absolute;
+    font-size: 12px;
+  
+    top: 80px;
+    right: 30%;
+    background: linear-gradient(to bottom, #4dc7d9 0%, #66a6ff 100%);
+    color: white;
+    padding: 0.5em 1em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 25px;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s;
+  }
+  
+  .popupDelete .cardDelete button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0px 8px 15px white;
+  }
+  
+  .popupDelete .cardDelete button:active {
+    transform: scale(0.95);
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  .popupDelete .cardDelete button span {
+    display: block;
+    margin-left: 0.4em;
+    transition: all 0.3s;
+  }
+  
+  .popupDelete .cardDelete button i {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    fill: white;
+    transition: all 0.3s;
+  }
+  
+  .popupDelete .cardDelete .svg-valider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.2);
+    margin-right: 0.5em;
+    transition: all 0.3s;
+  }
+  
+  .popupDelete .cardDelete button:hover .valider {
+    background-color: rgba(255, 255, 255, 0.5);
+  }
+  
+  .popupDelete .cardDelete button:hover i {
+    transform: rotate(45deg);
+  }
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    z-index: 9998;
+  }
+   
+  .overlay.active{
+    display: block;
+  }

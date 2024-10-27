@@ -1,0 +1,140 @@
+<div class="commentContainer" [attr.id]="'comment-' + comment.id" *ngIf="comment.enabled === true">
+  
+  <div class="commentUser">
+    <img [src]="comment.user.image ? comment.user.image : '/assets/image/user.png'" class="profile-img" (click)="navProfile(comment.user)" />
+    <p>{{comment.user.nom}} {{comment.user.prenom}}</p>
+  </div>
+
+  <div class="container">
+    <span [innerHTML]="getCommentText(comment.text, comment)"></span>
+    <div>
+      <i class='bx bx-trash' *ngIf="comment.user.id === user.id" (click)="callTogglePopupDelete(comment)"></i>
+      <i *ngIf="comment.user.id !== user.id" class='bx bx-error-alt' (click)="callTogglePopupSignale(comment)"></i>
+    </div>
+  </div>
+
+  <div *ngIf="getActiveChildComments(comment).length > 0" class="repond-taille">
+    <p *ngIf="getActiveChildComments(comment).length == 1" (click)="toggleCommentChildsPart(comment)">
+      {{getActiveChildComments(comment).length}} réponse
+    </p>
+    <p *ngIf="getActiveChildComments(comment).length > 1" (click)="toggleCommentChildsPart(comment)">
+      {{getActiveChildComments(comment).length}} réponses
+    </p>
+  </div>
+
+  <div class="btnCommIte">
+    <button (click)="toggleLike(comment)">
+      <i class='bx bxs-like' [ngClass]="{'liked': isLike[comment.id]}"></i>
+      <span *ngIf="totalLikesMap[comment.id] > 0">{{ totalLikesMap[comment.id] }}</span>
+    </button>
+
+    <button (click)="toggleDislike(comment)">
+      <i class='bx bxs-dislike' [ngClass]="{'disLiked': isDislike[comment.id]}"></i>
+      <span *ngIf="totalDislikesMap[comment.id] > 0">{{ totalDislikesMap[comment.id] }}</span>
+    </button>
+
+    <button (click)="toggleReplyVisibility(comment)">
+      <i class='bx bx-chat'></i>
+    </button>
+  </div>
+
+  <div *ngIf="isReplyVisible[comment.id]"[formGroup]="repondForm" class="repText">
+    <textarea id="textRep" rows="2" placeholder="" [(ngModel)]="replyText" [formControl]="repondForm.get('messageRepond')" (click)="comment.showButton = true" (input)="adjustTextareaSize($event)" (keydown.enter)="addNewLine()"></textarea>
+    <button *ngIf="comment.showButton">
+      <i class='bx bxs-send' (click)="addCommentToComment(comment)"></i>
+    </button>
+  </div>
+
+  <div class="childContainer">
+    <div *ngFor="let childComment of filteredChildComments | slice: 0:commentsToShow[comment.id]; trackBy: trackByCommentId" [attr.id]="'comment-' + childComment.id">
+      <app-comment *ngIf="commentsToShow[comment.id]" [comment]="childComment"  [user]="user" 
+        (signaleComment)="onSignaleChildComment($event)" (signaleCommentWithInfo)="onResirveChildSignale($event)"
+        (deleteComment)="onDeleteChildComment($event)" (deleteCommentWithInfo)="onResirveChildDelete($event)"    >
+      </app-comment>
+      
+    
+  </div>
+  <div *ngIf="commentsToShow[comment.id] > 0 && getActiveChildComments(comment).length > 10" 
+    (click)="toggleChildComments(comment.id, comment.childComments)" 
+    class="commentInfo">
+ <p>{{ commentsToShow[comment.id] }} / {{ getActiveChildComments(comment).length }} réponses affichées</p>
+</div>
+
+</div>
+
+    <div   class="popupInform">
+      <div class="cardInform">
+        <p>C'est déjà supprimer !</p>
+        <button (click)="validerInform()">
+          <div class="svg-valider">
+    
+            <i class='bx bxs-user-check'></i>
+          </div>
+    
+          <span >Valider</span>
+        </button>
+      </div>
+      </div>
+    <div class="overlay" #overlay></div>
+    <!--div class="popupSignale" #popupSignale>
+      <div class="cardSignale">
+        <div *ngIf="currentStep === 1">
+          <div *ngIf="errorMessageSignale" class="error-message">
+            {{ errorMessageSignale }}
+          </div>
+          <span>Signaler le Post</span>
+          <div class="signale-options">
+            <div *ngFor="let type of reportTypes">
+              <input 
+                type="radio" 
+                [id]="type" 
+                name="signale" 
+                [value]="type" 
+                (change)="onTypeChange($event)">
+              <label [for]="type">{{ type }}</label>
+            </div>
+          </div>
+          <button (click)="goToNextStep()">
+            
+    
+            <span >Suivant</span>
+            <div class="svg-valider">
+    
+              <i class='bx bx-chevron-right'></i>
+            </div>
+          </button>
+        
+        </div>
+    
+       
+        <div *ngIf="currentStep === 2">
+          <span>Décrivez le problème</span>
+          <textarea 
+            [(ngModel)]="reportDescription" 
+            rows="5" 
+            placeholder="Décrivez le problème...">
+          </textarea>
+          <div> <button (click)="sendSignale()">
+            
+            <div class="svg-valider">
+    
+              <i class='bx bx-check'></i>
+            </div>
+            <span >Signaler</span>
+            
+          </button>
+          <button (click)="closeSignale()">
+            
+            <div class="svg-valider">
+    
+              <i class='bx bx-x-circle' ></i>
+            </div>
+            <span >Annuler</span>
+            
+          </button>
+            
+          </div>
+        </div>
+      </div>
+    </div-->
+

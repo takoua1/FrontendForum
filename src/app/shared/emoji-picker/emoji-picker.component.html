@@ -1,0 +1,19 @@
+<div class="emoji-picker">
+    <input
+      type="text"
+      [(ngModel)]="searchTerm"
+      (ngModelChange)="filterEmojis()"
+      placeholder="Rechercher un emoji"
+    />
+    <div *ngFor="let category of categories">
+      <span>{{ category }}</span>
+      <div class="emoji-list" id="emoji-list-{{category}}">
+        <span
+          *ngFor="let emoji of filteredEmojis[category]"
+          (click)="selectEmoji(emoji.unicode)"
+          class="emoji"
+          [innerHTML]="emoji.unicode"
+        ></span>
+      </div>
+    </div>
+  </div>

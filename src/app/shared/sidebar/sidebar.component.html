@@ -1,1 +1,47 @@
-<p>sidebar works!</p>
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins" />
+<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+<link  href='/app/sidebar/sidebar.component.css'  >
+</head>
+<body >
+  <div  class="container"></div>
+
+<div  class="sidebar">
+  <div  class="top">
+    <div class="logo">
+      <i class='bx bxl-codepen'></i>
+      <span>ForumSocialX</span>
+    </div>
+    <i class='bx bx-menu' id="btn" ></i>
+  </div>
+  <div *ngIf="isUserAuthenticated" class="profile">
+    <img [src]="user.image ? user.image : '/assets/image/user.png'" class="profile-img" (click)="navProfile(user)" />
+  </div>
+    <div *ngIf="isUserAuthenticated" class="nom">
+      <p class="blod">{{user.nom}}</p>
+      <p>{{user.email}}</p>
+    
+  </div>
+     
+      <ul  >
+        <!--li>
+          <i class='bx bx-search' ></i>
+          <input type="text" placeholder="Recherche...">
+        </li-->
+          <li *ngFor="let menuItem of menuItems" routerLinkActive="active" class="{{menuItem.class}}">
+              <a [routerLink]="[menuItem.path]">
+                <i class={{menuItem.icon}}></i>
+                  <span class="nav-item">{{menuItem.title}}</span>
+                  
+              </a>
+              <span class="tooltip">{{menuItem.title}}</span>
+          </li>
+          
+      </ul>
+   
+  </div>
+ 
+</body>
+</html>

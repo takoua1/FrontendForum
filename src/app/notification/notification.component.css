@@ -1,0 +1,773 @@
+* {
+    margin: 0;
+    padding: 0;
+  
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+  }
+
+
+
+  .notification {
+    position: relative;
+   display: flex;
+    top:200px;
+     padding: 25px;
+     width: 35%;
+     height: 120px;
+     border-radius: 16px;
+   
+     border: 1px solid white;
+     margin-bottom: 15px;
+     left: 30%;
+     background-color: rgba(0, 0, 0, 0.1);
+     box-shadow: 12px 17px 51px rgba(0, 0, 0, 0.22);
+     backdrop-filter: blur(6px);
+     border-radius: 17px;
+    
+   }
+   .notification .notification-header {
+    position: absolute;
+    top:0px;
+		right: 4px;
+float: right;
+		align-items: center;
+	 
+		margin-bottom: 15px;
+	}
+   .notification .notification-header  .notification-close {
+  
+		cursor: pointer;
+		width: 30px;
+		height: 30px;
+		border-radius: 30px;
+   
+		display: flex;
+  		align-items: center;
+		justify-content: center;
+		background-color: #F0F2F5;
+		font-size: 18px;
+   box-shadow: 12px 17px 51px rgba(0, 0, 0, 0.22);
+   backdrop-filter: blur(6px);
+    z-index: 111;
+	}
+  
+     .notification .notification-container {
+       position: relative;
+       display: flex;
+      
+       width: 100%;
+     
+       align-items: flex-start;
+     }
+     .notification .notification-container .notification-media {
+           position: relative;
+     }
+     .notification .notification-container .notification-media .notification-user-avatar {
+       width: 60px;
+       height: 60px;
+       border-radius: 60px;
+       object-fit: cover;
+     }
+     .notification .notification-container .notification-media .notification-reaction {
+       width: 30px;
+       height: 30px;
+       display: flex;
+       align-items: center;
+       justify-content: center;
+       border-radius: 30px;
+       color: white;
+       background-image: linear-gradient(45deg, #0070E1, #14ABFE);
+       font-size: 14px;
+       position: absolute;
+       bottom: 0;
+       right: 0;
+     }
+     .notification .notification-container .notification-media .notification-status  .bxs-circle {
+      position: absolute;
+      background-color: #FAFAFA;
+      border-bottom: solid 1px #E0E0E0;
+     font-size: 12px;
+       left: 45px;
+      width: 12px;
+      height: 12px;
+     top:5%;
+      border-radius: 50%;
+    }
+    .connected {
+     color: green;
+ }
+ 
+ .disconnected {
+ 
+     color:rgba(207, 142, 20, 0.664);}
+      .notification .notification-container .notification-content {
+       position: relative;
+       width: 90%;
+       padding-left: 20px;
+       line-height: 1.2;
+     }
+      .notification .notification-container .notification-text {
+           margin-bottom: 5px;
+       display:-webkit-box;
+       color:  #14ABFE;
+   -webkit-line-clamp:3;
+   -webkit-box-orient: vertical;
+   overflow: hidden;
+   text-overflow: ellipsis;
+       padding-right: 50px;
+   
+     }
+     .notification .notification-container   .notification-text p{
+      color:  #14ABFE;
+   font-size: 20px;
+    }
+     .notification .notification-container .notification-content  .notification-timer {
+       color: #1876F2;
+       font-weight: 600;
+       font-size: 14px;
+     }
+   
+.box-notif{
+  
+ position: relative;
+    border-radius: 10px;
+    transition: 0.5s;
+    padding: 0px;
+   margin-top:200px;
+}
+  .title{
+    position: relative;
+    top:150px;
+
+    margin-left: 260px;
+   
+  }
+ 
+  
+  
+  .content{
+    
+    padding: 20px;
+    color: black;
+    vertical-align: middle;
+    text-align: left;
+    overflow-y: scroll;
+  
+  }
+  
+  .gry{
+    background-color: #F4F4F4;
+  }
+  
+  .top{
+    color: black;
+    padding: 10px
+  }
+  
+  .sec .bx-trash{
+    float: right;
+    color:   #14ABFE;
+    visibility: hidden;
+  }
+  .sec:hover .bx-trash{
+    visibility:visible;
+  }
+  .cont{
+    position: relative;
+align-items: center;
+justify-content: center;
+margin-top: 10px;
+   left:25%;
+    width: 35%;
+ display: flex;
+    background-color: #F4F4F4;
+    border: 1px solid white;
+    box-shadow: 12px 17px 51px rgba(0, 0, 0, 0.22);
+    backdrop-filter: blur(6px);
+    border-radius: 17px;
+   
+   
+  }
+  .cont p{
+  
+  color:   #14ABFE;
+  float: right;
+  
+  margin-bottom:5px; 
+  }
+  .cont:empty{
+    display: none;
+  }
+  
+  .stick{
+    text-align: center;  
+    display: block;
+    font-size: 40pt;
+    padding-top: 70px;
+    padding-left: 80px
+  }
+  
+  .stick:hover{
+    color: black;
+  }
+  
+  .cent{
+    text-align: center;
+    display: block;
+  }
+  
+  .sec{
+    position: relative;
+   
+    padding: 25px 10px;
+    background-color: #F4F4F4;
+  
+    transition: 0.5s;
+  }
+  
+  .profCont{
+    padding-left: 15px;
+  }
+  
+  .profile{
+    -webkit-clip-path: circle(50% at 50% 50%);
+    clip-path: circle(50% at 50% 50%);
+    width: 50px;
+    height: 50px;
+    float: left;
+  }
+  
+  .txt{
+    vertical-align: top;
+    font-size: 15px;
+    padding: 5px 10px 0px 115px;
+   
+  }
+  
+  .sub{
+    position: relative;
+    font-size: 10px;
+    color: grey;
+    width: 50%;
+   
+  }
+  
+  .new{
+    border-style: none none solid none;
+    border-color:#14ABFE;
+  }
+  
+  .sec:hover{
+    background-color: #BFBFBF;
+  }
+
+  .popupPoste {
+   
+  
+    position:fixed;
+     top:15%;
+        left:10%;
+      width: 100%;
+        display: none;
+   
+        z-index: 10001;
+        }
+       
+        .popupPoste  .card-list li {
+        
+          text-decoration: none;
+        }
+    
+       
+       
+         .popupPoste  .card-list {
+       
+          box-sizing: border-box;
+          width: 80%;
+       height: 90%;
+          display: flex;
+       
+           padding: 30px;
+          background: rgba(217, 217, 217, 0.58);
+          border: 1px solid white;
+          box-shadow: 12px 17px 51px rgba(0, 0, 0, 0.22);
+          backdrop-filter: blur(20px);
+          border-radius: 17px;
+          text-align: center;
+          cursor: pointer;
+          transition: all 0.5s;
+          align-items: center;
+          justify-content: center;
+          user-select: none;
+          font-weight: bolder;
+          color: black;
+          margin-bottom: 15px;
+          bottom: 20px;
+        
+        }
+        
+       .popupPoste  .card-list:hover {
+          border: 1px solid rgb(14, 1, 1);
+          transform: scale(1.01);
+         
+        }
+        .popupPoste  .card-list .user-profile{
+    
+          position: fixed;
+          top:0;
+          left: 5%;
+          width: 20%;
+        }
+        
+        .popupPoste  .card-list .user-profile span {
+          position: fixed;
+           top:10px;
+          margin-left: 25%;
+          width: 20%;
+          font-size: 13px;
+          color: #676767;
+        
+        }
+        
+        .popupPoste  .card-list  .profile-img {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 45px;
+         
+          border-radius: 50%;
+          margin-right: 10px;
+        }
+       
+        .popupPoste .card-list  .containerPopupPoste{
+         position: relative;
+          top:10px;
+         border-radius: 10px;
+       
+          width: 40%;
+        
+           transition: all 0.5s ease;
+          display: inline-block;
+          border: 1px solid white;
+          bottom: 40px;
+        }
+       .popupPoste .card-list  .containerPopupPoste.active{
+      position: relative;
+         left: -20%;
+         transition: all 0.5s ease;
+        }
+        .popupPoste   .card-list .containerPopupPoste .post-text {
+          
+           color: black;
+          
+          padding: 10px;
+          white-space:pre-wrap;
+          font-size: 25px;
+          font: 1em sans-serif;
+          font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+           margin-top: 5%;
+           cursor: text;
+        }
+        .bx.bxs-like {
+          color: white;
+        }
+        
+        .bx.bxs-like.liked {
+          color:blue;}
+          .bx.bxs-dislike
+          {
+            color: white;
+          }
+          .bx.bxs-dislike.disLiked{
+            color:blue;
+          }
+        
+        
+        .popupPoste  .card-list  .containerPopupPoste .post-image {
+         
+          width: 50%;
+        margin-top: 5%;
+          border-radius: 4px;
+          margin-bottom: 5px;
+        }
+        
+        .popupPoste   .card-list .psteIcon {
+         position: absolute;
+          top: 0;
+         display: flex;
+          font-size: 25px;
+          color: #1876f2;
+        right: 0px;
+        }
+        .popupPoste  .card-list .containerPopupPoste  .commentTaille 
+      
+        {
+        
+       position: relative;
+         top:10px;
+         left: 150px;
+          color: #616060;
+      display: flex;
+          font-size: 12px;
+       
+          
+        }
+        .popupPoste  .card-list .containerPopupPoste  .commentTaille p{
+          font-size: 12px;
+        }
+        .popupPoste  .card-list  .containerPopupPoste .btnIte {
+       
+          margin-top:15px;
+          width: 100%;
+           float: left;
+       
+         bottom: 10px;
+          margin-left: 0%;
+        
+        }
+        .popupPoste  .card-list .containerPopupPoste .btnIte  button:nth-child(3) {
+          background-color: #007bff; /* Change la couleur de fond du bouton en bleu */
+          color: white; /* Change la couleur du texte en blanc */
+        }
+        
+        .popupPoste  .card-list  .containerPopupPoste .btnIte button {
+          font-size: 12px;
+          width: 15%;
+       
+          background: linear-gradient(to bottom, #aab7d392 0%, #95a1ba92 100%);
+          color: white;
+          margin-left: 10%;
+        
+          align-items: center;
+          justify-content: center;
+          border: none;
+          border-radius: 25px;
+          box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+          transition: all 0.3s;
+        }
+        
+        .popupPoste  .card-list .containerPopupPoste .btnIte button:hover {
+          transform: translateY(-3px);
+          box-shadow: 0px 8px 15px white;
+        }
+       
+        .popupPoste   .card-list .containerPopupPoste .btnIte button:active {
+          transform: scale(0.95);
+          box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+        }
+       
+       
+        
+      
+        
+       
+        .popupPoste  .card-list   .commentPopup{
+        
+        position:fixed;
+        width: 40%;
+       float: right;
+          max-height:95%;
+          overflow-y: auto; 
+          overflow-x: hidden;
+       display: block;
+          top: 3%;
+      
+      margin-right: -60%;
+          transition: all 1s ease;
+        }
+        .popupPoste  .card-list   .commentPopup.active{
+        
+          
+       display: none;
+       
+         
+        
+          }
+        .popupPoste  .card-list   .commentPopup .listeComment{
+  position: relative;
+      top:100%;
+         width: 100%;
+       display: none;
+         transition: all 1s ease;
+    
+        }
+       
+     .popupPoste  .card-list   .commentPopup .listeComment.active{
+position: relative;
+        top:2%;
+        margin-left: -90px;
+         display: block;
+         transition: all 1s ease;
+        }
+    .popupPoste   .card-list  .commentPopup  .commentText #textComm{
+    
+      border-radius: 10px;
+    
+      display: flex;
+    margin-top:80px;
+       outline: none;
+      transition: .2s ease;
+      width:95%;
+     margin-right: 90px;
+      resize: none;
+      border: none;
+        }
+     .popupPoste   .card-list  .commentPopup    .commentText   button{
+          position: relative;
+           width: 40px;
+          top:-34px;
+    
+           float: right;
+           height: 25px;
+          
+           right: 6%;
+           align-items: center;
+           justify-content: center;
+           border: none;
+           border-radius: 10px;
+          
+         }
+       .popupPoste .card-list .commentPopup .commentText .bxs-send {
+           color: #66a6ff;
+         }
+    
+         .popupPoste  .card-list   .commentPopup .listeComment  .commentInfo{
+          margin-top:10px;
+          color: #717070;
+          font-size: 15px;
+        }
+        .popupPoste  .card-list   .commentPopup .listeComment  .commentInfo p{ font-size: 12px;}
+    
+
+        .popupDelete {
+          position: fixed;
+          top: 50%;
+          left: 40%;
+          transform: translate(-50%, -50%);
+          padding: 20px;
+          display: none;
+          z-index: 10000;
+        }
+        
+        .popupDelete .cardDelete {
+          position: absolute;
+          box-sizing: border-box;
+        
+          display: flex;
+          width: 300px;
+          height: 130px;
+          background: rgba(255, 253, 253, 0.829);
+          border: 1px solid white;
+          box-shadow: 12px 17px 51px rgba(0, 0, 0, 0.22);
+          backdrop-filter: blur(6px);
+          border-radius: 17px;
+          text-align: center;
+          cursor: pointer;
+          transition: all 0.5s;
+        
+          align-items: center;
+          justify-content: center;
+          user-select: none;
+          font-weight: bolder;
+          color: black;
+          top: 10px;
+        
+        }
+        
+        .popupDelete .cardDelete:hover {
+        
+          transform: scale(1.05);
+        }
+        
+        .popupDelete .cardDelete p {
+          position: absolute;
+          top: 10px;
+          font-size: 15px;
+          color: #97b7e3;
+        }
+        
+        .popupDelete .cardDelete button {
+          position: absolute;
+          font-size: 12px;
+        
+          top: 80px;
+          right: 30%;
+          background: linear-gradient(to bottom, #4dc7d9 0%, #66a6ff 100%);
+          color: white;
+          padding: 0.5em 1em;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: none;
+          border-radius: 25px;
+          box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+          transition: all 0.3s;
+        }
+        
+        .popupDelete .cardDelete button:hover {
+          transform: translateY(-3px);
+          box-shadow: 0px 8px 15px white;
+        }
+        
+        .popupDelete .cardDelete button:active {
+          transform: scale(0.95);
+          box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .popupDelete .cardDelete button span {
+          display: block;
+          margin-left: 0.4em;
+          transition: all 0.3s;
+        }
+        
+        .popupDelete .cardDelete button i {
+          font-size: 18px;
+          width: 18px;
+          height: 18px;
+          fill: white;
+          transition: all 0.3s;
+        }
+        
+        .popupDelete .cardDelete .svg-valider {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 30px;
+          height: 30px;
+          border-radius: 50%;
+          background-color: rgba(255, 255, 255, 0.2);
+          margin-right: 0.5em;
+          transition: all 0.3s;
+        }
+        
+        .popupDelete .cardDelete button:hover .valider {
+          background-color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .popupDelete .cardDelete button:hover i {
+          transform: rotate(45deg);
+        }
+        .popupInform {
+          position: fixed;
+          top: 50%;
+          left: 40%;
+          transform: translate(-50%, -50%);
+          padding: 20px;
+          display: none;
+          z-index: 10000;
+        }
+        
+        .popupInform .cardInform {
+          position: absolute;
+          box-sizing: border-box;
+        
+          display: flex;
+          width: 300px;
+          height: 130px;
+          background: rgba(255, 253, 253, 0.829);
+          border: 1px solid white;
+          box-shadow: 12px 17px 51px rgba(0, 0, 0, 0.22);
+          backdrop-filter: blur(6px);
+          border-radius: 17px;
+          text-align: center;
+          cursor: pointer;
+          transition: all 0.5s;
+        
+          align-items: center;
+          justify-content: center;
+          user-select: none;
+          font-weight: bolder;
+          color: black;
+          top: 10px;
+        
+        }
+        
+        .popupInform .cardInform:hover {
+        
+          transform: scale(1.05);
+        }
+        
+        .popupInform .cardInform p {
+          position: absolute;
+          top: 10px;
+          font-size: 15px;
+          color: #97b7e3;
+        }
+        
+        .popupInform .cardInform button {
+          position: absolute;
+          font-size: 12px;
+        
+          top: 80px;
+          right: 30%;
+          background: linear-gradient(to bottom, #4dc7d9 0%, #66a6ff 100%);
+          color: white;
+          padding: 0.5em 1em;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: none;
+          border-radius: 25px;
+          box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+          transition: all 0.3s;
+        }
+        
+        .popupInform .cardInform button:hover {
+          transform: translateY(-3px);
+          box-shadow: 0px 8px 15px white;
+        }
+        
+        .popupInform .cardInform button:active {
+          transform: scale(0.95);
+          box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .popupInform .cardInform button span {
+          display: block;
+          margin-left: 0.4em;
+          transition: all 0.3s;
+        }
+        
+        .popupInform .cardInform button i {
+          font-size: 18px;
+          width: 18px;
+          height: 18px;
+          fill: white;
+          transition: all 0.3s;
+        }
+        
+        .popupInform .cardInform .svg-valider {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 30px;
+          height: 30px;
+          border-radius: 50%;
+          background-color: rgba(255, 255, 255, 0.2);
+          margin-right: 0.5em;
+          transition: all 0.3s;
+        }
+        
+        .popupInform .cardInform button:hover .valider {
+          background-color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .popupInform .cardInform button:hover i {
+          transform: rotate(45deg);
+        }
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+    
+      display: none;
+      z-index: 9998;
+    }
+     
+    .overlay.active{
+      display: block;
+    }

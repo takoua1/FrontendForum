@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins" />
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <link href='/app/home/home.component.css'>
+
+</head>
+
+<body>
+
+  
+  <div class="card-container">
+
+    <div *ngIf="isUserAuthenticated &&( user.id===id || id===0)" class="card-user">
+
+      <form (ngSubmit)="onSubmit()" [formGroup]="posteForm">
+      
+          <div *ngIf="submissionAttempted && posteForm?.get('messagePoste')?.errors?.required && errorMessage"  class="alert-poste" >
+            {{errorMessage}}
+          </div>
+          <div *ngIf="submissionAttempted && !categorySelected && errorMesCateg"  class="alert-poste">
+            {{errorMesCateg}}
+
+          </div>
+     
+        <img [src]="user.image ? user.image : '/assets/image/user.png'" class="profile-img">
+
+        <textarea id="textPoste" rows="4" placeholder="Quoi de neuf ?" formControlName="messagePoste"></textarea>
+        <button id="btnAdd" type="submit">
+          <div class="svg-wrapper-1">
+            <div class="svg-wrapper">
+
+              <i class='bx bxs-send'></i>
+            </div>
+          </div>
+          <span>Partager</span>
+        </button>
+      </form>
+      
+
+      <div class="select-menu" #dropdownElement>
+        <button (click)="clickMenu()" class="btn">
+          <div class="sbtn-btn">
+            <span class="select-text" type="checkbox">{{ selectedCategory }}</span>
+            <i class='bx bxs-chevron-down'></i>
+          </div>
+        </button>
+
+        <ul class="categs">
+
+          <li class="categ" *ngFor="let categorie of categories" (change)="onCategorySelected($event.target.value)"
+            (click)="selectCategory(categorie)">
+
+
+            <i class="bx" [class]="categorie.icon"></i>
+            <span class="categ-text">{{ categorie.name }}</span>
+
+          </li>
+
+        </ul>
+
+
+      </div>
+
+      <div class="upload-image">
+        <button>
+          <div class="btnUpload">
+            <i   class='bx bxs-image-alt' (click)="clickUploadImagePoste('ajout')"></i>
+          </div>
+        </button>
+      </div>
+    </div>
+ 
+  
+
+    <div *ngFor="let poste of filteredPostes" class="card-list" >
+      <div class="user-profile" >
+        <div>
+          <p >{{poste.user.nom}} {{poste.user.prenom}}</p>
+          <span> {{poste.dateCreate | date:'dd-MM-yy HH:mm'}}</span>
+          <img [src]="poste.user.image ? poste.user.image : '/assets/image/user.png'" class="profile-img" (click)="navProfile(poste.user)" />
+        </div>
+      </div>
+      <div class="containerPoste">
+        <p class="post-text">
+          {{ poste.expanded ? poste.message : (poste.message | slice: 0:textLimit) }}{{ poste.message.length > textLimit && !poste.expanded ? '...' : '' }}
+        </p>
+        
+        <!-- Bouton Voir plus/moins : uniquement visible si le texte est tronqué et non encore entièrement affiché -->
+        <button 
+          class="toggle-button" 
+          *ngIf="poste.message.length > textLimit && !poste.expanded" 
+          (click)="toggleExpand(poste)">
+          Voir plus
+        </button>
+  
+        <!-- Bouton Voir moins : uniquement visible si le texte est entièrement affiché -->
+        <button 
+          class="toggle-button" 
+          *ngIf="poste.expanded" 
+          (click)="toggleExpand(poste)">
+          Voir moins
+        </button>
+      <img [src]="poste.image" class="post-image">
+    </div>
+
+    
+      <div class="btnIte" >
+        <button  (click)=" toggleLike(poste)"  >
+          <i class='bx bxs-like'   [ngClass]="{ 'liked': isLike[poste.id.toString()] }">
+          </i>
+          <span *ngIf="totalLikesMap[poste.id] > 0">  {{ totalLikesMap[poste.id] }}</span>
+        </button>
+        <button  (click)="toggleDislike(poste)">
+          <i class='bx bxs-dislike'    [ngClass]="{ 'disLiked': isDislike[poste.id.toString()] }"></i>
+          <span *ngIf="totalDislikesMap[poste.id] > 0">  {{totalDislikesMap[poste.id]}}</span>
+        </button>
+        <button (click)="toggleTextarea(poste)" >
+         
+          <i class='bx bx-chat'></i>
+        </button>
+      </div>
+      <div class="edit-delette" (click)="togglePopup($event)" ><i class='bx bx-dots-horizontal-rounded'></i>
+      </div>
+      <div class="popup-content" >
+
+        <ul >
+          <li *ngIf="poste.user.id == user.id">
+            <i class='bx bxs-edit-alt'></i>
+            <span  class="modifier" (click)="togglePopupModifier(poste,'modifier')">Modifier</span>
+          </li>
+
+          <li *ngIf="poste.user.id == user.id" (click)="callTogglePopupDelete(poste)">
+            <i class='bx bx-trash'></i>
+            <span  >Supprimer</span>
+          </li>
+          <li *ngIf="poste.user.id != user.id " (click) ="openPopupSignale(poste)" >
+            <i class='bx bx-error-alt'></i>
+          <span >Signaler</span></li>
+        </ul>
+
+      </div>
+      <!-------------------------Comment----------------------------------------------------------->
+      <div class="comment" >
+        <div  *ngIf="getActiveComments(poste).length > 0" class="commentLenght"  (click)="openPostPopup($event,poste)">
+          <div *ngIf="getActiveComments(poste).length ===1"><p>{{getActiveComments(poste).length }} commentaire</p></div>
+          <div *ngIf="getActiveComments(poste).length >1" > <p  class="lenght" >{{ getActiveComments(poste).length}} commentaires</p></div>
+         
+        </div>
+       <div  *ngIf="isTextareaVisible(poste)" [formGroup]="commentForm"  class="commentText">
+        <textarea id="textComm" rows="2" placeholder="" (click)="poste.showButton = true" [ngModel]="messageComment" (input)="adjustTextareaSize($event)" (keydown.enter)="addNewLine()" [formControl]="commentForm.get('messageComment')"></textarea>
+       <button *ngIf="poste.showButton" (click)="addCommentToPost(poste)">  <i class='bx bxs-send' ></i></button>
+    
+        
+      <input type="file" #fileInput style="display: none;" (change)="onFileSelected($event)">
+          </div>
+         
+         
+          <div *ngFor="let comment of  filteredComments;  let i = index">
+            <div *ngIf="i < commentsToShow[poste.id] ">
+              <app-comment [comment]="comment"     [user]="user" (signaleCommentWithInfo)="onResirveSignale($event)" (signaleComment)="onCommentsignale($event)"  (deleteCommentWithInfo)="onResirve($event)" (deleteComment)="onCommentDelete($event)" [comments]="filteredComments" ></app-comment>
+            </div>
+         </div>
+         <div *ngIf="commentsToShow[poste.id] > 0  && getActiveComments(poste).lenght  > 10 " (click)="toggleComments(poste.id, poste.comments)" class="commentInfo">
+          <p>{{ commentsToShow[poste.id] }} / {{getActiveComments(poste).lenght }} commentaires affichés</p> </div>
+          <div>
+          <p *ngIf="commentsToShow[poste.id] > increment" (click)="toggleCommentsBackwards(poste.id, poste.comments)" class="commentInfo">Afficher moins de commentaires</p>
+        </div>
+      
+      
+          
+    </div>
+    
+      <div *ngFor="let catIcon of poste.icons">
+
+        <i class="psteIcon" [class]="catIcon.icon"></i>
+      </div>
+    </div>
+
+    
+  </div>
+
+
+
+  <div class="popupCardUser" id="popup" *ngIf="isPopupVisible" (click)="$event.stopPropagation()">
+
+    <div *ngIf="isUserAuthenticated" class="card-user">
+
+      <form (ngSubmit)="performAction()" [formGroup]="posteForm">
+        <div *ngIf="submissionAttempted && posteForm?.get('messagePoste')?.errors?.required && errorMessage"  class="alert-poste" >
+          {{errorMessage}}
+        </div>
+        <div *ngIf="submissionAttempted && !categorySelected && errorMesCateg"  class="alert-poste">
+          {{errorMesCateg}}
+
+        </div>
+
+        <img [src]="user.image  ? user.image : '/assets/image/user.png'"  class="profile-img">
+
+        <textarea id="popupTextarea" rows="4" placeholder="Quoi de neuf ?"
+          formControlName="messagePoste" [ngModel]="post.message"></textarea>
+        <div class="drop-area" id="dropArea" (drop)="onFileDropped($event)" (dragover)="prevent($event)">
+          <span class="drag-text"  [class.active]="hasImage">Glissez et déposez votre image ici ou </span>
+          <input type="file" id="fileInput" (change)="onFileSelected($event)" [class.active]="hasImage">
+          <label for="fileInput" class="upload-button" [class.active]="hasImage">Importer</label>
+          <div class="delete-icon" id="deleteIcon" (click)="removeImage()" [class.active]="hasImage" >
+            <i class='bx bx-trash'></i>
+          </div>
+          <div *ngIf="imageUrl" class="image-preview">
+            <img [src]="imageUrl" alt="Image preview">
+          </div>
+        </div>
+        <button id="btnAdd" type="submit">
+          <div class="svg-wrapper-1">
+            <div class="svg-wrapper">
+
+              <i class='bx bxs-send'></i>
+            </div>
+          </div>
+          <span>Partager</span>
+        </button>
+      </form>
+      <!--div *ngIf="submissionAttempted && !categorySelected" class="alert-poste">
+        {{errorMesCateg}}
+      </div-->
+
+      <div class="select-menu-popup" #dropdownElement>
+        <button (click)="clickMenuPopup()" class="btn-popup">
+          <div class="sbtn-btn">
+            <span class="select-text" type="checkbox">{{ selectedCategory }}</span>
+            <i class='bx bxs-chevron-down'></i>
+          </div>
+        </button>
+
+        <ul class="categs">
+
+          <li class="categ" *ngFor="let categorie of categories" (change)="onCategorySelected($event.target.value)"
+            (click)="selectCategory(categorie)">
+
+
+            <i class="bx" [class]="categorie.icon"></i>
+            <span class="categ-text">{{ categorie.name }}</span>
+
+          </li>
+
+        </ul>
+
+
+      </div>
+
+
+    </div>
+  </div>
+  <div   class="popupDelete">
+    <div class="cardDelete">
+      <p>Voulez-vous vraiment supprimer ?</p>
+      <button (click)="deleteObject()">
+        <div class="svg-valider">
+
+          <i class='bx bxs-user-check'></i>
+        </div>
+
+        <span >Valider</span>
+      </button>
+    </div>
+  </div>
+  <!------------------------------------PouPPoste------------------------------------------------------------->
+<div   class="popupPoste" #popupPoste  *ngIf="isPopupPosteVisible" >
+  <div  *ngIf="selectedPost" class="card-list">
+    <div  class="user-profile">
+      <div>
+        <p >{{selectedPost.user.nom}} {{selectedPost.user.prenom}}</p>
+        <span> {{selectedPost.dateCreate | date:'dd-MM-yy HH:mm'}}</span>
+        <img [src]="selectedPost.user.image" class="profile-img">
+      </div>
+    </div>
+    
+    <div class="containerPopupPoste">
+      
+     
+      <p contenteditable="true" class="post-text">
+        {{ selectedPost.expanded ? selectedPost.message : (selectedPost.message | slice: 0:textLimit) }}{{selectedPost.message.length > textLimit && !selectedPost.expanded ? '...' : '' }}
+      </p>
+      
+      <!-- Bouton Voir plus/moins : uniquement visible si le texte est tronqué et non encore entièrement affiché -->
+      <button 
+        class="toggle-button" 
+        *ngIf="selectedPost.message.length > textLimit && !selectedPost.expanded" 
+        (click)="toggleExpand(selectedPost)">
+        Voir plus
+      </button>
+
+      <!-- Bouton Voir moins : uniquement visible si le texte est entièrement affiché -->
+      <button 
+        class="toggle-button" 
+        *ngIf="selectedPost.expanded" 
+        (click)="toggleExpand(selectedPost)">
+        Voir moins
+      </button>
+      <!-- Bouton Voir plus/moins -->
+      
+    
+    <img [src]="selectedPost.image" class="post-image">
+    <div class="commentTaille"  (click)="toggleCommentsPart(selectedPost.id, selectedPost,$event)">
+    <div  *ngIf="getActiveComments(selectedPost).length > 0" >
+      <div *ngIf="getActiveComments(selectedPost).length ==1"><p>{{ getActiveComments(selectedPost).length}} commentaire</p></div>
+      <div *ngIf="getActiveComments(selectedPost).length > 1"> <p>{{ getActiveComments(selectedPost).length }} commentaires</p></div>
+    </div>
+    </div>
+    <div class="btnIte"  >
+      <button (click)=" toggleLike(selectedPost)">
+        <i class='bx bxs-like' [ngClass]="{ 'liked': isLike[selectedPost.id.toString()] }"></i>
+        <span *ngIf="totalLikesMap[selectedPost.id] > 0">  {{ totalLikesMap[selectedPost.id] }}</span>
+      </button>
+      <button  (click)="toggleDislike(selectedPost)">
+        <i class='bx bxs-dislike'   [ngClass]="{ 'disLiked': isDislike[selectedPost.id.toString()] }"></i>
+        <span *ngIf="totalDislikesMap[selectedPost.id] > 0">  {{totalDislikesMap[selectedPost.id]}}</span>
+      </button>
+      <button (click)="toggleTextarea(selectedPost)" >
+        <i class='bx bx-chat'></i>
+      </button>
+    </div>
+   
+</div>
+  
+   
+    <div class="edit-delette" (click)="togglePopup($event)"><i class='bx bx-dots-horizontal-rounded'></i>
+    </div>
+    <div class="popup-content">
+
+      <ul>
+        <li *ngIf="selectedPost.user.id == user.id">
+          <i class='bx bxs-edit-alt'></i>
+          <span *ngIf="isModifierVisible" class="modifier" (click)="togglePopupModifier(selectedPost,'modifier')">Modifier</span>
+        </li>
+
+        <li *ngIf="selectedPost.user.id == user.id">
+          <i class='bx bx-trash'></i>
+          <span  (click)="callTogglePopupDelete(selectedPost)">Supprimer</span>
+        </li>
+        <li *ngIf="selectedPost.user.id != user.id" (click)="openPopupSignale(poste)" >
+          <i class='bx bx-error-alt'></i>
+        <span >Signaler</span></li>
+      </ul>
+
+    </div>
+   
+    <!-------------------------Comment----------------------------------------------------------->
+    <div class="comment">
+      
+      <div  *ngIf="isTextareaVisible(selectedPost)" [formGroup]="commentForm"  class="commentText">
+        <textarea id="textComm" rows="2" placeholder="" (click)="selectedPost.showButton = true" [ngModel]="messageComment" (input)="adjustTextareaSize($event)" (keydown.enter)="addNewLine()" [formControl]="commentForm.get('messageComment')"></textarea>
+      <button *ngIf="selectedPost.showButton" (click)="addCommentToPost(selectedPost)">  <i class='bx bxs-send' ></i></button>
+      </div>
+    
+        <div *ngFor="let comment of  filteredComments; let i = index">
+          <div *ngIf="i < commentsToShow[selectedPost.id]" >            
+            <app-comment [comment]="comment"   [user]="user" (deleteCommentWithInfo)="onResirve($event)" (deleteComment)="onCommentDelete($event)" (signaleCommentWithInfo)="onResirveSignale($event)" (signaleComment)="onCommentsignale($event)"[comments]="filteredComments"></app-comment>
+          </div>
+       </div>
+       <div *ngIf="commentsToShow[selectedPost.id] > 0  && getActiveComments(selectedPost).length > 10 " (click)="toggleComments(selectedPost.id, selectedPost.comments)" class="commentInfo">
+        <p>{{ commentsToShow[selectedPost.id] }} / {{getActiveComments(selectedPost).length }} commentaires affichés</p> </div>
+        <div>
+        <!--p *ngIf="commentsToShow[selectedPost.id] > increment" (click)="toggleCommentsBackwards(selectedPost.id, selectedPost.comments)" class="commentInfo">Afficher moins de commentaires</p-->
+      </div>
+  
+      
+    </div>
+  
+
+
+      <i class="psteIcon" [class]="matchingIcon.icon"></i>
+   
+
+  </div>            
+</div>
+<div class="popupSignale" #popupSignale>
+  <div class="cardSignale">
+    <div *ngIf="currentStep === 1">
+      <div *ngIf="errorMessageSignale" class="error-message">
+        {{ errorMessageSignale }}
+      </div>
+      <span>Signaler le Post</span>
+      <div class="signale-options">
+        <div *ngFor="let type of reportTypes">
+          <input 
+            type="radio" 
+            [id]="type" 
+            name="signale" 
+            [value]="type" 
+            (change)="onTypeChange($event)">
+          <label [for]="type">{{ type }}</label>
+        </div>
+      </div>
+      <button (click)="goToNextStep()">
+        
+
+        <span >Suivant</span>
+        <div class="svg-valider">
+
+          <i class='bx bx-chevron-right'></i>
+        </div>
+      </button>
+    
+    </div>
+
+    <!-- Étape 2 : Description du problème -->
+    <div *ngIf="currentStep === 2">
+      <span>Décrivez le problème</span>
+      <textarea 
+        [(ngModel)]="reportDescription" 
+        rows="5" 
+        placeholder="Décrivez le problème...">
+      </textarea>
+      <div> <button (click)="sendSignale()">
+        
+        <div class="svg-valider">
+
+          <i class='bx bx-check'></i>
+        </div>
+        <span >Signaler</span>
+        
+      </button>
+      <button (click)="closeSignale()">
+        
+        <div class="svg-valider">
+
+          <i class='bx bx-x-circle' ></i>
+        </div>
+        <span >Annuler</span>
+        
+      </button>
+        
+      </div>
+    </div>
+  </div>
+</div>
+<div   class="popupInform">
+  <div class="cardInform">
+    <p>C'est déjà supprimer !</p>
+    <button (click)="validerInform()">
+      <div class="svg-valider">
+
+        <i class='bx bxs-user-check'></i>
+      </div>
+
+      <span >Valider</span>
+    </button>
+  </div>
+  </div>
+<div class="overlay" #overlay *ngIf="isOverlayVisible  && !disableOverlay" (click)="onOverlayClick()"></div>
+</body>
+
+</html>
+
+  <!-- div class="commentContainer">
+        <div class="commentUser">
+          <img [src]="comment.user.image" class="profile-img">
+        <p>{{comment.user.nom}} {{comment.user.prenom}}</p>
+        <span>{{ comment.text }}</span>
+        </div>
+        <div class="btnCommIte" >
+          <button>
+            <i class='bx bxs-like'></i>
+          </button>
+          <button>
+            <i class='bx bxs-dislike'></i>
+          </button>
+          <button (click)="toggleTextareaComm(comment)" >
+            <i class='bx bx-chat' ></i>
+          </button>
+        </div>
+      
+        <div  *ngIf="isTextareaVisibleComm(comment)" class="repText">
+          <textarea id="textRep" rows="2" (click)="comment.showButton = true "placeholder=""  (input)="adjustTextareaSize($event)" (keydown.enter)="addNewLine()"  ></textarea>
+        <button>  <i class='bx bxs-send' ></i></button>
+        <i class='bx bx-camera'></i>
+        
+      </div>
+       
+      
+      </div-->

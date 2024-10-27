@@ -1,0 +1,2116 @@
+* {
+    margin: 0;
+    padding: 0;
+   
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  .raw {
+    top: 0;
+  
+  }
+
+  /*.raw.active {
+  
+    width: 250px;
+  }
+  
+  .raw.active ~ .card-container  {
+    left: 250px;
+  
+    width: calc(100% - 250px);
+  }
+  .raw.active ~ .contenu {
+    left: 250px;
+  
+    width: calc(100% - 250px);
+  }*/
+  .contenu {
+    position: absolute;
+    border-radius: 6px;
+    top:22rem;
+  
+    left: 3%;
+    padding: 20px;
+    color: #626262;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.5s;
+    
+  }
+  
+  
+  
+  .card-user {
+    position: relative; 
+    top: 8rem; 
+   width: 700px;
+  
+   
+    height: 13rem;
+    background: rgba(217, 217, 217, 0.58);
+    border: 1px solid white;
+    box-shadow: 12px 17px 51px rgba(0, 0, 0, 0.22);
+    backdrop-filter: blur(6px);
+    border-radius: 17px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.5s;
+   
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    font-weight: bolder;
+    color: black;
+    padding: 20px;
+    z-index: 100;
+}
+  .card-user:hover {
+    border: 1px solid black;
+    transform: scale(1.05);
+  }
+  
+  
+  /*.card-user:active {
+      transform: scale(0.95) rotateZ(1.7deg);
+    }*/
+  .card-user .profile-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 45px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  
+  .card-user textarea {
+    position: absolute;
+    top: 0.5rem;
+    left: 1rem;
+    
+    border-radius: 10px;
+    outline: none;
+    transition: .2s ease;
+    width: 90%;
+    display: flex;
+   margin: 2rem;
+    height: 8rem;
+    resize: none;
+    border: none;
+  
+  }
+  
+  .card-user button {
+    position: fixed;
+    font-size: 12px;
+    bottom: 0rem;
+    right: 4rem;
+    background: linear-gradient(to bottom, #4dc7d9 0%, #66a6ff 100%);
+    color: white;
+    padding: 0.5em 1em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 25px;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s;
+  }
+  
+  .card-user button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0px 8px 15px white;
+  }
+  
+  .card-user button:active {
+    transform: scale(0.95);
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  .card-user button span {
+    display: block;
+    margin-left: 0.4em;
+    transition: all 0.3s;
+  }
+  
+  .card-user button i {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    fill: white;
+    transition: all 0.3s;
+  }
+  
+  .card-user button .svg-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.2);
+    margin-right: 0.5em;
+    transition: all 0.3s;
+  }
+  
+  .card-user button:hover .svg-wrapper {
+    background-color: rgba(255, 255, 255, 0.5);
+  }
+  
+  .card-user button:hover i {
+    transform: rotate(45deg);
+  }
+  
+     .alert-poste {
+      position :absolute;
+  top:8px;
+  left:150px;
+     font-size: 12px;
+     margin-left: 120px;
+    color: red;
+    background-color: #ffe6e6;
+    padding: 10px;
+    border-radius: 5px;
+    
+    text-align: center;
+    font-weight: bold;
+
+  }
+  
+  
+  .select-menu button {
+    position: fixed;
+    font-size: 12px;
+    bottom: 0rem;
+    left: 20rem;
+  
+  max-width: 135px;
+    background: linear-gradient(to bottom, #aab7d392 0%, #95a1ba92 100%);
+    color: white;
+  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 25px;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s;
+  }
+  
+  .card-user .select-menu button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0px 8px 15px white;
+  }
+  
+  .card-user .select-menu button:active {
+    transform: scale(0.95);
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  .card-user .select-menu button .sbtn-btn {
+  
+    width: 30px;
+    height: 30px;
+    display: flex;
+    border-radius: 50%;
+    margin-right: -80px;
+    background-color: rgba(255, 255, 255, 0.2);
+  
+    transition: all 0.3s;
+  
+  
+  }
+  
+  .card-user .select-menu button .sbtn-btn span {
+    display: block;
+    float: left;
+    margin-left: -70px;
+    transition: all 0.3s;
+    margin-top: 3px;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+  
+    transition: all 0.3s;
+  
+  }
+  
+  .card-user .select-menu button .sbtn-btn i {
+    position: absolute;
+    display: flex;
+    font-size: 23px;
+    width: 23px;
+    height: 18px;
+    fill: white;
+    margin-left: 4px;
+  
+    top: 10px;
+    transition: all 0.3s;
+  
+  
+  }
+  
+ 
+  .card-user .select-menu button:hover .sbtn-btn i {
+    transform: rotate(180deg);
+  
+    top: 10px;
+  }
+  
+  .card-user .upload-image button {
+    position: fixed;
+    font-size: 12px;
+    bottom: 0rem;
+    left: 5rem;
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(to bottom, #13d209 0%, #11ba08 100%);
+    color: white;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s;
+  
+  }
+  
+  .card-user .upload-image button i {
+    position: relative;
+    display: flex;
+    font-size: 35px;
+  
+    align-items: center;
+    justify-content: center;
+    width: 35px;
+    height: 35px;
+    fill: white;
+    transition: all 0.3s;
+  }
+  
+  .card-user .upload-image button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0px 8px 15px white;
+  }
+  
+  .card-user .upload-image button:active {
+    transform: scale(0.95);
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  .card-user .upload-image button .btnUpload {
+    position: absolute;
+    display: fixed;
+    font-size: 40px;
+    display: flex;
+    width: 35px;
+    height: 35px;
+    border-radius: 25%;
+    background-color: rgba(255, 255, 255, 0.2);
+  
+    transition: all 0.3s;
+  }
+  
+  .card-user .select-menu .categs {
+    position: absolute;
+    bottom: -10rem;
+    width: 250px;
+    overflow-y: scroll;
+    height: 150px;
+    left: 17rem;
+    border: 1px solid black;
+    padding: 20px;
+    margin-top: 10px;
+    border-radius: 8px;
+  background-color: rgba(217, 217, 217, 0.58);
+    box-shadow: 0 0 3px rgba(129, 113, 113, 0.1);
+  
+  }
+ 
+  .categs::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: #F5F5F5;
+  border-radius: 5px
+}
+
+.categs::-webkit-scrollbar
+{
+	width: 10px;
+	background-color: #F5F5F5;
+  border-radius: 5px
+}
+
+.categs::-webkit-scrollbar-thumb
+{
+	background-color: #66a6ff;
+	border: 2px solid#66a6ff;
+  border-radius: 5px
+}
+
+
+  
+  .card-user .select-menu .categs .categ {
+  
+    display: flex;
+  color: black;
+    height: 25px;
+    cursor: pointer;
+    padding: 0 16px;
+    border-radius: 8px;
+    align-items: center;
+  
+  
+  }
+ 
+  .card-user .select-menu .categs {
+    visibility: hidden;
+  }
+  
+  .card-user .select-menu.active .categs {
+    visibility: visible;
+  }
+  
+  .card-user .select-menu .categs .categ:hover {
+    background: #F2F2F2;
+  
+  }
+  
+  .card-user .select-menu .categs .categ i {
+    font-size: 15px;
+    margin-right: 12px;
+  
+  }
+  
+  .card-user .select-menu .categs .categ .categ-text {
+    font-size: 15px;
+    color: black;
+  
+  }
+  
+
+  .card-container {
+  
+   position: absolute;
+    border-radius: 6px;
+  
+    justify-content: center;
+    align-items: center;
+  left: 22%;
+    padding: 20px;
+    color: #626262;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.5s;
+    
+ 
+  }
+  
+  .card-container .card-list li {
+    margin-top: 0;
+    text-decoration: none;
+  }
+  
+  .card-container .card-list {
+  position: relative;
+    box-sizing: border-box;
+    width: 900px;
+    top:10rem;
+   
+  
+  
+    background: rgba(217, 217, 217, 0.58);
+    border: 1px solid white;
+    box-shadow: 12px 17px 51px rgba(0, 0, 0, 0.22);
+    backdrop-filter: blur(6px);
+    border-radius: 17px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.5s;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    font-weight: bolder;
+    color: black;
+    margin-bottom: 15px;
+    padding:  30px;
+  }
+  
+  .card-container .card-list:hover {
+    border: 1px solid rgb(14, 1, 1);
+    transform: scale(1.01);
+   
+  }
+  
+  .card-container .card-list .user-profile span {
+    font-size: 13px;
+    color: #9a9a9a;
+  
+  }
+  
+  .card-container .card-list  .profile-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 45px;
+   
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  .card-list .user-profile p {
+    position: absolute;
+    top: 5px;
+    margin-left:7%;
+  }
+  .card-list .containerPoste{
+  
+  position: relative;
+    border-radius: 10px;
+   
+     margin: 10px;
+    display: inline-block;
+    border: 1px solid white;
+    
+  }
+  .card-list .containerPoste .post-text {
+     color: black;
+    padding: 10px;
+    white-space: pre-wrap; /* Conserve les sauts de ligne et les espaces comme dans le texte d'origine */
+  word-wrap: break-word; 
+    font-size: 25px;
+    font: 1em sans-serif;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+     margin-top: 5%;
+     cursor: text;
+     text-align: left;
+
+   
+    
+    
+  
+ 
+  }
+  .post-text.expanded {
+    max-height: none; /* Supprime la limite lorsque l'élément est étendu */
+    white-space: normal;
+    overflow: visible;
+  }
+  
+  .toggle-button {
+    background-color: transparent;
+    border: none;
+    color:#6d80c5;
+    cursor: pointer;
+    margin-top: 5px;
+  }
+  .card-list  .containerPoste .post-image {
+    max-width: 60%;
+    height: auto;
+  margin-top: 5%;
+    border-radius: 4px;
+    margin-bottom: 5px;
+  }
+  
+  .card-list .psteIcon {
+   position: absolute;
+    top: 0;
+   display: flex;
+    font-size: 25px;
+    color: #1876f2;
+  right: 0px;
+  }
+  
+  .card-list .btnIte {
+    width: 60%;
+   
+    margin-left: 14%;
+   bottom: 10px;
+    left: 0;
+    margin-bottom: 50px;
+  }
+  .card-list .btnIte  button:nth-child(3) {
+    background-color: #007bff; /* Change la couleur de fond du bouton en bleu */
+    color: white; /* Change la couleur du texte en blanc */
+  }
+  
+  .bx.bxs-like {
+    color: white;
+  }
+  
+  .bx.bxs-like.liked {
+    color:blue;}
+    .bx.bxs-dislike
+    {
+      color: white;
+    }
+    .bx.bxs-dislike.disLiked{
+      color:blue;
+    }
+  .card-list .btnIte button {
+    font-size: 16px;
+    width: 12%;
+    margin-top: 0;
+    background: linear-gradient(to bottom, #aab7d392 0%, #95a1ba92 100%);
+    color: white;
+    margin-left: 10%;
+  
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 25px;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s;
+  }
+  
+  .card-list .btnIte button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0px 8px 15px white;
+  }
+  
+  .card-list .btnIte button:active {
+    transform: scale(0.95);
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  .card-list .edit-delette {
+    position: absolute;
+    right: 30px;
+    top: 3px;
+    width: 22px;
+    height: 22px;
+   }
+  
+  .card-list .edit-delette .bx-dots-horizontal-rounded {
+    font-size: 22px;
+    
+  }
+  
+  .card-list .edit-delette:hover {
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.1)
+  }
+  
+  .popup-content {
+    position: absolute;
+    background: rgba(241, 241, 244, 0.936);
+    top: 23px;
+    width: 120px;
+    right: 0px;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid white;
+    box-shadow: 0 1rem 1.5rem rgba(0, 0, 0, 0.2);
+    display: none; /* Pour afficher le popup, tu devras changer cette propriété dynamiquement avec JavaScript ou Angular */
+  }
+  
+   .popup-content::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 60px;
+    width: 25px;
+    height: 18px;
+    background: rgba(241, 241, 244, 0.936);
+    transform: rotate(45deg);
+    border-radius: 3px;
+    border: 1px solid rgba(241, 241, 244, 0.936);
+    box-shadow: 0 0.5rem 0.8rem rgba(241, 241, 244, 0.936);
+  }
+  
+  .popup-content ul {
+    margin: 0;
+    padding: 0;
+    width: 100px;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+  }
+  
+   .popup-content ul li {
+    padding: 10px 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+  }
+  
+   .popup-content ul li:hover {
+    transform: scale(1.05);
+    border-radius: 10px;
+    border: 1px solid white;
+    box-shadow: 0px 8px 15px white;
+    background-color: #b1c0fa;
+  }
+  
+ .popup-content ul li span {
+    margin-left: 5px;
+    font-size: 12px;
+  }
+  
+  
+   .popup-content ul li .bxs-edit-alt{
+    color:rgb(2, 175, 2);
+  }
+  .popup-content ul li  .bx-trash, .bx-error-alt {
+    color:rgb(255, 5, 5)
+  }
+  .popupCardUser {
+    position: fixed;
+    top: 20%;
+    left: 35%;
+    transform: translate(-50%, -50%);
+    pointer-events: auto;
+    padding: 20px;
+    
+     z-index: 9999;
+  }
+  
+  .popupCardUser .card-user {
+    position: absolute;
+    box-sizing: border-box;
+    margin-top: 30px;
+    margin-left: -100px;
+    display: flex;
+    width: 700px;
+    height: 420px;
+    background: rgba(217, 217, 217, 0.58);
+    border: 1px solid white;
+    box-shadow: 12px 17px 51px rgba(0, 0, 0, 0.22);
+    backdrop-filter: blur(6px);
+    border-radius: 17px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.5s;
+  
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    font-weight: bolder;
+    color: black;
+    top: 10px;
+  
+  }
+  
+  .popupCardUser .card-user:hover {
+    border: 1px solid black;
+    transform: scale(1.05);
+  }
+  
+  .popupCardUser .card-user.scaled {
+    transform: scale(1.5);
+    width: 50%;
+  
+    top: 20px;
+    
+  }
+  
+  /*.card-user:active {
+     transform: scale(0.95) rotateZ(1.7deg);
+   }*/
+  .popupCardUser .card-user .profile-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 45px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  
+  .popupCardUser .card-user textarea {
+    position: absolute;
+  
+    border-radius: 10px;
+    outline: none;
+    transition: .2s ease;
+    width: 600px;
+    display: flex;
+    left: 40px;
+    height: 25%;
+    resize: none;
+    border: none;
+  
+  }
+  
+  .popupCardUser .drop-area {
+    position: absolute;
+    top: 155px;
+    left: 155px;
+    border: 2px dashed #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    width: 400px;
+    height: 50%;
+    text-align: center;
+  
+    justify-content: center;
+  }
+  
+  .popupCardUser .drag-text {
+    position: absolute;
+    margin-top: 50px;
+    color: white;
+    display: flex;
+    font-size: 13px;
+   
+  }
+  
+  .popupCardUser .drag-text.active {
+    visibility: hidden;
+  }
+  
+  .popupCardUser .upload-button {
+    position: absolute;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 15px;
+    padding: 6px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    margin-top: 45px;
+    margin-left: 233px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .popupCardUser .upload-button.active {
+    visibility: hidden;
+  }
+  
+  .popupCardUser .upload-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .popupCardUser #fileInput {
+    display: none;
+  }
+  
+  .popupCardUser .delete-icon {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    cursor: pointer;
+    visibility: hidden;
+    
+  }
+  
+  .popupCardUser .delete-icon.active {
+    visibility: visible;
+  }
+  
+  .popupCardUser .drop-area .image-preview {
+    position: absolute;
+    top: 0px;
+    left: 10px;
+    width: 300px;
+  
+    height: 200px;
+    border: 1px solid #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .popupCardUser .drop-area .image-preview img {
+    max-width: 100%;
+    max-height: 100%;
+  }
+  
+  .popupCardUser .card-user button {
+    position: absolute;
+    font-size: 12px;
+  width: 140px;
+    top: 370px;
+   
+    background: linear-gradient(to bottom, #4dc7d9 0%, #66a6ff 100%);
+    color: white;
+    padding: 0.5em 1em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 25px;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s;
+  }
+  
+  .popupCardUser .card-user button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0px 8px 15px white;
+  }
+  
+  .popupCardUser .card-user button:active {
+    transform: scale(0.95);
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  .popupCardUser .card-user button span {
+    display: block;
+    margin-left: 0.4em;
+    transition: all 0.3s;
+  }
+  
+  .popupCardUser .card-user button i {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    fill: white;
+    transition: all 0.3s;
+  }
+  
+  .popupCardUser .card-user button .svg-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.2);
+    margin-right: 0.5em;
+    transition: all 0.3s;
+  }
+  
+  .popupCardUser .card-user button:hover .svg-wrapper {
+    background-color: rgba(255, 255, 255, 0.5);
+  }
+  
+  .popupCardUser .card-user button:hover i {
+    transform: rotate(45deg);
+  }
+  
+  .popupCardUser .card-user .alert-poste {
+    position: absolute;
+    top: 0;
+    font-size: 12px;
+    color: red;
+  }
+  
+  .popupCardUser .select-menu-popup button {
+    position: absolute;
+    font-size: 12px;
+    display: flex;
+    top: 370px;
+    left: 150px;
+    width: 30%;
+  
+    background: linear-gradient(to bottom, #9ca8c192 0%, #95a1ba92 100%);
+    color: white;
+  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 25px;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s;
+  }
+  
+  .popupCardUser .card-user .select-menu-popup button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0px 8px 15px white;
+  }
+  
+  .popupCardUser .card-user .select-menu-popup button:active {
+    transform: scale(0.95);
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  .popupCardUser .card-user .select-menu-popup button .sbtn-btn {
+  
+    width: 30px;
+    height: 30px;
+    display: flex;
+    border-radius: 50%;
+    margin-right: -80px;
+    background-color: rgba(255, 255, 255, 0.2);
+  
+    transition: all 0.3s;
+  
+  
+  }
+  
+  .popupCardUser .card-user .select-menu-popup button .sbtn-btn span {
+    display: block;
+    float: left;
+    margin-left: -70px;
+    transition: all 0.3s;
+    margin-top: 3px;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+  
+    transition: all 0.3s;
+  
+  }
+  
+  .popupCardUser .card-user .select-menu-popup button .sbtn-btn i {
+    position: absolute;
+    display: flex;
+    font-size: 23px;
+    width: 23px;
+    height: 18px;
+    fill: white;
+    margin-left: 4px;
+  
+    top: 10px;
+    transition: all 0.3s;
+    /*  width: 3px;
+        
+         font-size: 23px;
+         
+        top:5px;
+       
+        
+         width: 30px;
+         height: 30px;
+         fill: white;
+         transition: all 0.3s;*/
+  
+  }
+  
+  /* .card-user .select-menu  button:hover .sbtn-btn span  {
+         background-color: rgba(255, 255, 255, 0.5);
+       }*/
+  .popupCardUser .card-user .select-menu-popup button:hover .sbtn-btn i {
+    transform: rotate(180deg);
+  
+    top: 10px;
+  }
+  
+  
+  
+  
+  .popupCardUser .card-user .select-menu-popup .categs {
+    position: absolute;
+    top: 400px;
+    overflow-y: scroll;
+    max-height: 100px;
+    left: 150px;
+    border: 1px solid black;
+    padding: 20px;
+    margin-top: 10px;
+    border-radius: 8px;
+    background: white;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
+  
+  }
+  
+  .popupCardUser .card-user .select-menu-popup .categs::-webkit-scrollbar {
+    width: 5px;
+  
+  }
+  
+  .popupCardUser .card-user .select-menu-popup .categs::-webkit-scrollbar-track {
+    background: #d1e5ff;
+  }
+  
+  .popupCardUser .card-user .select-menu-popup .categs::-webkit-scrollbar-thumb {
+    background: linear-gradient(#642bff, #8eb2d489);
+    border-radius: 10px;
+  }
+  
+  .popupCardUser .card-user .select-menu-popup .categs .categ {
+  
+    display: flex;
+  
+    height: 30px;
+    cursor: pointer;
+    padding: 0 16px;
+    border-radius: 8px;
+    align-items: center;
+  
+  
+  }
+  
+  .popupCardUser .card-user .select-menu-popup .categs {
+    visibility: hidden;
+  }
+  
+  .popupCardUser .card-user .select-menu-popup.active .categs {
+    visibility: visible;
+  }
+  
+  .popupCardUser .card-user .select-menu-popup .categs .categ:hover {
+    background: #F2F2F2;
+  
+  }
+  
+  .popupCardUser .card-user .select-menu-popup .categs .categ i {
+    font-size: 15px;
+    margin-right: 12px;
+  
+  }
+  
+  .popupCardUser .card-user .select-menu-popup .categs .categ .categ-text {
+    font-size: 15px;
+    color: #333;
+  
+  }
+  
+  .popupDelete {
+    position: fixed;
+    top: 50%;
+    left: 40%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    display: none;
+    z-index: 10000;
+  }
+  
+  .popupDelete .cardDelete {
+    position: absolute;
+    box-sizing: border-box;
+  
+    display: flex;
+    width: 300px;
+    height: 130px;
+    background: rgba(255, 253, 253, 0.829);
+    border: 1px solid white;
+    box-shadow: 12px 17px 51px rgba(0, 0, 0, 0.22);
+    backdrop-filter: blur(6px);
+    border-radius: 17px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.5s;
+  
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    font-weight: bolder;
+    color: black;
+    top: 10px;
+  
+  }
+  
+  .popupDelete .cardDelete:hover {
+  
+    transform: scale(1.05);
+  }
+  
+  .popupDelete .cardDelete p {
+    position: absolute;
+    top: 10px;
+    font-size: 15px;
+    color: #97b7e3;
+  }
+  
+  .popupDelete .cardDelete button {
+    position: absolute;
+    font-size: 12px;
+  
+    top: 80px;
+    right: 30%;
+    background: linear-gradient(to bottom, #4dc7d9 0%, #66a6ff 100%);
+    color: white;
+    padding: 0.5em 1em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 25px;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s;
+  }
+  
+  .popupDelete .cardDelete button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0px 8px 15px white;
+  }
+  
+  .popupDelete .cardDelete button:active {
+    transform: scale(0.95);
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  .popupDelete .cardDelete button span {
+    display: block;
+    margin-left: 0.4em;
+    transition: all 0.3s;
+  }
+  
+  .popupDelete .cardDelete button i {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    fill: white;
+    transition: all 0.3s;
+  }
+  
+  .popupDelete .cardDelete .svg-valider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.2);
+    margin-right: 0.5em;
+    transition: all 0.3s;
+  }
+  
+  .popupDelete .cardDelete button:hover .valider {
+    background-color: rgba(255, 255, 255, 0.5);
+  }
+  
+  .popupDelete .cardDelete button:hover i {
+    transform: rotate(45deg);
+  }
+  
+  .popupInform {
+    position: fixed;
+    top: 50%;
+    left: 40%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    display: none;
+    z-index: 10000;
+  }
+  
+  .popupInform .cardInform {
+    position: absolute;
+    box-sizing: border-box;
+  
+    display: flex;
+    width: 300px;
+    height: 130px;
+    background: rgba(255, 253, 253, 0.829);
+    border: 1px solid white;
+    box-shadow: 12px 17px 51px rgba(0, 0, 0, 0.22);
+    backdrop-filter: blur(6px);
+    border-radius: 17px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.5s;
+  
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    font-weight: bolder;
+    color: black;
+    top: 10px;
+  
+  }
+  
+  .popupInform .cardInform:hover {
+  
+    transform: scale(1.05);
+  }
+  
+  .popupInform .cardInform p {
+    position: absolute;
+    top: 10px;
+    font-size: 15px;
+    color: #97b7e3;
+  }
+  
+  .popupInform .cardInform button {
+    position: absolute;
+    font-size: 12px;
+  
+    top: 80px;
+    right: 30%;
+    background: linear-gradient(to bottom, #4dc7d9 0%, #66a6ff 100%);
+    color: white;
+    padding: 0.5em 1em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 25px;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s;
+  }
+  
+  .popupInform .cardInform button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0px 8px 15px white;
+  }
+  
+  .popupInform .cardInform button:active {
+    transform: scale(0.95);
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  .popupInform .cardInform button span {
+    display: block;
+    margin-left: 0.4em;
+    transition: all 0.3s;
+  }
+  
+  .popupInform .cardInform button i {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    fill: white;
+    transition: all 0.3s;
+  }
+  
+  .popupInform .cardInform .svg-valider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.2);
+    margin-right: 0.5em;
+    transition: all 0.3s;
+  }
+  
+  .popupInform .cardInform button:hover .valider {
+    background-color: rgba(255, 255, 255, 0.5);
+  }
+  
+  .popupInform .cardInform button:hover i {
+    transform: rotate(45deg);
+  }
+  body.no-scroll {
+    overflow: hidden;
+  }
+  /*---------------------------------    POPUP POSTE --------------------------------------------------------*/
+ .popupPoste {
+   
+  
+  position:fixed;
+  
+    width: 100%;
+   left: 23%;
+   top: 10rem;
+      z-index: 9999;
+   
+
+      }
+   
+      .popupPoste  .card-list li {
+      
+        text-decoration: none;
+      }
+  
+     
+     
+       .popupPoste  .card-list {
+     
+        box-sizing: border-box;
+        width: 900px;
+       max-height: 500px;
+     
+        overflow-y: auto;
+         padding: 30px;
+        background: rgba(217, 217, 217, 0.58);
+        border: 1px solid white;
+        box-shadow: 12px 17px 51px rgba(0, 0, 0, 0.22);
+        backdrop-filter: blur(20px);
+        border-radius: 17px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.5s;
+        align-items: center;
+        justify-content: center;
+        user-select: none;
+        font-weight: bolder;
+        color: black;
+        margin-bottom: 15px;
+        bottom: 20px;
+      
+      }
+      
+     .popupPoste  .card-list:hover {
+        border: 1px solid rgb(14, 1, 1);
+        transform: scale(1.01);
+       
+      }
+      .popupPoste  .card-list .user-profile{
+  
+        position: fixed;
+        top:0;
+        left: 5%;
+        width: 20%;
+      }
+      
+      .popupPoste  .card-list .user-profile span {
+        position: fixed;
+         top:10px;
+        margin-left: 25%;
+        width: 20%;
+        font-size: 13px;
+        color: #676767;
+      
+      }
+      
+      .popupPoste  .card-list  .profile-img {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 45px;
+       
+        border-radius: 50%;
+        margin-right: 10px;
+      }
+     
+      .popupPoste .card-list  .containerPopupPoste{
+      
+      
+       top:10px;
+       border-radius: 10px;
+     
+        width: 40%;
+      
+         transition: all 0.5s ease;
+        display: inline-block;
+        border: 1px solid white;
+        bottom: 40px;
+      }
+   
+      .popupPoste   .card-list .containerPopupPoste .post-text {
+        color: black;
+       padding: 10px;
+       white-space: pre-wrap; /* Conserve les sauts de ligne et les espaces comme dans le texte d'origine */
+     word-wrap: break-word; 
+       font-size: 20px;
+       font: 1em sans-serif;
+       font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        margin-top: 5%;
+        cursor: text;
+        text-align: left;
+      
+     }
+      
+      
+      
+      .popupPoste  .card-list  .containerPopupPoste .post-image {
+       
+        width: 50%;
+      margin-top: 5%;
+        border-radius: 4px;
+        margin-bottom: 5px;
+      }
+      
+      .popupPoste   .card-list .psteIcon {
+       position: absolute;
+        top: 0;
+       display: flex;
+        font-size: 25px;
+        color: #1876f2;
+      right: 0px;
+      }
+      .popupPoste  .card-list .containerPopupPoste  .commentTaille 
+    
+      {
+      
+     position: relative;
+       top:10px;
+       left: 180px;
+        color: #616060;
+    display: flex;
+        font-size: 12px;
+     
+        
+      }
+      .popupPoste  .card-list  .containerPopupPoste .btnIte {
+     
+        margin-top:15px;
+        width: 100%;
+         float: left;
+     
+       bottom: 10px;
+        margin-left: 0%;
+      
+      }
+      .popupPoste  .card-list .containerPopupPoste .btnIte  button:nth-child(3) {
+        background-color: #007bff; /* Change la couleur de fond du bouton en bleu */
+        color: white; /* Change la couleur du texte en blanc */
+      }
+      
+      .popupPoste  .card-list   .containerPoste  .btnIte button {
+        font-size: 12px;
+        width: 15%;
+     
+        background: linear-gradient(to bottom, #aab7d392 0%, #95a1ba92 100%);
+        color: white;
+        margin-left: 10%;
+      
+        align-items: center;
+        justify-content: center;
+        border: none;
+        border-radius: 25px;
+        box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s;
+      }
+      
+      .popupPoste  .card-list .btnIte button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0px 8px 15px white;
+      }
+      
+      .popupPoste   .card-list .btnIte button:active {
+        transform: scale(0.95);
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+      }
+     
+      .popupPoste  .card-list .edit-delette {
+        position: absolute;
+        right: 30px;
+        top: 3px;
+        width: 22px;
+        height: 22px;
+      
+      
+      
+      
+      }
+      
+      .popupPoste   .card-list .edit-delette .bx-dots-horizontal-rounded {
+        font-size: 22px;
+      }
+      
+      .popupPoste  .card-list .edit-delette:hover {
+        border-radius: 50%;
+        background-color: rgba(0, 0, 0, 0.1)
+      }
+      
+  
+      .popupPoste  .card-list   .commentPopup{
+      
+        
+     
+     
+       
+      position:fixed;
+      width: 40%;
+     float: right;
+        max-height:95%;
+        overflow-y: auto; 
+        overflow-x: hidden;
+     display: block;
+        top: 3%;
+    
+    margin-right: -60%;
+        transition: all 1s ease;
+      }
+      .popupPoste  .card-list   .commentPopup.active{
+      
+        
+     display: none;
+     
+       
+      
+        }
+      .popupPoste  .card-list   .commentPopup .listeComment{
+       
+        top:100%;
+        
+        width: 100%;
+           transition: all 1s ease;
+  
+      }
+     
+   .popupPoste  .card-list   .commentPopup .listeComment.active{
+       top:2%;
+       margin-left: -90px;
+       transition: all 1s ease;
+      }
+  .popupPoste   .card-list  .commentPopup  .commentText #textComm{
+  
+    border-radius: 10px;
+  
+    display: flex;
+  margin-top:80px;
+     outline: none;
+    transition: .2s ease;
+    width:95%;
+   margin-right: 90px;
+    resize: none;
+    border: none;
+      }
+   .popupPoste   .card-list  .commentPopup    .commentText   button{
+        position: relative;
+         width: 40px;
+        top:-34px;
+  
+         float: right;
+         height: 25px;
+        
+         right: 6%;
+         align-items: center;
+         justify-content: center;
+         border: none;
+         border-radius: 10px;
+        
+       }
+     .popupPoste .card-list .commentPopup .commentText .bxs-send {
+         color: #66a6ff;
+       }
+  
+       .popupPoste  .card-list   .commentPopup .listeComment  .commentInfo{
+        margin-top:10px;
+        color: #717070;
+        font-size: 15px;
+      }
+  .popupSignale{
+    position: fixed;
+   top:2%;
+       left:30%;
+     width: 95%;
+   display: none;
+   
+       z-index: 9999;
+
+  }
+  .popupSignale .cardSignale{
+    box-sizing: border-box;
+    width: 40%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+     padding: 30px;
+    background: rgba(217, 217, 217, 0.58);
+    border: 1px solid white;
+    box-shadow: 12px 17px 51px rgba(0, 0, 0, 0.22);
+    backdrop-filter: blur(20px);
+    border-radius: 17px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.5s;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    font-weight: bolder;
+    color: black;
+    margin-bottom: 15px;
+    bottom: 20px;
+    overflow-y: auto;
+  
+    
+  }
+  .error-message {
+    color: #ff4d4f;
+    background-color: #ffe6e6;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    text-align: center;
+    font-weight: bold;
+  }
+  .popupSignale .cardSignale span {
+    margin-bottom: 1rem;
+    font-size: 18px;
+    margin-left: -6rem;
+  }
+  
+  .popupSignale .cardSignale .signale-options {
+    display: flex;
+  flex-direction: column; /* Affiche les boutons radio verticalement */
+  align-items: flex-start; /* Aligne les éléments à gauche */
+  width: 100%; /* Prend toute la largeur disponible */
+  margin-bottom: 1rem;
+  }
+  
+  .popupSignale .cardSignale .signale-options div {
+    display: flex;
+    align-items: center;
+    margin: 0.5rem; /* Espacement entre les éléments */
+  }
+  
+  .popupSignale .cardSignale input[type="radio"] {
+    margin-right: 0.5rem;
+  }
+  
+  .popupSignale .cardSignale .signale-options div label {
+    color: #4189e0;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    font-size:13px ;
+    padding: 0.5rem; /* Ajoute du padding autour du texte */
+    border-radius: 5px; /* Arrondir les coins du label */
+    background: rgba(255, 255, 255, 0.3);  /* Ajoute un fond léger pour le label */
+  }
+  
+  .popupSignale .cardSignale textarea {
+    width: 280px;
+
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    position: relative;
+    height: 50%;
+    border-radius: 10px;
+    outline: none;
+    transition: .2s ease;
+   
+    display: flex;
+   
+  
+    resize: none;
+    border: none;
+  
+  }
+
+
+
+  .popupSignale .cardSignale div button {
+ 
+    font-size: 12px;
+  
+    
+  float: right;
+    padding: 0.5rem 1rem;
+    background: linear-gradient(to bottom, #4dc7d9 0%, #66a6ff 100%);
+    color: white;
+  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 25px;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s;
+  }
+  
+  .popupSignale .cardSignale div button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0px 8px 15px white;
+  }
+  
+  .popupSignale .cardSignale div button:active {
+    transform: scale(0.95);
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  .popupSignale .cardSignale div button span {
+    display: block;
+ 
+    margin-bottom: 0.3rem;
+    margin-left: 0.4em;
+    transition: all 0.3s;
+    align-items: center;
+    font-size: 12px;
+  }
+  
+  .popupSignale .cardSignale div button i {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    fill: white;
+    transition: all 0.3s;
+  }
+  
+  .popupSignale .cardSignale  div button.svg-valider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.2);
+    margin-right: 0.5em;
+    transition: all 0.3s;
+  }
+  
+  .popupSignale .cardSignale div button:hover .valider {
+    background-color: rgba(255, 255, 255, 0.5);
+  }
+  
+  .popupSignale .cardSignale div button:hover i {
+    transform: rotate(45deg);
+  }
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+  
+    width: 100%; 
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9998;
+   
+  }
+   
+  .overlay.active{
+    display: block;
+  }
+  /*-----------------------css commentaitre--------------------------------*/
+  .card-list .comment .commentText #textComm {
+   position: relative;
+ 
+    top:40px;
+  
+    border-radius: 10px;
+    outline: none;
+    transition: .2s ease;
+    width: 62%;
+    padding-left: 5px;
+    padding-right:  75px;
+    display: flex;
+    left: 200px;
+   
+    resize: none;
+    border: none;
+    margin-bottom: 60px;
+  }
+  
+  /*.card-list .comment .commentText  .uplodImage{
+    position: relative;
+    top:-15px;
+    left: 85px;
+    border: 2px dashed #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    width:25%;
+    height: 25%;
+    bottom: 5px;
+    text-align: center;
+    display: none;
+    justify-content: center;
+  }*/
+  .card-list .comment .commentText .image-preview {
+    position: relative;
+    top:-15px;
+    left: 85px;
+    width: 300px;
+    border: 2px dashed #ccc;
+    height: 200px;
+   
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .card-list .comment .commentText .image-preview img {
+    max-width: 100%;
+    max-height: 100%;
+  }
+  .delete-icon {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    cursor: pointer;
+    visibility: hidden;
+    
+  }
+  .comment {
+    position: relative;
+  
+  }
+  .comment  .commentText .bx-camera{
+    position: relative;
+    float: right;
+   font-size: 20px;
+   bottom:75px;
+    color:#69738b92 ;
+    right: 130px;}
+  
+  .comment .commentText   button{
+   position:absolute;
+    width: 40px;
+   top:48px;
+    
+    height: 25px;
+    bottom:75px;
+    right:15%;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 10px;
+   
+  }
+  .comment .commentText .bxs-send {
+    color: #66a6ff;
+  }
+  
+  
+  .comment .commentLenght p
+    
+  { position: relative;
+    
+   margin-top:-40px;
+    color: #7e7e7e;
+   float: right;
+    font-size: 12px;
+  
+  }
+  .comment .commentInfo{
+    position: relative;
+    margin-top:10px;
+    color: #7e7e7e;
+    font-size: 15px;
+  }
+  .comment .commentInfo p{
+    position: relative;
+   top:40px;
+   margin-bottom: 10px;
+    
+  }
+  .comment .commentContainer .commentUser{
+    position: relative;
+    margin-left: 100px;
+  margin-bottom: 60px;
+  bottom: 25px;
+  }
+  
+  .comment .commentContainer .commentUser .profile-img {
+   
+  
+    width: 30px;
+  
+    border-radius: 50%;
+   
+  }
+  .comment .commentContainer .commentUser p{
+   position: absolute;
+    font-size: 14px;
+   margin-left: 50px;
+  
+  }
+  .comment .commentContainer .commentUser span {
+  position: relative;
+  top: 35px;
+  display: flex;
+  
+    color: black;
+    white-space:pre-line;
+    font-size: 25px;
+    font: 1em sans-serif;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+   margin-left: 50px;
+  
+    bottom: 10px;
+    margin-right: 10%;
+   
+    cursor: text;
+  }
+  .comment .commentContainer  .btnCommIte {
+   position: relative;
+   width: 30%;
+   margin-top: 15px;
+   margin-left: 14%;
+   align-items: center;
+   justify-content: center;
+   left: 0;
+  
+  top: -40px;
+  }
+  .comment .commentContainer  .btnCommIte  button {
+    font-size: 12px;
+    width: 12%;
+    margin-top: 0;
+    background: linear-gradient(to bottom, #aab7d392 0%, #95a1ba92 100%);
+    color: white;
+    margin-left: 10%;
+  
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 25px;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s;
+  }
+  .comment .commentContainer  .btnCommIte  button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0px 8px 15px white;
+  }
+  
+  .comment .commentContainer  .btnCommIte button:active {
+    transform: scale(0.95);
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  .card-list .comment .commentContainer .repText {
+  
+  
+    margin-top:15px;
+  }
+  
+  .card-list .comment .commentContainer .repText #textRep
+  {  position: absolute;
+  
+    margin-left: 17.5%;
+    margin-right: 17.5%;
+    
+    border-radius: 10px;
+    outline: none;
+    transition: .2s ease;
+    width: 65%;
+    padding-left: 5px;
+    padding-right:  75px;
+    display: flex;
+    left: 50px;
+  
+    resize: none;
+    border: none;
+  }
+  .comment .commentContainer .repText button{
+  position: relative;
+  float: right;
+    width: 40px;
+    height: 25px;
+    bottom:70px;
+    right: 167px;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 10px;
+   
+  }
+  .comment .commentContainer .repText .bxs-send {
+    color: #66a6ff;
+  }
+  .comment .commentContainer .repText .bx-camera{
+    position: relative;
+    float: right;
+   font-size: 20px;
+    bottom:68px;
+    color:#69738b92 ;
+    right: 170px;
+  }
+
+/*
+  @media (max-width: 1370px){
+
+    .card-container {
+
+
+     width: 80%;
+    }
+
+  }
+  @media (max-width: 1220px){
+
+    .card-container {
+
+
+    
+    }
+
+  }
+  @media (max-width: 1105px){
+
+    .card-container {
+
+
+  
+    }
+
+  }
+
+ /* @media (max-width: 1452px) {
+    .card-user {
+        width: 650px;
+        
+        top: 8rem;
+    }
+
+    .card-user button{
+
+      right:0.5rem;
+    }
+    .card-user .select-menu button{
+      width: 150px;
+      left:12rem;
+    }
+    .card-user .select-menu button,
+    .card-user .upload-image button {
+       
+        font-size: 10px;
+    }
+  
+    .card-container .card-list{
+    
+      width:850px;
+    }
+}
+@media (max-width: 1240px) {
+  .card-user {
+ 
+    left: 34%;
+   
+}
+
+.card-container .card-list{
+  left:30%;
+   
+  }
+}
+
+
+@media (max-width: 768px) {
+  .card-container .card-list{
+   
+    width:600px;
+  }
+
+}
+
+@media (max-width: 768px) {
+  .card-container .card-list{
+   
+    width:550px;
+  }
+
+}
+@media (max-width: 553px) {
+  .card-container .card-list{
+   
+    width:500px;
+  }
+
+}
+/*
+
+@media (max-width: 871px) {
+    .card-user {
+        width: 50%;
+        left: 2.5%;
+        top: 5rem;
+    }
+
+    .card-user textarea {
+        height: 6rem;
+    }
+
+    .card-user button, 
+    .card-user .select-menu button,
+    .card-user .upload-image button {
+        width: 80px;
+        height: 30px;
+        font-size: 9px;
+    }
+    
+    .alert-poste {
+        font-size: 10px;
+        margin-left: 50px;
+    }
+
+    .categs {
+        width: 200px;
+        height: 120px;
+    }
+}
+
+
+@media (max-width: 480px) {
+    .card-user {
+        width: 100%;
+        left: 0;
+        top: 4rem;
+    }
+
+    .card-user textarea {
+        height: 5rem;
+    }
+
+    .card-user button, 
+    .card-user .select-menu button,
+    .card-user .upload-image button {
+        width: 60px;
+        height: 25px;
+        font-size: 8px;
+    }
+
+    .categs {
+        width: 180px;
+        height: 100px;
+    }
+}*/

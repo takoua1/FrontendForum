@@ -1,1 +1,222 @@
-<p>navbar works!</p>
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet"  href="https://fonts.googleapis.com/css?family=Poppins" />
+<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+<link  href='/src/app/shared/navbar/navbar.component.css'  >
+</head>
+<body>
+
+    <nav>
+<div id="sidebarStatus"  class="navbar">
+   
+</div>
+
+<div class="main-content">
+
+    <div class="search">
+        <i class='bx bx-search' ></i> 
+        <input type="text"   (input)="onSearch($event.target.value)" placeholder="Recherche...">
+    </div>
+   <div class="icon">
+    <ul >
+       
+        <!--div class="bell-notif">
+      <li  *ngIf="isUserAuthenticated">  <i class='bx bx-bell' (click)="toggleNotificationPopup()"></i>
+        <span class="badge" *ngIf="unreadCount > 0">{{ unreadCount >= 100 ? '+100' : unreadCount }}</span></li>
+        <div class="box-notif"  [ngClass]="{ 'has-notifications': notificationsList.length > 0 }">
+      
+         
+           
+              <div class = "cont" >
+                <p (click)="goToNotification()">Voir tout</p>
+                 <div class = "sec new"  *ngFor="let not of notificationsList" >
+                   
+                   <div class = "profCont">
+                   <img class = "profile" [src]="not.imageActor ?not.imageActor : '/assets/image/user.png'">
+                    </div>
+                   <div class = "txt">{{not.message}}</div>
+                  <div class = "txt sub">11/7 - 2:30 pm</div>
+                 
+                </div>
+            
+             </div>
+            </div>
+         </div-->
+         <div class="bell-notif">
+         <li *ngIf="isUserAuthenticated"><i class='bx bx-bell' (click)="toggleNotificationPopup()"></i>
+            <span class="badge" *ngIf="unreadCount > 0">{{unreadCount >= 100 ? '+100' : unreadCount }}</span>  </li>
+            <div class="box-notif"  [ngClass]="{ 'has-notifications': notificationsList.length > 0 }">
+                <div class = "cont" >
+                    <p (click)="goToNotification()">Voir tout</p>
+            <div class="notificationList" *ngFor="let not of notificationsList" @notificationAnimation>
+                <div class="notification-header">
+                    <i class='bx bx-x notification-close' (click)="PopupDelete(not)"></i>
+                   
+                  </div>
+          
+            <div class="notification-container" (click)="openPostPopup($event,not)">
+                <div class="notification-media" >
+                  <img [src]="not.actor.image ?not.actor.image : '/assets/image/user.png'" alt="" class="notification-user-avatar">
+                        <i *ngIf="not.reaction === 'commente'" class="bx bxs-chat notification-reaction"></i>
+                        <i *ngIf="not.reaction === 'like'" class="bx bxs-like notification-reaction"></i>
+                        <i *ngIf="not.reaction === 'dislike'" class="bx bxs-dislike notification-reaction"></i>
+                <div class="notification-status">
+               <i class='bx bxs-circle' [ngClass]="{'connected':not.actor.status === 'CONNECTE', 'disconnected':not.actor.status === 'DECONNECTE'}" ></i>
+                            
+              </div>
+                </div>
+               
+                <div class="notification-content">
+                  <p class="notification-text">
+                
+                  {{not.message}}
+                    </p>
+                        <span class="notification-timer" >{{formatDate(not)}}</span>
+                </div>
+               
+              </div>
+            </div>
+        </div>
+            </div> </div>
+            <li *ngIf="isUserAuthenticated" (click)="BoiteMail()"><i class='bx bx-envelope'></i></li>
+        <li  *ngIf="isUserAuthenticated"><i (click)="settingActive()" class='bx bx-cog'></i></li>
+        <li *ngIf="!isUserAuthenticated"> <i (click)="login()" class='bx bx-log-in-circle'></i></li>
+        
+    </ul>
+</div>
+</div>
+
+<div  class="setting" >
+    <ul>
+        <li>
+            <i class='bx bx-user' ></i>
+            <span (click)="onProfile()">Mon profile</span>
+        </li>
+        <li>
+            <i class='bx bxl-messenger' ></i>
+            <span (click)="OnMeassages()" >Messages</span>
+        </li>
+        <li>
+            <i class='bx bx-log-out-circle' ></i>
+            <span (click)="logout()">Se déconnecter</span>
+        </li>
+      
+        
+    </ul>
+
+          
+</div>    
+<div *ngFor="let notif of notifications">
+<div class="notification">
+	<div class="notification-header">
+		<h3 class="notification-title">Nouvelle notification</h3>
+		<i class='bx bx-x notification-close' (click)="closeNotification(notif)"></i>
+	</div>
+	<div class="notification-container">
+		<div class="notification-media">
+			<img [src]="notif.imageActor ?notif.imageActor : '/assets/image/user.png'" alt="" class="notification-user-avatar">
+            <i *ngIf="notif.reaction === 'commente'" class="bx bxs-chat notification-reaction"></i>
+            <i *ngIf="notif.reaction === 'like'" class="bx bxs-like notification-reaction"></i>
+            <i *ngIf="notif.reaction === 'dislike'" class="bx bxs-dislike notification-reaction"></i>
+		</div>
+		<div class="notification-content">
+			<p class="notification-text">
+		
+			{{notif.message}}
+        </p>
+            <span class="notification-timer">Il ya quelques secondes</span>
+		</div>
+		<span class="notification-status"></span>
+	</div>
+</div></div>
+
+
+
+</nav>
+
+<div   class="popupPoste" #popupPoste>
+  <div  *ngIf="selectedPost" class="card-list">
+    <div  class="user-profile">
+      <div>
+        <p >{{selectedPost.user.nom}} {{selectedPost.user.prenom}}</p>
+        <span> {{selectedPost.dateCreate | date:'dd-MM-yy HH:mm'}}</span>
+        <img [src]="selectedPost.user.image" class="profile-img">
+      </div>
+    </div>
+    
+    <div class="containerPopupPoste">
+      
+    
+    <p contenteditable="true" class="post-text">{{selectedPost.message}}
+    </p>
+    <img [src]="selectedPost.image" class="post-image">
+    <div class="commentTaille"  (click)="toggleCommentsPart(selectedPost.id, selectedPost,$event)">
+    <div  *ngIf="getActiveComments(selectedPost).length > 0" >
+      <div *ngIf="getActiveComments(selectedPost).length ==1"><p>{{ getActiveComments(selectedPost).length }} commentaire</p></div>
+      <div *ngIf="getActiveComments(selectedPost).length >1"> <p>{{ getActiveComments(selectedPost).length }} commentaires</p></div>
+    </div>
+    </div>
+    <div class="btnIte"  >
+      <button (click)=" toggleLike(selectedPost)">
+        <i class='bx bxs-like' [ngClass]="{ 'liked': isLike[selectedPost.id.toString()] }"></i>
+        <span *ngIf="totalLikesMap[selectedPost.id] > 0">  {{ totalLikesMap[selectedPost.id] }}</span>
+      </button>
+      <button  (click)="toggleDislike(selectedPost)">
+        <i class='bx bxs-dislike'   [ngClass]="{ 'disLiked': isDislike[selectedPost.id.toString()] }"></i>
+        <span *ngIf="totalDislikesMap[selectedPost.id] > 0">  {{totalDislikesMap[selectedPost.id]}}</span>
+      </button>
+      <button (click)="toggleTextarea(selectedPost)" >
+        <i class='bx bx-chat'></i>
+      </button>
+    </div>
+   
+</div>
+  
+   
+   
+   
+   
+    <!-------------------------Comment----------------------------------------------------------->
+    <div class="commentPopup">
+      
+      <div  *ngIf="isTextareaVisible(selectedPost)" [formGroup]="commentForm"  class="commentText">
+        <textarea id="textComm" rows="2" placeholder="" (click)="selectedPost.showButton = true" [ngModel]="messageComment" (input)="adjustTextareaSize($event)" (keydown.enter)="addNewLine()" [formControl]="commentForm.get('messageComment')"></textarea>
+      <button *ngIf="selectedPost.showButton" (click)="addCommentToPost(selectedPost)">  <i class='bx bxs-send' ></i></button>
+      </div>
+      <div  class="listeComment"  >
+        <div *ngFor="let comment of getSortedComments(selectedPost.comments) " [attr.id]="'comment-' + comment.id">
+        
+            
+            <app-comment  [showChilds]="showChilds" [comment]="comment" [user]="user" (deleteCommentWithInfo)="onResirve($event)" (deleteComment)="onCommentDelete($event)" [comments]="selectedPost.comments" ></app-comment>
+            
+          </div>
+     </div>
+    
+  
+  
+        <i class="psteIcon" [class]="matchingIcon.icon"></i>
+     
+  
+    </div>
+  </div>
+   </div>
+   <div   class="popupSupp" #popupSupp>
+   <div class="cardDelete">
+     <p>Voulez-vous vraiment supprimer ?</p>
+     <button  (click)="confirmDelete()">
+       <div class="svg-valider">
+
+         <i class='bx bxs-user-check'></i>
+       </div>
+
+       <span >Valider</span>
+     </button>
+   </div>
+ </div>
+
+   <div class="overlay" #overlay></div>
+      
+</body>
+</html>
+

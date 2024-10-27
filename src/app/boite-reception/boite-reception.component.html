@@ -1,0 +1,53 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet"  href="https://fonts.googleapis.com/css?family=Poppins" />
+<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+<link  href='/src/app/boite-reception/boite-reception.component.css'  >
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+    <div class="container">
+        <header class="header">
+            <h1>Boîte de Réception</h1>
+        </header>
+    
+        <div class="mail-list">
+            <div class="mail-item" *ngFor="let mail of mails" @mailAnimation>
+                <div class="mail-header">
+                    <span class="sender">{{ mail.signale.admin.nom }} {{ mail.signale.admin.prneom }}</span>
+                    <span class="date">{{ mail.dateCreate | date:'dd/MM/yyyy' }}</span>
+                    <i class='bx bx-x boite-close' (click)="PopupDelete(mail)"></i>
+                </div>
+                <div class="mail-body">
+                    <h2 [style.color]="mail.type === 'Avert' ? 'red' : 'green'">Objet : {{ mail.objet }}</h2>
+                    <!-- Afficher un extrait du texte s'il n'est pas déplié -->
+                    <p *ngIf="!mail.showDetails" [innerHTML]="mail.contenu | slice:0:100"></p>
+            <!-- Afficher le texte complet s'il est déplié -->
+            <p *ngIf="mail.showDetails" [innerHTML]="mail.contenu"></p>
+                </div>
+                <button class="details-btn" (click)="toggleDetails(mail)">
+                    {{ mail.showDetails ? 'Masquer' : 'Voir Détails' }}
+                </button>
+            </div>
+        </div>
+      </div>
+      <div   class="popupDelete" #popupDelete>
+        <div class="cardDelete">
+          <p>Voulez-vous vraiment supprimer ?</p>
+          <button  (click)="Delete()">
+            <div class="svg-valider">
+    
+              <i class='bx bxs-user-check'></i>
+            </div>
+    
+            <span >Valider</span>
+          </button>
+        </div>
+      </div>
+      <div class="overlay" #overlay></div>
+</body>
+</html>

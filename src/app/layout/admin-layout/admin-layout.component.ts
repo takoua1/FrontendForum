@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-admin-layout',
@@ -6,10 +7,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./admin-layout.component.css']
 })
 export class AdminLayoutComponent implements OnInit {
-
-  constructor() { }
+  isAuthenticated: boolean = false;
+  constructor(private authService: AuthService) { }
 
   ngOnInit(): void {
-  }
+    // Vérifie l'authentification lorsque le composant est initialisé
+    this.isAuthenticated = this.authService.isUserAuthenticated();
+  }  
 
 }
