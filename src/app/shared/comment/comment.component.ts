@@ -16,6 +16,7 @@ import { Notification } from '../../model/notification';
 import { NotificationService } from '../../services/notification.service';
 import { BlockService } from '../../services/block.service';
 import { forkJoin, map, Observable, tap } from 'rxjs';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-comment',
@@ -38,13 +39,21 @@ export class CommentComponent implements OnInit,AfterViewChecked{
   @Output() deleteComment: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() deleteCommentWithInfo: EventEmitter<Comment> = new EventEmitter<Comment>();
   @Output() signaleComment: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() connectComment: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() signaleCommentWithInfo: EventEmitter<Comment> = new EventEmitter<Comment>();
+  @Output() connectCommentWithInfo: EventEmitter<Comment> = new EventEmitter<Comment>();
   @Input() comments :Comment[];
   @Input() parentComment: Comment|undefined;
   @Output() commentChanged : EventEmitter<Comment> = new EventEmitter<Comment>();
   @Output() commentShow: EventEmitter<any> = new EventEmitter<any>();
+ 
+
   id:number;
+  
   commentDelete:Comment;
+  isPopupConnectVisible: boolean = false;
+  isOverlayVisible:boolean=false;
+ @Input() isUserAuthenticated: boolean;
   @ViewChild('textRep') textRep: ElementRef;
   //isCommentsVisible :{ [key: number]: boolean } = {}; 
   replyText = '';
@@ -79,24 +88,25 @@ export class CommentComponent implements OnInit,AfterViewChecked{
   currentStep = 1;
   reportType: string = '';
   reportDescription: string = '';
-  commentsToShow: { [postId: number]: number } = {};
+  @Input() commentsToShow: { [postId: number]: number } = {};
   increment = 10;
  @Input()filteredChildComments: any[] = []; 
  
   constructor(private sharedService:SharedService,private router: Router,private  interaService: InteractionService,
     private route: ActivatedRoute,private commentService:CommentService,private renderer: Renderer2,private cdr: ChangeDetectorRef,
-     private elementRef: ElementRef,private dialog: MatDialog, private notifService:NotificationService,private blockService: BlockService){
+     private elementRef: ElementRef,private dialog: MatDialog, private authService: AuthService, private notifService:NotificationService,private blockService: BlockService){
     this.totalLikesMap = {};
     this.totalDislikesMap={};
   
   }
   ngOnInit(): void {
-    
+   console.log("this.isUserAuthenticated",this.isUserAuthenticated)
+ 
     console.log("id:",this.id);
     this.repondForm= new FormGroup({
       messageRepond: new FormControl('')
     });
-  
+   
     this.loadLikeInteraction(this.comment);
     this.loadDislikeInteraction(this.comment);
     this.getTotalLikes(this.comment);
@@ -126,6 +136,7 @@ toggleCommentChildsPart(comment: Comment): void {
   // Basculer entre afficher 0 sous-commentaires (fermé) et 10 sous-commentaires (ouvert)
   this.commentsToShow[comment.id] = this.commentsToShow[comment.id] ? 0 : 10;
 }
+
 toggleChildComments(commentId: number, childComments: Comment[]) {
   const totalChildComments = childComments.length;
 
@@ -163,10 +174,13 @@ clickEdit(active: boolean) {
 
  
   toggleReplyVisibility(comment:Comment) {
-    this.isReplyVisible[comment.id] = !this.isReplyVisible[comment.id];
+    if(this.isUserAuthenticated)
+  {  this.isReplyVisible[comment.id] = !this.isReplyVisible[comment.id];
     if (this.isReplyVisible[comment.id]) {
           this.addTagToTextarea(comment);
-    }
+    }}
+    else{
+    this.openVerifierconnect()}
     }
      formatComment(comment:any) {
       // Vérifie si le symbole @ suivi du nom d'utilisateur est présent dans la chaîne de caractères
@@ -196,7 +210,7 @@ clickEdit(active: boolean) {
 }*/
 private verifierEtAjouterNomUtilisateur(texte: string, comment: any): string {
   const usernameRegex = new RegExp(`@${comment.user.nom}`);
-  const usernameWithSpace = `@${comment.user.nom} `;
+  const usernameWithSpace = `@${comment.user.nom}`;
 
   if (!usernameRegex.test(texte)) {
     texte = `@${comment.user.nom} ` + texte;
@@ -218,21 +232,36 @@ adjustTextareaSize() {
 
 
   // Vérifier si replyText est défini et non null avant d'utiliser includes
-  addTagToTextarea(comment: any) {
+  addTagToTextarea(comment: any): void {
     // Vérifier si replyText est défini et non null
     if (this.replyText !== null && this.replyText !== undefined) {
-      const tag = `@${comment.user.nom} `;
-      if (!this.replyText.includes(tag)) {
-        this.replyText += tag;
-        this.id = comment.user.id;
+      const tag = `@${comment.user.nom} ${comment.user.prenom}`; // Créer le tag
+      const tagWithSpace = `${tag} `; // Ajouter un espace après le tag
+  
+      // Vérifier si le tag n'est pas déjà présent dans replyText
+      if (!this.replyText.includes(tagWithSpace)) {
+        this.replyText += tagWithSpace; // Ajouter le tag au texte de réponse
+        this.id = comment.user.id; // Stocker l'ID de l'utilisateur pour référence
       }
     }
   }
 
   getCommentText(text: string ,comment:Comment): string {
    
-    return text.replace(/@(\w+)/g,  `<a href="/profile/${comment.idtag}">@$1</a>`);
+    return text.replace(/@(\w+ \w+)/g,  `<a href="/profile/${comment.idtag}">@$1</a>`);
   }
+
+  goToProfile(id: number): void {
+    this.router.navigate(['/profile', id]).then(() => {
+      window.location.reload();
+    });
+  }
+  
+  handleLinkClick(event: MouseEvent, id: number): void {
+    event.preventDefault(); // Empêche le comportement par défaut du lien
+    this.goToProfile(id);
+  }
+
   addNewLine(): void {
     this.textareaContent += '\n';
   }
@@ -283,7 +312,10 @@ adjustTextareaSize() {
     notif.read = false;
     notif.recipients = [parentComment.user];
     notif.poste = this.poste;
-    notif.message = `${this.user.nom} a commenté <<${this.truncateText(this.extractTextAfterMention(newComment.text), 15)}>> sur votre commentaire ${this.truncateText(this.extractTextAfterMention(parentComment.text), 15)}`;
+    const newText = newComment?.text ? this.truncateText(this.extractTextAfterMention(newComment.text), 10) : 'un commentaire';
+const parentText = parentComment?.text ? this.truncateText(this.extractTextAfterMention(parentComment.text), 10) : 'un commentaire parent';
+
+notif.message = `${this.user.nom} a commenté « ${newText} » sur votre commentaire « ${parentText} »`;
   
     // Ajouter le commentaire enfant au parent
     this.commentService.addCommentToComment(newComment).subscribe(
@@ -300,7 +332,7 @@ adjustTextareaSize() {
         if (notif.actor.id !== parentComment.user.id) {
           this.notifService.onSendNotification(notif);
         }
-        parentComment.childComments.push(newComment);
+       parentComment.childComments.push(newComment);
        this.filteredChildComments.push(newComment)
        this.isReplyVisible[this.comment.id]= !this.isReplyVisible[this.comment.id];
       this.loadFilteredChildComments(this.comment)
@@ -427,6 +459,12 @@ adjustTextareaSize() {
       
           
                   }
+
+                  callTogglePopupComment(comment:Comment): void{
+                   this.connectComment.emit(true)
+                   this.connectCommentWithInfo.emit(comment)
+                   this.sharedService.togglePopupConnect();
+                  }
            
 
             onDeleteChildComment(deleted: boolean): void {
@@ -477,7 +515,9 @@ chatButton.addEventListener('click', () => {
           }
 
  async  toggleLike(comment: Comment){
-            let inter = new Interaction();
+
+  if (this.isUserAuthenticated )
+{          let inter = new Interaction();
            this.commentService.getCommentById(comment.id).subscribe(
             updatedComment => {
                 comment = updatedComment;
@@ -525,7 +565,9 @@ chatButton.addEventListener('click', () => {
               notif.recipients=[this.comment.user];    
                 notif.poste=this.poste;
                 notif.comment=comment;
-                notif.message=`${this.user.nom} aime votre commentaire ${this.truncateText(this.extractTextAfterMention(comment.text),15)}`
+                const commentText = this.extractTextAfterMention(comment.text);
+                const truncatedComment = this.truncateText(commentText, 10);
+                notif.message = `${this.user.nom} aime votre commentaire « ${truncatedComment} »`;
               this.interaService.onInteractionComment(inter).subscribe(
                 (reponse: any) => {
                   
@@ -569,11 +611,16 @@ chatButton.addEventListener('click', () => {
     (error) => {
         console.error('Error fetching comment:', error);
     }
-);
+);}
+else{
+  this.openVerifierconnect();
+}
 }
 
        async  toggleDislike(comment:Comment){
-            let inter = new Interaction();
+
+        if(this.isUserAuthenticated)
+     {      let inter = new Interaction();
             this.commentService.getCommentById(comment.id).subscribe(
               updatedComment => {
                   comment = updatedComment;
@@ -624,7 +671,9 @@ chatButton.addEventListener('click', () => {
           notif.recipients=[this.comment.user];    
             notif.poste=this.poste;
             notif.comment=comment;
-            notif.message=`${this.user.nom} n'aime pas votre commentaire ${this.truncateText(this.extractTextAfterMention(comment.text),15)}`
+            const commentText = this.extractTextAfterMention(comment.text);
+            const truncatedComment = this.truncateText(commentText, 10);
+            notif.message = `${this.user.nom} n'aime pas votre commentaire « ${truncatedComment} »`;
            this.interaService.onInteractionComment(inter).subscribe(
             (reponse: any) => {
               this.reponseMessage = reponse;
@@ -668,7 +717,10 @@ chatButton.addEventListener('click', () => {
 (error) => {
     console.error('Error fetching comment:', error);
 }
-);
+);}
+
+else{
+this.openVerifierconnect()}
 }
 
 
@@ -733,13 +785,6 @@ chatButton.addEventListener('click', () => {
 
 
 
-  navProfile(user:User)
-  {this.router.navigate(['/profile', user.id]).then(() => {
-    // Rafraîchir la page après la navigation
-    window.location.reload();
-  });   
-
-}
 getActiveChildComments(comment: Comment): Comment[] {
   return comment.childComments?.filter(child => child.enabled) || [];
 }
@@ -802,40 +847,51 @@ closeSignale() {
   this.closePopup({ target: this.overlay.nativeElement } as MouseEvent);
   this.currentStep=1;
 }
-loadFilteredChildComments(parentComment: Comment):  Promise<Comment[]>{
-  const childCommentPromises: Promise<Comment | null>[] = parentComment.childComments.map(childComment => {
-    return new Promise((resolve, reject) => {
-      // Vérifiez si l'utilisateur actuel a bloqué l'utilisateur du sous-commentaire
-      this.blockService.isUserBlocked(this.user.id, childComment.user.id).subscribe(
-        (isBlockedByCurrentUser) => {
-          // Vérifiez également si l'utilisateur du sous-commentaire a bloqué l'utilisateur actuel
-          this.blockService.isUserBlocked(childComment.user.id, this.user.id).subscribe(
-            (isBlockedByCommentUser) => {
-              // Si ni l'utilisateur actuel n'est bloqué par le propriétaire du sous-commentaire
-              // ni l'inverse, renvoyez le sous-commentaire
-              if (!isBlockedByCurrentUser && !isBlockedByCommentUser) {
-                resolve(childComment);  // Renvoie le sous-commentaire
-              } else {
-                resolve(null);  // Renvoie null si l'utilisateur est bloqué
-              }
-            },
-            (error) => {
-              reject(error);
-            }
-          );
-        },
-        (error) => {
-          reject(error);
-        }
-      );
-    });
-  });
+loadFilteredChildComments(parentComment: Comment): Promise<Comment[]> {
+  if (!this.isUserAuthenticated) {
+    // Si non authentifié, renvoyez tous les sous-commentaires activés et triés par date
+    this.filteredChildComments = parentComment.childComments
+      .filter(childComment => childComment.enabled) // Filtrer par 'enabled'
+      .sort((a, b) => new Date(b.dateCreate).getTime() - new Date(a.dateCreate).getTime());
+    return Promise.resolve(this.filteredChildComments);
+  }
 
-  // Utiliser Promise.all pour attendre la résolution de toutes les vérifications
- return Promise.all(childCommentPromises).then(results => {
+  const childCommentPromises: Promise<Comment | null>[] = parentComment.childComments
+    .filter(childComment => childComment.enabled) // Filtrer par 'enabled' avant la vérification de blocage
+    .map(childComment => {
+      return new Promise((resolve, reject) => {
+        // Vérifiez si l'utilisateur actuel a bloqué l'utilisateur du sous-commentaire
+        this.blockService.isUserBlocked(this.user.id, childComment.user.id).subscribe(
+          (isBlockedByCurrentUser) => {
+            // Vérifiez également si l'utilisateur du sous-commentaire a bloqué l'utilisateur actuel
+            this.blockService.isUserBlocked(childComment.user.id, this.user.id).subscribe(
+              (isBlockedByCommentUser) => {
+                // Si ni l'utilisateur actuel n'est bloqué par le propriétaire du sous-commentaire ni l'inverse
+                if (!isBlockedByCurrentUser && !isBlockedByCommentUser) {
+                  resolve(childComment);  // Renvoyer le sous-commentaire
+                } else {
+                  resolve(null);  // Renvoyer null si l'utilisateur est bloqué
+                }
+              },
+              (error) => {
+                reject(error);
+              }
+            );
+          },
+          (error) => {
+            reject(error);
+          }
+        );
+      });
+    });
+
+  // Utiliser Promise.all pour attendre la résolution de toutes les vérifications de blocage
+  return Promise.all(childCommentPromises).then(results => {
     // Filtrer les résultats pour enlever les sous-commentaires bloqués (null)
     this.filteredChildComments = results.filter(comment => comment !== null) as Comment[];
-    return  this.filteredChildComments.sort((a, b) => new Date(b.dateCreate).getTime() - new Date(a.dateCreate).getTime());
+
+    // Trier les sous-commentaires filtrés par date
+    return this.filteredChildComments.sort((a, b) => new Date(b.dateCreate).getTime() - new Date(a.dateCreate).getTime());
   });
 }
 
@@ -931,4 +987,23 @@ async removeCommentById(comments: any[], comment: Comment) {
 trackByCommentId(index: number, comment: any): number {
   return comment.id;  // Angular se base sur l'id pour suivre les modifications
 }
+
+navProfile(user:User)
+  {
+   
+      this.router.navigate(['/profile', user.id]).then(() => {
+        window.location.reload();
+      });
+    }
+
+    openVerifierconnect(){
+
+      this.isOverlayVisible = true;
+      this.isPopupConnectVisible = true;
+    }
+
+    login(){
+      this.router.navigate(['/login']);  
+  
+    }
 }

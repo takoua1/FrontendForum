@@ -15,5 +15,6 @@ export class Notification {
     reaction:string;
     dateCreate:Date;
     read:boolean;
+  
     enabled:boolean;
 }

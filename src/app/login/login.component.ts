@@ -36,6 +36,10 @@ export class LoginComponent implements OnInit {
  rememberMe = false; 
  forgotPasswordForm: FormGroup;
  message: string = '';
+ messageError:string='';
+
+
+
  constructor(private formBuilder:FormBuilder,private userService:UserService, private router:Router, private authService: AuthService,private tokenStorage: TokenStorageService) {
 
  }
@@ -177,9 +181,8 @@ checkUserExists(): boolean {
        this.tokenStorage.saveToken(response.access_token);
        this.tokenStorage.saveUser(response);
       
-         
-       
- 
+       this.messageError=response?. messageError;
+       console.log(this.messageError);
  
        this.isLoginFailed = false;
        this.isLoggedIn = true;
@@ -188,10 +191,14 @@ checkUserExists(): boolean {
         
       },
        err=>
-       {
-         this.reponseMessage=err.error?.message;
-         this.isLoginFailed = true;
-       }
+       {this.isLoginFailed = true;
+        if (err.error?.message_Error) {
+          this.messageError = err.error.message_Error; // Message d'erreur détaillé
+        }
+        
+        
+      }
+       
      );
      }
     

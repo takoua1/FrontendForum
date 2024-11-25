@@ -5,6 +5,8 @@
 <link rel="stylesheet"  href="https://fonts.googleapis.com/css?family=Poppins" />
 <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 <link  href='/src/app/notification/notification.component.css'  >
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 <div class="title">
@@ -33,13 +35,14 @@
       <i class='bx bx-x notification-close' (click)="PopupDelete(not)"></i>
      
     </div>
-    <div class="notification-container" (click)="openPostPopup($event,not)">
+    <div class="notification-container" (click)="goToPostDetail(not)">
     
       <div class="notification-media">
         <img [src]="not.actor.image ?not.actor.image : '/assets/image/user.png'" alt="" class="notification-user-avatar">
               <i *ngIf="not.reaction === 'commente'" class="bx bxs-chat notification-reaction"></i>
               <i *ngIf="not.reaction === 'like'" class="bx bxs-like notification-reaction"></i>
               <i *ngIf="not.reaction === 'dislike'" class="bx bxs-dislike notification-reaction"></i>
+              <i *ngIf="not.reaction === 'suivre'" class="bx bxs-user-plus notification-reaction"></i>
       <div class="notification-status">
      <i class='bx bxs-circle' [ngClass]="{'connected':not.actor.status === 'CONNECTE', 'disconnected':not.actor.status === 'DECONNECTE'}" ></i>
                   
@@ -57,72 +60,7 @@
     </div>
   </div>
 
-  <div   class="popupPoste" #popupPoste>
-    <div  *ngIf="selectedPost" class="card-list">
-      <div  class="user-profile">
-        <div>
-          <p >{{selectedPost.user.nom}} {{selectedPost.user.prenom}}</p>
-          <span> {{selectedPost.dateCreate | date:'dd-MM-yy HH:mm'}}</span>
-          <img [src]="selectedPost.user.image" class="profile-img">
-        </div>
-      </div>
-      
-      <div class="containerPopupPoste">
-        
-      
-      <p contenteditable="true" class="post-text">{{selectedPost.message}}
-      </p>
-      <img [src]="selectedPost.image" class="post-image">
-      <div class="commentTaille"  (click)="toggleCommentsPart(selectedPost.id, selectedPost,$event)">
-      <div  *ngIf="getActiveComments(selectedPost).length > 0" >
-        <div *ngIf="getActiveComments(selectedPost).length ==1"><p>{{ getActiveComments(selectedPost).length }} commentaire</p></div>
-        <div *ngIf="getActiveComments(selectedPost).length >1"> <p>{{ getActiveComments(selectedPost).length }} commentaires</p></div>
-      </div>
-      </div>
-      <div class="btnIte"  >
-        <button (click)=" toggleLike(selectedPost)">
-          <i class='bx bxs-like' [ngClass]="{ 'liked': isLike[selectedPost.id.toString()] }"></i>
-          <span *ngIf="totalLikesMap[selectedPost.id] > 0">  {{ totalLikesMap[selectedPost.id] }}</span>
-        </button>
-        <button  (click)="toggleDislike(selectedPost)">
-          <i class='bx bxs-dislike'   [ngClass]="{ 'disLiked': isDislike[selectedPost.id.toString()] }"></i>
-          <span *ngIf="totalDislikesMap[selectedPost.id] > 0">  {{totalDislikesMap[selectedPost.id]}}</span>
-        </button>
-        <button (click)="toggleTextarea(selectedPost)" >
-          <i class='bx bx-chat'></i>
-        </button>
-      </div>
-     
-  </div>
-    
-     
-     
-     
-     
-      <!-------------------------Comment----------------------------------------------------------->
-      <div class="commentPopup">
-        
-        <div  *ngIf="isTextareaVisible(selectedPost)" [formGroup]="commentForm"  class="commentText">
-          <textarea id="textComm" rows="2" placeholder="" (click)="selectedPost.showButton = true" [ngModel]="messageComment" (input)="adjustTextareaSize($event)" (keydown.enter)="addNewLine()" [formControl]="commentForm.get('messageComment')"></textarea>
-        <button *ngIf="selectedPost.showButton" (click)="addCommentToPost(selectedPost)">  <i class='bx bxs-send' ></i></button>
-        </div>
-        <div  class="listeComment"  >
-          <div *ngFor="let comment of getSortedComments(selectedPost.comments) " [attr.id]="'comment-' + comment.id">
-          
-              
-              <app-comment  [showChilds]="showChilds" [comment]="comment" [user]="user" (deleteCommentWithInfo)="onResirve($event)" (deleteComment)="onCommentDelete($event)" [comments]="selectedPost.comments" ></app-comment>
-              
-            </div>
-       </div>
-    
-  
-  
-        <i class="psteIcon" [class]="matchingIcon.icon"></i>
-     
-  
-    </div>
-  </div>
-   </div>
+ 
         
    <div   class="popupDelete" #popupDelete>
     <div class="cardDelete">

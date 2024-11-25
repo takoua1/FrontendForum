@@ -1,11 +1,12 @@
-import { AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, Renderer2, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, Renderer2, SimpleChanges, ViewChild } from '@angular/core';
 import { Message } from '../../model/message';
 import { MessageService } from '../../services/message.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { User } from '../../model/user';
 import { ChatService } from '../../services/chat.service';
 import { TokenStorageService } from '../../services/token-storage.service';
 import { UserService } from '../../services/user.service';
-import { Observable, Subscription, catchError, debounceTime, forkJoin, fromEvent, of, take, throwError } from 'rxjs';
+import { Observable, Subscription, catchError, debounceTime, forkJoin, fromEvent, map, of, shareReplay, take, throwError } from 'rxjs';
 import { ChatNotification } from '../../model/chat-notification';
 import { Groupe } from '../../model/groupe';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -14,6 +15,7 @@ import 'emoji-picker-element';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BlockService } from '../../services/block.service';
+import { ChatComponent } from '../../chat/chat.component';
 
 
 interface EmojiClickEvent extends CustomEvent {
@@ -26,7 +28,8 @@ interface EmojiClickEvent extends CustomEvent {
   selector: 'app-message-card',
  
   templateUrl: './message-card.component.html',
-  styleUrl: './message-card.component.css'
+  styleUrl: './message-card.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MessageCardComponent  implements OnInit, OnDestroy,AfterViewChecked {
   @Input() messages: Message[];
@@ -41,11 +44,12 @@ export class MessageCardComponent  implements OnInit, OnDestroy,AfterViewChecked
   @Input() actifDetail:boolean=false;
   @Input() chat:any;
  @Input ()key:number;
+ 
  @Input()messagesGroupe:Message[]
   @Output() groupLinkClicked: EventEmitter<Groupe> = new EventEmitter<Groupe>();
   combinedMessages: any[] = [];
   @Input() messagePrivieList: any[] =[];
-  messageGroupList: any[]=[] ;
+ @Input() messageGroupList: any[]=[] ;
   subscriptions: Subscription[] = [];
   messageInput: string = '';
   isTyping: boolean = false;
@@ -66,7 +70,7 @@ export class MessageCardComponent  implements OnInit, OnDestroy,AfterViewChecked
   recognition: any; 
   progress: number = 0;          // Progression en pourcentage
   maxRecordingTime: number = 60;
-  isShow:boolean=false;
+   isShow:boolean=false;
  @Input() isMember:boolean=false;
   private audioBlob: Blob |null;
   idGroupe:number;
@@ -75,14 +79,16 @@ export class MessageCardComponent  implements OnInit, OnDestroy,AfterViewChecked
   groupMessageSubscription: Subscription;
   messageSubscription: Subscription;
   isDropdownVisible = true;
- groupId:string;
+ groupId:string|null;
   userTyping: User;
  typing = false;
  id:number;
-  
- typingUsers: string[] = [];
+ @Input() isMemberGroup:boolean;
+ typingUsers: any[] = [];
   @ViewChild('messageContainer', { static: false }) messageContainer: ElementRef;
+  @ViewChild(ChatComponent) chatComponent: ChatComponent;
   @ViewChild('inputField') inputField: ElementRef;
+ 
   displayMembres = false;
   displayImages=false;
   displayVideos=false;
@@ -109,8 +115,9 @@ export class MessageCardComponent  implements OnInit, OnDestroy,AfterViewChecked
   categorySelected: boolean = false;
 
 
+
   nameGroupe:string;
-  filteredMembers:any[];
+  filteredMembers: any[] = [];
   @Input() filteredMessages :any[];
   filteredBlockedMembers: any[];
   categories = [
@@ -131,22 +138,26 @@ selectedMessageElement: HTMLElement | null = null;
 
 
   constructor(private messageService :MessageService,private chatService :ChatService,
-    private token:TokenStorageService,private userService:UserService,
+    private token:TokenStorageService,private userService:UserService, private snackBar: MatSnackBar,
     private cdr:ChangeDetectorRef,private sanitizer: DomSanitizer,private blockService:BlockService,
     
     private  groupService:GroupService ,private el: ElementRef, private renderer: Renderer2, private route:ActivatedRoute,private router: Router)
   {
 
-      (window as any).handleGroupLinkClick = this.handleGroupLinkClick.bind(this);
-   
+      (window as any).handleGroupLinkClick = this. handleLinkClick.bind(this);
+
+    
     }
+   
+    
   
     
-  ngOnInit(): void {
+ async  ngOnInit() {
    
 
-
+ 
   this.scrollToBottom();
+ 
   this.chatService.connecter().then(() => {
     // Abonnez-vous aux événements de vue des messages
     this.chatService.subscribe(`/user/${this.user.username}/queue/view`, (message) => {
@@ -161,23 +172,26 @@ selectedMessageElement: HTMLElement | null = null;
     });
   });
 
-  
- 
+  console.log("this.actifNew",this.actifNew);
+
  this.chatService.getCurrentGroupId().subscribe(groupId => {
   console.log('groupe chat id', groupId);
-  if (this.groupe ) {
-    
-    this.groupId = this.groupe.id.toString();
+  if (groupId) {
+    this.groupId = groupId.toString();}
     this.subscribeToGroupMessages(this.groupe.id);
+
    this.updateCombinedMessages()
-  }
+  
+    
+  
 });
 this.chatService.getTypingStatus().subscribe((typingStatus) => {
   if (typingStatus && typingStatus.hasOwnProperty('isTyping')) {
     this.typingStatus=typingStatus;
     if (typingStatus.senderId === this.userProfile.username) {
-      // Mettre à jour le statut de frappe
+     
       this.typing = typingStatus.isTyping;
+      console.log("this.typing",this.typing)
     } else {
       this.typing = false; // Si ce n'est pas le destinataire, désactiver la frappe
     }
@@ -186,7 +200,8 @@ this.chatService.getTypingStatus().subscribe((typingStatus) => {
   }
 });
 if (this.groupe) {
-  this.filteredBlockedMembers = this.groupe.blockedMembers;
+  this.filteredBlockedMembers = await this.groupe.blockedMembers;
+  await this.initializeBlockMembers();
  this.subscribeToTypingStatus(this.groupe.id)
 }
 this.subscribeToPrivateMessages()
@@ -291,25 +306,27 @@ subscribeToTypingStatus(groupId: number): void {
   console.log('Subscribing to typing status for group:', groupId);
 
   this.chatService.getGroupTypingStatus(groupId).subscribe((typingStatus: any) => {
-    console.log('Typing status received:', typingStatus);
-
-    if (typingStatus.typing) {
-      if (!this.typingUsers.includes(typingStatus.username)) {
-        this.typingUsers.push(typingStatus.username);
-        console.log('Updated typing users:', this.typingUsers);
+    console.log('Typing event received:', typingStatus);
+  
+    if (typingStatus && typingStatus.username) {
+      typingStatus.image = typingStatus.image || '/assets/image/user.png'; // Défaut si null
+      if (typingStatus.typing) {
+        if (!this.typingUsers.some(user => user.username === typingStatus.username)) {
+          this.typingUsers.push(typingStatus);
+        }
+      } else {
+        this.typingUsers = this.typingUsers.filter(user => user.username !== typingStatus.username);
       }
-    } else {
-      this.typingUsers = this.typingUsers.filter(user => user !== typingStatus.username);
+  
       console.log('Updated typing users:', this.typingUsers);
+      this.cdr.detectChanges();
     }
-
-    this.cdr.detectChanges(); // Forcer la mise à jour de l'affichage
   });
 }
 
 ngAfterViewChecked() {
-
-  this.cdr.markForCheck(); // Marquer pour vérifier les changements
+  this.addGroupLinkClickListeners();
+  this.cdr.markForCheck(); 
 }
 
 
@@ -321,14 +338,16 @@ getCombinedMessages() {
   if (!Array.isArray(this.messagesGroupe)) {
     return []; // Retourner un tableau vide si `this.messages` n'est pas un tableau
   }
-  const combinedMessages = [...this.messagesGroupe];
   
+   const combinedMessages = [...this.messagesGroupe];
   this.messageGroupList.forEach((item) => {
     if (!combinedMessages.some(m => m.id === item.id)) {
       combinedMessages.push(item);
+      
     }
   });
-  this.messageGroupList = [];
+
+  
   
 
   return combinedMessages;
@@ -406,45 +425,53 @@ ngOnDestroy(): void {
         (message) => {
           console.log('Private message received: ', message);
           if (message) {
-            this.messagePrivieList.push(message);
-
+           
+          
+              this.messagePrivieList.push(message);
+         
           this.chatService.triggerChatListUpdated()
-          }
+           
+        }
+            
         },
         (error) => {
           console.error('Error receiving private message:', error);
         }
       );
+    
       this.scrollToBottom();
     }
   
   
   
   async subscribeToGroupMessages(groupId: number) {
-     this.groupId= groupId.toString();
+   /*  this.groupId= groupId.toString();
      this.userProfile=null;
      this.chatService.subscribeToGroupMessages(groupId);
       if (this.groupMessageSubscription) {
         this.groupMessageSubscription.unsubscribe();
-        this.updateCombinedMessages();
-      }
+       
+      }*/
      this.groupMessageSubscription=this.chatService.getGroupMessages(groupId).subscribe(async(message) => {
     if (message) {
       console.log("message groupe", message);
       console.log("id groupe", this.groupId);
       console.log("id chat groupe", this.groupe.chat.id);
-      this.groupService.triggerGroupeListUpdated()
+      
      this.messageGroupList.push(message);
-     const isBlocked = await this.blockService.isUserBlockedByUsername(this.user.id, message.senderId).toPromise();
     
+     const isBlocked = await this.blockService.isUserBlockedByUsername(this.user.username, message.senderUsername).toPromise();
+     
     // Si l'expéditeur est bloqué, supprimer le message de la liste
     if (isBlocked) {
-      this.messageGroupList = this.messageGroupList.filter(msg => msg.senderId !== message.senderId);
+      this.messageGroupList = this.messageGroupList.filter(msg => msg.senderUsername !== message.senderUsername);
     }
-     this.updateCombinedMessages();
     
+     
     
     }
+  
+    this.updateCombinedMessages();
     this.scrollToBottom();
     
   })
@@ -478,9 +505,13 @@ ngOnDestroy(): void {
         message.receivers = [this.userProfile];
       }
       let msg = new ChatNotification();
-      msg.senderId = this.user.username;
+      msg.senderId=this.user.id;
+      msg.senderUsername = this.user.username;
+      msg.senderNom = this.user.nom;
+      msg.senderPrenom = this.user.prenom;
+      msg.senderEmail = this.user.email;
       msg.imageProfile = this.user.image;
-      msg.recipientId = this.userProfile.username;
+      msg.recipientUsername = this.userProfile.username;
       msg.content = this.messageInput;
    
       
@@ -493,7 +524,7 @@ ngOnDestroy(): void {
      
      
       await this.chatService.sendMessage(message, msg, null, null, '')
-    
+  
       
     
         
@@ -574,9 +605,13 @@ async scrollToBottom(){
         }
         message.time = new Date();
         let msg = new ChatNotification();
-        msg.senderId = this.user.username;
+        msg.senderId = this.user.id;
+        msg.senderUsername =this.user.username;
+        msg.senderNom=this.user.nom;
+        msg.senderPrenom=this.user.prenom;
+        msg.senderEmail=this.user.email;
         msg.imageProfile = this.user.image;
-        msg.recipientId = this.userProfile.username;
+        msg.recipientUsername = this.userProfile.username;
         msg.times= new Date().toISOString();
         if (this.selectedFile) {
           const fileReader = new FileReader();
@@ -687,9 +722,13 @@ async sendAudio() {
   }
   message.time=new Date();
   let msg = new ChatNotification();
-  msg.senderId = this.user.username;
+  msg.senderId = this.user.id;
+  msg.senderUsername= this.user.username;
+  msg.senderNom=this.user.nom;
+  msg.senderPrenom=this.user.prenom;
+  msg.senderEmail=this.user.email;
   msg.imageProfile = this.user.image;
-  msg.recipientId = this.userProfile.username;
+  msg.recipientUsername = this.userProfile.username;
   msg.times = new Date().toISOString();
   
   // Assure-toi que `audioBlob` et `audioUrl` sont définis
@@ -718,7 +757,11 @@ async sendAudioGroup() {
 
   message.time=new Date();
   let msg = new ChatNotification();
-  msg.senderId = this.user.username;
+  msg.senderId=this.user.id;
+  msg.senderUsername = this.user.username;
+  msg.senderNom=this.user.nom;
+  msg.senderPrenom=this.user.prenom;
+  msg.senderEmail=this.user.email;
   msg.imageProfile = this.user.image;
   
   msg.times = new Date().toISOString();
@@ -765,7 +808,11 @@ this.user = await this.userService.findByUsername(username).toPromise();
    message.time=new Date();
   let msg = new ChatNotification();
   msg.id=this.groupe.id.toString();
-  msg.senderId = this.user.username;
+  msg.senderId=this.user.id;
+  msg.senderUsername = this.user.username;
+  msg.senderNom=this.user.nom;
+  msg.senderPrenom=this.user.prenom;
+  msg.senderEmail=this.user.email;
   msg.imageProfile = this.user.image;
   msg.content=this.messageInput;
 msg.times=new Date().toISOString();
@@ -837,7 +884,11 @@ async onFileSelectedGroup(event: any) {
           message.receivers = [this.userProfile];
         }
         let msg = new ChatNotification();
-        msg.senderId = this.user.username;
+        msg.senderId=this.user.id.toString();
+        msg.senderUsername = this.user.username;
+        msg.senderNom=this.user.nom;
+        msg.senderPrenom=this.user.prenom;
+        msg.senderEmail=this.user.email;
         msg.imageProfile = this.user.image;
         //msg.recipientId = this.userProfile.username;
         if (this.selectedFile) {
@@ -867,7 +918,9 @@ async onFileSelectedGroup(event: any) {
   console.error('Error sending message:', error);
 }
  
-}async showDetail(groupe: any) {
+}
+
+async showDetail(groupe: any) {
   this.actifNew = false;
   this.actifDetail = true;
   this.isShow = true;
@@ -903,21 +956,22 @@ async onFileSelectedGroup(event: any) {
           this.membres = users;
         }
   
-        this.filteredMembers = this.membres;  // Mettre à jour les membres filtrés
-        this.showMembres();  // Afficher les membres
+        this.filteredMembers = await this.membres; 
+        await this.initializeMembers();
+        this.showMembres();  // 
       } else {
         this.membres = [];
-        this.filteredMembers = this.membres;
+        this.filteredMembers = [];
       }
     } else {
       console.warn('Aucun membre trouvé.');
       this.membres = [];
-      this.filteredMembers = this.membres;
+      this.filteredMembers =[];
     }
   } catch (error) {
     console.error('Erreur lors de la récupération des membres :', error);
     this.membres = [];
-    this.filteredMembers = this.membres;
+    this.filteredMembers = [];
   }}
 
 toggleDetail(groupe:any)
@@ -925,8 +979,9 @@ toggleDetail(groupe:any)
   {  
     this.stopShowDetail();}
     else{
+     
       this.membres=[];
-      this.filteredMembers = this.membres; 
+      this.filteredMembers = []; 
       this.showDetail(groupe);
       
     }
@@ -984,52 +1039,103 @@ showVocales() {
   this.setActiveTab('vocales');
 
 }
-
- copyGroupLink() {
-    const groupLink = `${window.location.origin}/join-group/${this.groupe.id}`;
-    navigator.clipboard.writeText(groupLink).then(() => {
-      alert('Le lien du groupe a été copié dans le presse-papier !');
-    }).catch(err => {
-      console.error('Erreur lors de la copie du lien : ', err);
+copyGroupLink() {
+  const groupLink = `${window.location.origin}/join-group/${this.groupe.id}`;
+  navigator.clipboard.writeText(groupLink).then(() => {
+    this.snackBar.open('Le lien du groupe a été copié dans le presse-papier !', '', {
+      duration: 3000, // Durée en ms
     });
-  }
+  }).catch(err => {
+    console.error('Erreur lors de la copie du lien : ', err);
+    this.snackBar.open('Échec de la copie du lien', 'Fermer', {
+      duration: 3000,
+    });
+  });
+}
   getGroupById(groupeId: number) {
    /* */
     return this.groupes.find(groupe => groupe.id === groupeId);
   }
 
   parseMessage(message: string): SafeHtml {
-    
-      this.membres=[];
-      this.filteredMembers = this.membres; 
+    this.membres = []; // Exemple, remplissez ce tableau selon votre source de données
+    this.filteredMembers = this.membres;
+  
     const groupLinkPattern = /http:\/\/localhost:4200\/join-group\/(\d+)/g;
+    const profileLinkPattern = /http:\/\/localhost:4200\/profile\/(\d+)/g;
+    const postDetailLinkPattern = /http:\/\/localhost:4200\/detail\/(\d+)/g; // Expression régulière pour les liens vers les détails de poste
+  
+    // Traitement des liens de groupe
     if (groupLinkPattern.test(message)) {
       const replacedMessage = message.replace(groupLinkPattern, (match, groupId) => {
-        const group = this.getGroupById(parseInt(groupId, 10)); // Parse groupId as number
-        const groupName = group ? group.groupName : 'Unknown Group';
-        // Return sanitized HTML with custom data attribute to pass group data
-        return `<a href="#" data-group-id="${groupId}" class="group-link">${groupName}</a>`;
+        const group = this.getGroupById(parseInt(groupId, 10)); // Récupérer le groupe par son ID
+        const groupName = group ? group.groupName : 'Groupe inconnu';
+        return `Rejoignez le groupe :<a href="#" data-group-id="${groupId}" class="group-link"> <span class="group-name">${groupName}</span></a>`;
       });
       return this.sanitizer.bypassSecurityTrustHtml(replacedMessage);
-      
+    }
+  
+    // Traitement des liens vers les profils
+    else if (profileLinkPattern.test(message)) {
+      const replacedMessage = message.replace(profileLinkPattern, (match, userId) => {
+        return `<a href="#" data-user-id="${userId}" class="profile-link">Voir le profil</a>`;
+      });
+      return this.sanitizer.bypassSecurityTrustHtml(replacedMessage);
+    }
+  
+    // Traitement des liens vers les détails de poste
+    else if (postDetailLinkPattern.test(message)) {
+      const replacedMessage = message.replace(postDetailLinkPattern, (match, postId) => {
+        return `<a href="#" data-post-id="${postId}" class="post-detail-link">Voir le post</a>`;
+      });
+      return this.sanitizer.bypassSecurityTrustHtml(replacedMessage);
     } else {
-      return this.sanitizer.bypassSecurityTrustHtml(message); // Return the message content as is if it doesn't contain a group link
+      return this.sanitizer.bypassSecurityTrustHtml(message); // Retourner le message tel quel si aucun lien n'est trouvé
     }
   }
-
-  handleGroupLinkClick(event: Event) {
+  
+  handleLinkClick(event: Event) {
     event.preventDefault();
     const target = event.target as HTMLElement;
-    const groupId = target.getAttribute('data-group-id');
-    if (groupId) {
-      const group = this.getGroupById(parseInt(groupId, 10));
-      if (group) {
-       
-       this.groupLinkClicked.emit(group);
-      } else {
-        alert('Group not found');
+  
+    // Vérifier si le lien est un lien de groupe
+    if (target.classList.contains('group-link')) {
+      const groupId = target.getAttribute('data-group-id');
+      if (groupId) {
+        const group = this.getGroupById(parseInt(groupId, 10));
+        if (group) {
+          this.groupLinkClicked.emit(group); // Ouvrir le groupe
+        } else {
+          alert('Groupe non trouvé');
+        }
       }
-    }}
+    }
+    
+    // Vérifier si le lien est un lien de profil
+    if (target.classList.contains('profile-link')) {
+      const userId = target.getAttribute('data-user-id');
+      if (userId) {
+        this.navigateToProfile(userId); // Naviguer vers le profil
+      }
+    }
+  
+    // Vérifier si le lien est un lien vers le détail du poste
+    if (target.classList.contains('post-detail-link')) {
+      const postId = target.getAttribute('data-post-id');
+      if (postId) {
+        this.navigateToPostDetail(postId); // Naviguer vers les détails du poste
+      }
+    }
+  }
+ 
+  navigateToPostDetail(postId: string) {
+    // Utiliser le router Angular pour rediriger vers la page de détail du poste
+    this.router.navigate([`/detail/${postId}`]);
+  }
+  navigateToProfile(userId: string) {
+    // Vous pouvez utiliser le router Angular pour rediriger vers la page du profil
+    this.router.navigate([`/profile/${userId}`]);
+  }
    async addMemberToGroup(groupe: Groupe) {
     const username = this.token.getUser().username;
     this.user = await this.userService.findByUsername(username).toPromise();
@@ -1068,12 +1174,12 @@ showVocales() {
       });
       
       console.log(`Sending typing status: ${username} is typing in group ${this.groupe.id}`);
-      this.chatService.sendGroupTypingStatus(this.groupe.id, this.user.username, true);
+      this.chatService.sendGroupTypingStatus(this.groupe.id, this.user.username,this.user.image, true);
     }
   
     onStopTypingGroup(): void {
       const user = this.token.getUser();
-      this.chatService.sendGroupTypingStatus(this.groupe.id, user.username, false);
+      this.chatService.sendGroupTypingStatus(this.groupe.id, user.username,user.image ,false);
     }
     checkAndSendViewStatus(message: any) {
       // Vérifier la structure du message pour accéder à l'ID de l'expéditeur
@@ -1105,47 +1211,59 @@ toggleEmojiPicker() {
 addEmoji(emoji: string): void {
   this.messageInput += emoji;
   this.showEmojiPicker = false; // Optionnel : fermer le picker après la sélection
-}
-
-formatTimestamp(date: Date): string {
-  
+}formatTimestamp(date: Date | string): string {
+  // Si l'argument n'est pas déjà un objet Date, essayez de le convertir
   if (!(date instanceof Date)) {
-      date = new Date(date);
+    date = new Date(date);
   }
 
+  // Vérifiez si la date est invalide
   if (isNaN(date.getTime())) {
-      return 'Date non valide';
+    return 'Date non valide'; // Renvoie un message d'erreur pour une date invalide
   }
 
   const now = new Date();
   const timeDifference = now.getTime() - date.getTime(); // Différence en millisecondes
- 
+
   const oneMinute = 60 * 1000;
   const oneHour = 60 * oneMinute;
   const oneDay = 24 * oneHour;
   const oneWeek = 7 * oneDay;
   const isSameDay = now.getDate() === date.getDate() &&
-  now.getMonth() === date.getMonth() &&
-  now.getFullYear() === date.getFullYear();
+                    now.getMonth() === date.getMonth() &&
+                    now.getFullYear() === date.getFullYear();
+  const isSameYear = now.getFullYear() === date.getFullYear(); // Vérifie si c'est la même année
+
+  // Vérifier la différence et retourner la chaîne correspondante
   if (timeDifference < oneMinute) {
-      const seconds = Math.floor(timeDifference / 1000);
-      return ` ${seconds } ${'sec'}`;
+    const seconds = Math.floor(timeDifference / 1000);
+    return `${seconds} sec`;
   } else if (timeDifference < oneHour) {
-      const minutes = Math.floor(timeDifference / oneMinute);
-      return ` ${minutes} ${'min'} `;
+    const minutes = Math.floor(timeDifference / oneMinute);
+    return `${minutes} min`;
   } else if (timeDifference < oneDay) {
     if (isSameDay) {
-      // Si dans le même jour, afficher l'heure et les minutes
+      // Si c'est le même jour, afficher l'heure et les minutes
       return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  } else{
-
-      return `${date.toLocaleDateString([], { weekday:'short' })} à ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;}
-  } else if (timeDifference < oneWeek) {
+    } else {
+      // Sinon afficher la date du jour avec l'heure
       return `${date.toLocaleDateString([], { weekday: 'short' })} à ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+    }
+  } else if (timeDifference < oneWeek) {
+    // Si c'est moins d'une semaine, afficher la date et l'heure
+    return `${date.toLocaleDateString([], { weekday: 'short' })} à ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
   } else {
+    // Si c'est plus d'une semaine, ajouter l'année si nécessaire
+    if (!isSameYear) {
+      return `${date.getDate()} ${date.toLocaleDateString([], { month: 'short' })} ${date.getFullYear()} à ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+    } else {
       return `${date.getDate()} ${date.toLocaleDateString([], { month: 'short' })} à ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+    }
   }
 }
+
+
+
 
 popupValider( messageId : number): void {
   this.messageId=messageId;
@@ -1490,6 +1608,7 @@ isMessageViewed(messageId: number): boolean {
   convertToNumber(id: string): number {
     return parseInt(id, 10); // Ou parseFloat(id) si nécessaire
 }
+
 convertToDate(times: string): Date {
   // Décompose la chaîne de caractères : "Fri Sep 27 00:10:59 CEST 2024"
   const [weekday, month, day, time, timezone, year] = times.split(' ');
@@ -1516,7 +1635,7 @@ async  getMessagesBetweenUsers(senderId:number, receiverId:number)
 {this.messagePrivieList=[];
 
   const chats = await this.chatService.getCommonChats (senderId,receiverId).toPromise();
-  for(let chat of chats)
+ 
   
     for(let chat of chats)
       if(chat.typeChat==="privée")
@@ -1557,7 +1676,7 @@ isMemberBlock(groupe: any): boolean {
 
 popupModifier(groupe: any, action: string) {
 
-  const popupModifier = document.querySelector('.popupGroupe') as HTMLElement;
+  const popupModifier = document.querySelector('.popupModifierGroupe') as HTMLElement;
   
   const overlay = document.querySelector('.overlay') as HTMLElement;
   popupModifier.style.display = 'block';
@@ -1628,12 +1747,23 @@ clickMenu() {
 }
 updateGroup()
 {
-  if(this.nameGroupe && this.selectedCategory === 'Catégorie')
+  console.log('updateGroup clicked!');
+  if(this.nameGroupe && this.selectedCategory !== 'Catégorie')
   
 { this.chatService.updateGroupe(this.groupe.id,this.nameGroupe,this.selectedCategory,this.fileImage) .subscribe({
     next: (response) => {
       console.log("Update successful:", response);
-      // You can add further actions to update the UI or navigate the user
+     this.groupService.triggerGroupeListUpdated();
+     const popupModifier = document.querySelector('.popupModifierGroupe') as HTMLElement;
+  
+     const overlay = document.querySelector('.overlay') as HTMLElement;
+    
+    
+       
+         popupModifier.style.display = 'none';
+         overlay.style.display = 'none';
+         
+     
     },
     error: (error) => {
       console.error("Error during update:", error);
@@ -1725,8 +1855,18 @@ onInputChange(): void {
           ('0' + messageDate.getSeconds()).slice(-2);
         
         // Vérifier si le terme de recherche est présent dans les dates formatées ou le contenu du message
-        const messageContent = message.content ? message.content.toLowerCase() : ''; // Contenu du message
-        return (formattedDateLong.includes(this.searchTerm) || formattedDateShort.includes(this.searchTerm)) || messageContent.includes(this.searchTerm.toLowerCase());
+        const messageContent = message.content ? message.content.toLowerCase() : '';
+        const senderFirstName = message.sender && message.sender.nom ? message.sender.nom.toLowerCase() : '';
+        const senderLastName = message.sender && message.sender.prenom ? message.sender.prenom.toLowerCase() : '';
+        
+        // Vérifier si le terme de recherche est présent dans les dates formatées, le contenu du message, le nom ou le prénom
+        return (
+          formattedDateLong.includes(this.searchTerm) || 
+          formattedDateShort.includes(this.searchTerm) ||
+          messageContent.includes(this.searchTerm.toLowerCase()) ||
+          senderFirstName.includes(this.searchTerm.toLowerCase()) ||
+          senderLastName.includes(this.searchTerm.toLowerCase())
+        );
       });
     }
   }
@@ -1740,4 +1880,65 @@ onInputChange(): void {
       });
     }
   }
+
+  loadPage(){
+
+    location.reload();
+  }
+  async checkBlockStatus(member: any): Promise<void> {
+    // Vérifiez si le membre est bloqué par l'utilisateur actuel ou si l'utilisateur actuel est bloqué par le membre
+    const isBlocked = await this.blockService.isUserBlocked(this.user.id, member.id).toPromise();
+    const isBlockedByTargetUser = await this.blockService.isUserBlocked(member.id, this.user.id).toPromise();
+    
+    // Ajoutez la propriété `isBlocked` au membre pour conditionner l'affichage dans le HTML
+    member.isBlocked = isBlocked || isBlockedByTargetUser;
+  }
+  
+  async initializeMembers() {
+    // Supposons que `filteredMembers` soit la liste des membres à afficher dans le groupe
+    for (const member of this.filteredMembers) {
+      await this.checkBlockStatus(member);
+    }
+  }
+  async initializeBlockMembers() {
+    // Supposons que `filteredMembers` soit la liste des membres à afficher dans le groupe
+    for (const member of this.filteredBlockedMembers) {
+      await this.checkBlockStatus(member);
+    }
+  }
+ navProfile(user:User)
+{
+ 
+    this.router.navigate(['/profile', user.id]).then(() => {
+      window.location.reload();
+    });
+  }
+  async navProfileMemeber(member:any)
+  {
+  
+    await this.checkBlockStatus(member)
+    if(!member.isBlocked)
+  {  this.router.navigate(['/profile', member.id]).then(() => {
+      window.location.reload();
+    });}
+  }
+
+
+async  navProfileId(id:number)
+  {  
+
+    const user =  await this.userService.findById(id).toPromise()
+    await this.checkBlockStatus(user)
+    if(!user.isBlocked)
+    {  this.router.navigate(['/profile', user.id]).then(() => {
+        window.location.reload();
+      });
+    }}
+    addGroupLinkClickListeners() {
+      const links = this.el.nativeElement.querySelectorAll('.group-link');
+      links.forEach((link: HTMLElement) => {
+        this.renderer.listen(link, 'click', (event: Event) => this. handleLinkClick(event));
+      });
+    }
+  
 }  

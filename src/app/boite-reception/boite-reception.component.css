@@ -10,24 +10,31 @@ body {
   
     margin: 0;
     padding: 0;
-    height: 90vh;
+   
     background-color: #f4f4f9;
     color: #333;
     line-height: 1.6;
 }
-
+body, html {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-y: hidden; /* Empêche tout défilement */
+}
 /* Container */
 .container {
-    width: 90%;
+  position: relative;
+    width: 100%;
+    left: 20%;
+    top: 6rem;
     max-width: 1000px;
-    margin: 6.5rem auto;
-    padding: 1.5rem;
+    margin: 1.5rem;
+    padding: 6.5rem;
+    max-height: 100%;
     background: #fff;
-    height: 85vh;
-    overflow-y: scroll;
     border-radius: 12px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    position: relative;
+  
 }
 .container::-webkit-scrollbar-track
 {
@@ -49,21 +56,45 @@ body {
 	border: 2px solid#66a6ff;
   border-radius: 5px
 }
+.mail-item.unread .badge i {
+  position: relative;
+  color: #f9f9f9; /* Couleur de l'icône */
+  top: 3px;
+  font-size: 20px;
+}
 
+.mail-item.unread .badge {
+  position: absolute;
+  top: 10px;
+  right: 80px;
+  background-color: #eb1111; /* Couleur rouge pour attirer l'attention */
+  color: white;
+  padding: 1px 8px;
+  border-radius: 5px;
+  align-items: center;
+  justify-content: center;
+  animation: pulse 0.5s ease-out infinite; /* Animation de pulsation */
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
 /* Header */
 .header {
-    background: linear-gradient(135deg, #4dc7d9, #66a6ff 100%);
-    color: #ffffff;
-    padding: 1rem;
-    border-radius: 12px 12px 0 0;
-    text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, #4dc7d9, #66a6ff 100%);
+  color: #ffffff;
+  padding: 1rem;
+  border-radius: 12px 12px 0 0;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .header h1 {
-    margin: 0;
-    font-size: 23px;
-    font-weight: 600;
+  margin: 0;
+  font-size: 23px;
+  font-weight: 600;
 }
 
 /* Mail List */
@@ -134,11 +165,12 @@ body {
     color: green;
   }
 .date {
-    font-size: 12px;
-    margin-left: 40rem;
-    color: #888;
+  position: absolute;
+  font-size: 12px;
+  top: 2rem;
+  right: 5rem;
+  color: #888;
 }
-
 .mail-body h2 {
     margin: 0;
     font-size: 15px;
@@ -396,3 +428,5 @@ keyframes fadeInUp {
   .overlay.active{
     display: block;
   }
+
+ 

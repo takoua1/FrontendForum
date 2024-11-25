@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, Renderer2, ViewChild, ViewEncapsulation } from '@angular/core';
 import { TokenStorageService } from '../services/token-storage.service';
 import { UserService } from '../services/user.service';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
@@ -8,22 +8,27 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { observableToBeFn } from 'rxjs/internal/testing/TestScheduler';
 import { MessageService } from '../services/message.service';
 
-import { Observable, of } from 'rxjs';
+import { debounceTime, forkJoin, map, Observable, of, switchMap } from 'rxjs';
 import { Message } from '../model/message';
 import { ChatService } from '../services/chat.service';
 import { PosteService } from '../services/poste.service';
 import { FollowService } from '../services/follow.service';
 import { BlockService } from '../services/block.service';
 import { PosteComponent } from '../shared/poste/poste.component';
-
+import { HttpErrorResponse } from '@angular/common/http';
+import { Notification } from '../model/notification';
+import { NotificationService } from '../services/notification.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css']
+  styleUrls: ['./profile.component.css'],
+ 
 })
 export class ProfileComponent implements OnInit {
   selectedFiles?: FileList;
   currentFile?: File;
+ 
   progress = 0;
   message = '';
   preview = '';
@@ -32,8 +37,11 @@ export class ProfileComponent implements OnInit {
   profileForm:any =FormGroup;
   passForm:any =FormGroup;
   reponseMessage:any;
+  errorUpdate:any
+  errorPassword:any;
   id:number;
 errorMessage="";
+successMessage="";
 user: User= new User();
 userCurrent :User= new User();
 nom:string;
@@ -46,14 +54,58 @@ isOverlayVisible = false;
 followers: User[] = [];
 followedUsers: User[] = [];
 blockedUsers: User[] = [];
+users: any[] = [];
+filteredUsers: any[] = [];
+searchUsername = '';
+searchEmail = '';
+currentUsername = '';
+
+usernameExists: boolean = false;
+emailExists: boolean = false;
 @ViewChild('overlay') overlay: ElementRef;
 @ViewChild('popupBloque', { static: false }) popupBloque!: ElementRef;
 @ViewChild('posteComponent') posteComponent!: PosteComponent;
+countries: string[] = [
+  "Afghanistan", "Albania", "Algeria", "American Samoa", "Andorra", "Angola", "Anguilla", "Antarctica",
+  "Antigua and Barbuda", "Argentina", "Armenia", "Aruba", "Australia", "Austria", "Azerbaijan", "Bahamas",
+  "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bermuda", "Bhutan", 
+  "Bolivia", "Bosnia and Herzegovina", "Botswana", "Bouvet Island", "Brazil", "British Indian Ocean Territory",
+  "Brunei Darussalam", "Bulgaria", "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia", "Cameroon", "Canada",
+  "Cayman Islands", "Central African Republic", "Chad", "Chile", "China", "Christmas Island", "Cocos (Keeling) Islands",
+  "Colombia", "Comoros", "Congo", "Congo (Democratic Republic of the)", "Cook Islands", "Costa Rica", "Côte d'Ivoire",
+  "Croatia", "Cuba", "Curaçao", "Cyprus", "Czech Republic", "Denmark", "Djibouti", "Dominica", "Dominican Republic",
+  "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini", "Ethiopia", "Falkland Islands",
+  "Faroe Islands", "Fiji", "Finland", "France", "French Guiana", "French Polynesia", "French Southern Territories",
+  "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Gibraltar", "Greece", "Greenland", "Grenada", "Guadeloupe",
+  "Guam", "Guatemala", "Guernsey", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Heard Island and McDonald Islands",
+  "Holy See", "Honduras", "Hong Kong", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", 
+  "Isle of Man", "Italy", "Jamaica", "Japan", "Jersey", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Korea (North)",
+  "Korea (South)", "Kuwait", "Kyrgyzstan", "Lao People's Democratic Republic", "Latvia", "Lebanon", "Lesotho",
+  "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Macao", "Madagascar", "Malawi", "Malaysia",
+  "Maldives", "Mali", "Malta", "Marshall Islands", "Martinique", "Mauritania", "Mauritius", "Mayotte", "Mexico",
+  "Micronesia (Federated States of)", "Moldova", "Monaco", "Mongolia", "Montenegro", "Montserrat", "Morocco",
+  "Mozambique", "Myanmar", "Namibia", "Nauru", "Nepal", "Netherlands", "New Caledonia", "New Zealand", "Nicaragua",
+  "Niger", "Nigeria", "Niue", "Norfolk Island", "Northern Mariana Islands", "Norway", "Oman", "Pakistan", "Palau",
+  "Palestine, State of", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Pitcairn", "Poland",
+  "Portugal", "Puerto Rico", "Qatar", "Réunion", "Romania", "Russian Federation", "Rwanda", "Saint Barthélemy",
+  "Saint Helena", "Saint Kitts and Nevis", "Saint Lucia", "Saint Martin", "Saint Pierre and Miquelon",
+  "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal",
+  "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Sint Maarten", "Slovakia", "Slovenia", "Solomon Islands",
+  "Somalia", "South Africa", "South Georgia and the South Sandwich Islands", "South Sudan", "Spain", "Sri Lanka",
+  "Sudan", "Suriname", "Svalbard and Jan Mayen", "Sweden", "Switzerland", "Syrian Arab Republic", "Taiwan",
+  "Tajikistan", "Tanzania", "Thailand", "Timor-Leste", "Togo", "Tokelau", "Tonga", "Trinidad and Tobago", "Tunisia",
+  "Turkey", "Turkmenistan", "Turks and Caicos Islands", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates",
+  "United Kingdom of Great Britain and Northern Ireland", "United States of America", "Uruguay", "Uzbekistan",
+  "Vanuatu", "Venezuela", "Viet Nam", "Western Sahara", "Yemen", "Zambia", "Zimbabwe"
+];
+
+dropdownOpen = false;
   constructor(private token: TokenStorageService,private route: ActivatedRoute,
-    private userService: UserService,private formBuilder:FormBuilder
-    ,private messageService:MessageService, private chatService :ChatService,
+    private userService: UserService,private formBuilder:FormBuilder,private snackBar: MatSnackBar,
+    private messageService:MessageService, private chatService :ChatService,
     private router: Router,private renderer: Renderer2,private posteService:PosteService,
-    private followService: FollowService, private blockService:BlockService,private el: ElementRef
+    private followService: FollowService, private blockService:BlockService,
+    private el: ElementRef,private cdRef: ChangeDetectorRef,private notifService:NotificationService
   ) {
     
    }
@@ -61,7 +113,7 @@ blockedUsers: User[] = [];
   ngOnInit(): void {
 
     this.id = Number(this.route.snapshot.paramMap.get('id'));
-    this.findUser(this.id);
+    
     window.addEventListener('btnEvent', this.checkSidebarStatus);
     this.currentUser = this.token.getUser();
     console.log( this.currentUser.username);
@@ -73,12 +125,16 @@ blockedUsers: User[] = [];
     // this.findByUsername(this.currentUser.username).then(() => {)
 
 const user =this.token.getUser();
+this.findUser(this.id);
 this.findByUsername(user.username)
-.then((userFound) => {
+.then(() => {
+  this.findUser(this.id).then(()=>{
   console.log('Utilisateur actuel récupéré:', this.userCurrent);
   if (this.userCurrent && this.user && this.user.id) {
     this.checkFollowingStatus(this.user.id);
     this.loadBlockedUsers();
+    this.loadFollowers();
+    this.loadFollowedUsers();
   } else {
     console.error('Utilisateur actuel ou cible non défini.');
   }
@@ -87,7 +143,7 @@ this.findByUsername(user.username)
   this.followService.followStatus$.subscribe((isFollowing: boolean) => {
     this.isFollowingStatus = isFollowing;
     console.log('Statut de suivi mis à jour:', isFollowing);
-  });
+  });});
 })
 .catch((error) => {
   console.error('Erreur lors de la récupération de l\'utilisateur:', error);
@@ -98,11 +154,12 @@ this.findByUsername(user.username)
     nom:[null,[Validators.required,Validators.pattern(GlobalConstants.nameRegex)]],
     prenom:[null,[Validators.required,Validators.pattern(GlobalConstants.nameRegex)]],
    
-  tel:[null],
+  tel:[null ,[Validators.pattern(GlobalConstants.phoneRegex)]],
+  
   email:[null,[Validators.required,Validators.pattern(GlobalConstants.emailRegex)]],
-  adresse:[null,[Validators.required]],
-  education:[null,[Validators.required]],
-  emploi:[null,[Validators.required]],
+  adresse:[null],
+  education:[null,],
+  emploi:[null,],
   twitter:[null,],
   facebook:[null],
   linked:[null],
@@ -117,13 +174,65 @@ this.passForm = this.formBuilder.group({
 }, { validator: this.passwordMatchValidator });
 
  this.loadPostCount();
- this.loadFollowers();
-this.loadFollowedUsers();
+;
+this.userService.findAll().subscribe(users => {
+  this.users = users;
+  this.filteredUsers = this.userService.filterUsers(users, this.searchUsername,this.searchEmail);
+  
+});
 
-  }
-  onSelectCountry(country: string): void {
-    this.selectedCountry = country;
-  }
+ 
+  
+    this.profileForm.controls['username'].valueChanges.pipe(
+      debounceTime(300)
+    ).subscribe((username: string) => {
+      this.searchUsername = username;
+  
+      // Filtrer la liste en excluant l'utilisateur actuel
+      this.filteredUsers = this.users.filter(user => user.username !== this.user.username);
+  
+      // Vérifier si le nom d'utilisateur existe parmi les utilisateurs filtrés
+      this.usernameExists = this.filteredUsers.some((user:any) => 
+        user.username?.toLowerCase() === username?.toLowerCase()
+      );
+    });
+  
+
+  
+  this.profileForm.controls['email'].valueChanges.pipe(
+    debounceTime(300)
+  ).subscribe((email: string) => {
+    this.searchEmail= email;
+
+    // Filtrer la liste en excluant l'utilisateur actuel
+    this.filteredUsers = this.users.filter(user => user.email !== this.user.email);
+
+    // Vérifier si le nom d'utilisateur existe parmi les utilisateurs filtrés
+    this.emailExists = this.filteredUsers.some(user => 
+      user.email?.toLowerCase() === email?.toLowerCase()
+    );
+  });
+ 
+}
+
+filterUser(): void {
+  // Filtrer les utilisateurs en fonction de la recherche
+  this.filteredUsers = this.userService.filterUsers(this.users, this.searchUsername, this.searchEmail);
+
+  // Vérifier si le nom d'utilisateur existe dans les utilisateurs filtrés
+  this.usernameExists = this.filteredUsers.some(user => 
+    user.username.toLowerCase() === this.searchUsername.toLowerCase()
+  );
+}
+  
+toggleDropdown() {
+  this.dropdownOpen = !this.dropdownOpen;
+}
+
+onSelectCountry(country: string) {
+  this.user.pays = country;
+  this.dropdownOpen = false; // Fermer le menu après sélection
+}
   loadPostCount(): void {
     this.posteService.getPostCountByUser(this.id).subscribe(
       count => this.postCount = count,
@@ -265,57 +374,74 @@ this.loadFollowedUsers();
  });
 } 
 
-  findUser(id: number) {
-   
-       this.userService.findById(id).subscribe(
+  findUser(id: number): Promise<User> {
+    return new Promise((resolve, reject) => {
+     this.userService.findById(id).subscribe(
          (user: User) => {
            this.user = user;
            this.preview=this.user.image;
            
            console.log(this.user);
 
-          
-         },
-         (error) => {
-           console.error('Error fetching user:', error);
-        
-         }
-       );
+           resolve(user); // Résolvez la promesse avec l'utilisateur trouvé
+      },
+      (error) => {
+        console.error('Error fetching user:', error);
+        reject(error); // Rejetez la promesse en cas d'erreur
+      }
+    );
+ });
    
    }
 
-  updateProfile()
-
-  {
-    let user = new User();
-    user.username = this.profileForm.controls['username'].value;
-    user.nom = this.profileForm.controls['nom'].value;
-    user.prenom = this.profileForm.controls['prenom'].value;
-       
-    user.tel = this.profileForm.controls['tel'].value;
-    user.email = this.profileForm.controls['email'].value;
-   user.adresse=this.profileForm.controls['adresse'].value;
-   user.education=this.profileForm.controls['education'].value;
-   if(this.selectedCountry!=='')
-   { user.pays=this.selectedCountry;}
-   else{  user.pays=this.user.pays;}
- 
-    user.bio=this.profileForm.controls['bio'].value;
-    user.emploi =this.profileForm.controls['emploi'].value;
-    user.compteFacebook=this.profileForm.controls['facebook'].value;
-    user.compteTwitter=this.profileForm.controls['twitter'].value;
-    user.compteInstagram=this.profileForm.controls['instagram'].value;
-    user.compteLinked=this.profileForm.controls['linked'].value;
-    // Appel au service pour mettre à jour l'utilisateur
-    this.userService.updateUser(this.user.id, user)
-      .subscribe({
-        next: (response: any) => {
-          this.reponseMessage = 'Profil mis à jour avec succès';
-        },
-        error: (error: any) => {
-          this.reponseMessage = 'Une erreur est survenue lors de la mise à jour du profil';
-        }
+   updateProfile(): void {
+    if (!this.profileForm.controls['tel'].value) {
+      this.profileForm.controls['tel'].clearValidators(); // Retirer la validation si tel est vide
+      this.profileForm.controls['tel'].updateValueAndValidity();
+    }
+    
+    if (this.profileForm.invalid) {
+      console.log('Le formulaire contient des erreurs');
+      Object.keys(this.profileForm.controls).forEach(key => {
+        console.log(key, this.profileForm.controls[key].errors);
       });
+      this.errorUpdate = 'Une erreur est survenue lors de la mise à jour du profil';
+      this.profileForm.markAllAsTouched();
+      return;
+    }
+      let updatedUser = new User();
+    updatedUser.username = this.profileForm.controls['username'].value;
+    updatedUser.nom = this.profileForm.controls['nom'].value;
+    updatedUser.prenom = this.profileForm.controls['prenom'].value;
+    updatedUser.tel = this.profileForm.controls['tel'].value;
+    updatedUser.email = this.profileForm.controls['email'].value;
+    updatedUser.adresse = this.profileForm.controls['adresse'].value;
+    updatedUser.education = this.profileForm.controls['education'].value;
+    updatedUser.pays = this.selectedCountry !== '' ? this.selectedCountry : this.user.pays;
+    updatedUser.bio = this.profileForm.controls['bio'].value;
+    updatedUser.emploi = this.profileForm.controls['emploi'].value;
+    updatedUser.compteFacebook = this.profileForm.controls['facebook'].value;
+    updatedUser.compteTwitter = this.profileForm.controls['twitter'].value;
+    updatedUser.compteInstagram = this.profileForm.controls['instagram'].value;
+    updatedUser.compteLinked = this.profileForm.controls['linked'].value;
+  
+    // Appel au service pour mettre à jour l'utilisateur
+    this.userService.updateUser(this.user.id, updatedUser)
+    .subscribe({
+      next: (response: User) => {
+       
+        this.user = response;
+        
+        this.user = { ...this.user, ...response }; 
+        this.ShowMenu('overview');
+      },
+      error: (error: HttpErrorResponse) => {
+        this.errorUpdate = 'Une erreur est survenue lors de la mise à jour du profil';
+        console.error('Erreur de mise à jour : ', error);
+      }
+    });
+   
+      
 
     
   }
@@ -364,7 +490,7 @@ this.loadFollowedUsers();
   get confirmPassword() {
     return this.passForm.get('confirmationPassword');
   }
-  selectFile(event: any): void {
+   async selectFile(event: any){
     this.message = '';
     this.preview = this.user.image;
     this.progress = 0;
@@ -396,23 +522,41 @@ this.loadFollowedUsers();
          
         );
       }
-
+      
     }
+    setTimeout(() => {
+      window.location.reload(); // Recharge la page après un délai
+    }, 2000); 
   }
 
   changerpassword()
-  {
-
+  {  if(this.passForm.invalid)
+  {    console.log('Le formulaire contient des erreurs');
+    Object.keys(this.passForm.controls).forEach(key => {
+      console.log(key, this.passForm.controls[key].errors);
+    });
+    this.errorUpdate = 'Une erreur est survenue lors de la mise à jour du profil';
+    this.passForm.markAllAsTouched();
+    return;
+    
+  }
+  const passwordData = {
+    currentPassword: this.passForm.value.currentPassword,
+    newPassword: this.passForm.value.newPassword,
+    confirmationPassword: this.passForm.value.confirmationPassword
+  };
     this.userService.changePassword(this.passForm.value)
     .subscribe({
       next: (response) => {
-        
-        this.router.navigate(['/profile']);  // Redirige vers la page de profil
+        this.successMessage = 'Mot de passe mis à jour avec succès!';
+        this.errorMessage = '';
       },
       error: (error) => {
-        this.errorMessage = error.error || 'Une erreur est survenue';
+        this.errorMessage = "Une erreur s'est produite lors de la mise à jour du mot de passe !";
+        this.successMessage = '';
       }
     });
+ 
 }
 
   
@@ -472,7 +616,7 @@ this.loadFollowedUsers();
   popupBlock( user: any): void {
     this.user=user;
     this.renderer.setStyle(this.popupBloque.nativeElement, 'display', 'block');
-    this.renderer.setStyle(this.overlay.nativeElement, 'display', 'block');
+   /* this.renderer.setStyle(this.overlay.nativeElement, 'display', 'block');
   
     const closePopup = (event: MouseEvent) => {
       if (event.target === this.overlay.nativeElement) {
@@ -480,8 +624,9 @@ this.loadFollowedUsers();
         this.overlay.nativeElement.removeEventListener('click', closePopup);
       }
     };
-  
-    this.overlay.nativeElement.addEventListener('click', closePopup);
+    
+    this.overlay.nativeElement.addEventListener('click', closePopup);*/
+    this.isOverlayVisible=true;
   }
   closePopup(): void {
     this.renderer.setStyle(this.popupBloque.nativeElement, 'display', 'none');
@@ -508,6 +653,14 @@ followUser() {
   this.followService.followUser(this.userCurrent.id, this.user.id).subscribe(
     response => {
       this.followService.updateFollowStatus(true); 
+      let notif = new Notification()
+      notif.actor= this.userCurrent;
+      notif.recipients=[this.user];
+      notif.reaction="suivre";
+      notif.message =`${this.userCurrent.nom} ${this.userCurrent.prenom} vous suit `;
+      notif.enabled = true;
+      notif.read = false;
+      this.notifService.onSendNotification(notif);
       console.log('Utilisateur suivi avec succès!');
     },
     error => {
@@ -521,6 +674,7 @@ unfollowUser()
     response => {
       console.log('Utilisateur suivi avec succès!');
       this.followService.updateFollowStatus(false); 
+     
     },
     error => {
       console.error('Erreur lors du suivi de l\'utilisateur', error);
@@ -560,25 +714,49 @@ checkFollowingStatus(followedId: number): void {
 }
 
 loadFollowers() {
-  this.followService.getFollowers(this.id).subscribe(
-    (data: User[]) => {
-      this.followers = data;
-    },
-    error => {
-      console.error('Erreur lors du chargement des abonnés', error);
-    }
+  this.followService.getFollowers(this.id).pipe(
+    switchMap((followers: any[]) =>
+      forkJoin(
+        followers.map((follower: any) =>
+          forkJoin({
+            isBlocked: this.blockService.isUserBlocked(this.user.id, follower.id),
+            isBlockedByFollower: this.blockService.isUserBlocked(follower.id, this.user.id)
+          }).pipe(
+            map(({ isBlocked, isBlockedByFollower }) => 
+              !isBlocked && !isBlockedByFollower ? follower : null
+            )
+          )
+        )
+      )
+    ),
+    map(filteredFollowers => filteredFollowers.filter(follower => follower !== null))
+  ).subscribe(
+    (filteredFollowers: any[]) => this.followers = filteredFollowers,
+    error => console.error('Erreur lors du chargement et du filtrage des abonnés', error)
   );
 }
 
-// Charger les utilisateurs suivis
+// Charger et filtrer les utilisateurs suivis (followedUsers)
 loadFollowedUsers() {
-  this.followService.getFollowedUsers(this.id).subscribe(
-    (data: User[]) => {
-      this.followedUsers = data;
-    },
-    error => {
-      console.error('Erreur lors du chargement des utilisateurs suivis', error);
-    }
+  this.followService.getFollowedUsers(this.id).pipe(
+    switchMap((followedUsers: any[]) =>
+      forkJoin(
+        followedUsers.map((followedUser: any) =>
+          forkJoin({
+            isBlocked: this.blockService.isUserBlocked(this.user.id, followedUser.id),
+            isBlockedByFollowedUser: this.blockService.isUserBlocked(followedUser.id, this.user.id)
+          }).pipe(
+            map(({ isBlocked, isBlockedByFollowedUser }) => 
+              !isBlocked && !isBlockedByFollowedUser ? followedUser : null
+            )
+          )
+        )
+      )
+    ),
+    map(filteredFollowedUsers => filteredFollowedUsers.filter(followedUser => followedUser !== null))
+  ).subscribe(
+    (filteredFollowedUsers: any[]) => this.followedUsers = filteredFollowedUsers,
+    error => console.error('Erreur lors du chargement et du filtrage des utilisateurs suivis', error)
   );
 }
 loadBlockedUsers()
@@ -593,6 +771,9 @@ unblockUser(userBlockId:number): void {
     console.log(response);
     // Mettre à jour la liste après déblocage
     this.blockedUsers = this.blockedUsers.filter(user => user.id !== userBlockId);
+    this.router.navigate(['/profile', userBlockId]).then(() => {
+          window.location.reload();
+        });
   });
 }
 
@@ -620,5 +801,36 @@ handlePosteClose() {
 onOverlayClick(){
   this.isOverlayVisible=false;
   this.posteComponent.closePopupOverlay();
+  this.renderer.setStyle(this.popupBloque.nativeElement, 'display', 'none');
 }
+/*
+filterUser(): void {
+  this.filteredUsers = this.userService.filterUsers(this.users, this.searchUsername, this.searchEmail);
+}*/
+checkUserExists(): boolean {
+  return this.userService.checkUserExists(this.filteredUsers, this.searchUsername, this.searchEmail);
+}
+navProfile(user:User)
+    {
+     
+        this.router.navigate(['/profile', user.id]).then(() => {
+          window.location.reload();
+        });
+      }
+
+      copyProfileLink()
+      {
+        const profileLink = `${window.location.origin}/profile/${this.id}`;
+      navigator.clipboard.writeText(profileLink).then(() => {
+        this.snackBar.open('Le lien du profile a été copié dans le presse-papier !', '', {
+          duration: 3000, // Durée en ms
+        });
+      }).catch(err => {
+        console.error('Erreur lors de la copie du lien : ', err);
+        this.snackBar.open('Échec de la copie du lien', 'Fermer', {
+          duration: 3000,
+        });
+      });
+      }
+     
 }

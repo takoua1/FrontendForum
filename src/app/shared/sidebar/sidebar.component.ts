@@ -92,11 +92,18 @@ export class SidebarComponent implements OnInit {
       
   
     }
-  
+    isHomePage(): boolean {
+      return this.router.url === '/home'; // Modifiez selon votre chemin exact
+    }
     navProfile(user:User)
     {
-      this.router.navigate(['/profile', user.id]); 
-      window.location.reload(); 
-    }
+     
+        this.router.navigate(['/profile', user.id]).then(() => {
+          window.location.reload();
+        });
+      }
+     
+     
+    
 }
 

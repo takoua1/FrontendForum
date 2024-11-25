@@ -1,16 +1,17 @@
 
-.commentContainer {
-  position: relative;
-   top: -5px;
-    
-  }
+.commentContainer{
+ margin:-0.5rem;
+  display:flex;
+  flex-direction: column;
+}
+
 .commentContainer .commentUser{
 position: relative;
- top:30px;
- left: 80px;
+ top:60px;
+ left: 20px;
  width: 120px;
   float: left;
-  display: flex;
+
 
 }
   
@@ -34,34 +35,46 @@ position: relative;
   }
   .commentContainer .commentUser p{
    position: relative;
- top:-30px;    
+ top:-65px;    
    
     font-size: 14px;
-   left: 70px;
+   left: 115px;
    float: left;
  
    
   
   }
-  .commentContainer  .container{
+ /* .commentContainer  .container{
 position: relative;
-  top:40px;
+
   float: left;
-  left: 80px;
+  margin-left: 138px;
     border: 1px solid white;
     align-items: center; 
    display: grid;
-    width:60%;
+    width:71%;
   padding: 0 6px;
     background-color: rgba(245, 242, 242, 0.822);
     border-radius: 10px;
   margin-bottom: 50px;
+  }*/
+
+  .commentContainer .container {
+    display: flex;
+    border: 1px solid white;
+    width:71%;  padding: 0 6px;
+  padding: 0 6px;
+    background-color: rgba(245, 242, 242, 0.822);
+    border-radius: 10px;
+    margin-left: 138px;
+    flex-direction: column;
+    align-items:  flex-start; /* Ou center si besoin */
   }
   .commentContainer  .container span {
-  
+  position: relative;
     color: black;
     white-space: pre-wrap;
-    
+    margin-bottom: 20px;
     font-size: 25px;
     font: 1em sans-serif;
    display: inline-flex;
@@ -73,12 +86,13 @@ position: relative;
   }
  
   .commentContainer .container   .bx-trash {
-    position: relative;
-  left: 60%;
+    position: absolute;
+    right:10%;
+    margin-top: -2rem;
   color: red;
     font-size: 20px;
-    
-   opacity: 0;
+    opacity: 0;
+  display: flex;
     transition: all 0.5s ease;
 
   }
@@ -90,26 +104,29 @@ position: relative;
 .commentContainer .container   .bx-error-alt{
   
 
-  position: relative;
-  left: 60%;
+  position: absolute;
+  right:10%;
+  margin-top: -2rem;
   color: red;
     font-size: 20px;
-  
-   opacity: 0;
+  display: flex;
+  opacity: 0;
     transition: all 0.5s ease;
 }
 
 .commentContainer .container   .bx-error-alt:hover{
   opacity: 1;
 }
-
+/*
 .commentContainer .btnCommIte  {
- position: relative;
- width: 60%;
- top:10px;
-  left: 120px;
-margin-bottom: 10px;
-  }
+
+margin-top:-75px;
+        width: 100%;
+         float: left;
+    padding: 10px;
+       bottom: 10px;
+      
+  }*/
   .bx.bxs-like {
    
     color: white;
@@ -137,9 +154,9 @@ margin-bottom: 10px;
 }
    .btnCommIte   button {
    position: relative;
-   width: 15%;
+   width: 50px;
     font-size: 12px;
-    height: 3%;
+    height: 20px;
     margin-right: 5%;
     background: linear-gradient(to bottom, #aab7d392 0%, #95a1ba92 100%);
     color: white;
@@ -165,32 +182,29 @@ margin-bottom: 10px;
   { 
     position: relative;
  
-    top:40px;
+ top:28px;
   
     border-radius: 10px;
     outline: none;
     transition: .2s ease;
-    width: 53%;
+    width: 70%;
     padding-left: 5px;
     padding-right:  75px;
     display: flex;
-    left: 200px;
+    left: 145px;
    
     resize: none;
     border: none;
-    margin-bottom: 60px;
+  
   }
-  .commentContainer .repText{
-    position: relative;
-
-  }
+  
   .commentContainer .repText button{
-    position:absolute;
+    position:relative;
     width: 40px;
    
-    top:46px;
- 
-  right: 15%;
+    top:-4px;
+   display: flex;
+  right: -81%;
  
     height: 25px;
     align-items: center;
@@ -203,38 +217,43 @@ margin-bottom: 10px;
     color: #66a6ff;
   }
 
-  .repond-taille{
-    position: relative;
-    top:5px;
-    float: right;
-
-  }
+  
    .repond-taille p
-  {
-    position: relative;
-    margin-top:-10px;
-    margin-right: 150px;
+  { position: relative;
+ 
+   margin-top: -20px;
+    right: 150px;
+  float:right;
    color: #545353;
    font-size: 12px;
    
   }
   .childContainer {
-    margin-left: 20px; /* Décalage unique de 20px pour tout le conteneur enfant */
+    margin-left: 20px;
+   
+
 }
 
 .childComments {
     display: flex;
-    flex-direction: column; /* Assure que les enfants sont empilés verticalement */
+    flex-direction: column;
+   
 }
 
 .childContainer .childContainer {
     margin-left: 0; /* Annuler le décalage pour les sous-commentaires à chaque niveau */
 }
 
-.commentInfo{
-  margin-top:10px;
-  color: #717070;
+ .commentlenght {
+  position: relative;
+  top: 35px;
+  left:37%;
+  margin-bottom: 2rem;
+  cursor: pointer;
+  color: #007bff; 
   font-size: 15px;
+  align-self: flex-start; /* S'assure que l'élément commence à gauche */
+ 
 }
 
 
@@ -346,7 +365,114 @@ margin-bottom: 10px;
 .popupInform .cardInform button:hover i {
   transform: rotate(45deg);
 }
+.popupConnect {
+  position: fixed;
+  top: 50%;
+  left: 40%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+ 
+  z-index: 10000;
+}
 
+.popupConnect .cardConnect {
+  position: absolute;
+  box-sizing: border-box;
+
+  display: flex;
+  width: 300px;
+  height: 130px;
+  background: rgba(255, 253, 253, 0.829);
+  border: 1px solid white;
+  box-shadow: 12px 17px 51px rgba(0, 0, 0, 0.22);
+  backdrop-filter: blur(6px);
+  border-radius: 17px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.5s;
+
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  font-weight: bolder;
+  color: black;
+  top: 10px;
+
+}
+
+.popupConnect .cardConnect:hover {
+
+  transform: scale(1.05);
+}
+
+.popupConnect .cardConnect p {
+  position: absolute;
+  top: 10px;
+  font-size: 15px;
+  color: #97b7e3;
+}
+
+.popupConnect .cardConnect button {
+  position: absolute;
+  font-size: 12px;
+
+  top: 80px;
+ 
+  background: linear-gradient(to bottom, #4dc7d9 0%, #66a6ff 100%);
+  color: white;
+  padding: 0.5em 1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 25px;
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s;
+}
+
+.popupConnect .cardConnect button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0px 8px 15px white;
+}
+
+.popupIConnect .cardConnect button:active {
+  transform: scale(0.95);
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.popupConnect .cardConnect button span {
+  display: block;
+  margin-left: 0.4em;
+  transition: all 0.3s;
+}
+
+.popupConnect .cardConnect button i {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  fill: white;
+  transition: all 0.3s;
+}
+
+.popupConnect.cardConnect .svg-valider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.2);
+  margin-right: 0.5em;
+  transition: all 0.3s;
+}
+
+.popupConnect .cardConnect button:hover .valider {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.popupConnect.cardConnect button:hover i {
+  transform: rotate(45deg);
+}
 .popupSignale{
   position: fixed;
  top:2%;

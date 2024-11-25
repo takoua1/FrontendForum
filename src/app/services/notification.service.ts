@@ -14,6 +14,7 @@ export class NotificationService {
   private privateNotifications: Subject<any> = new Subject<any>();
   private notificationsSubject: BehaviorSubject<Notification[]> = new BehaviorSubject<Notification[]>([]);
   public notifications$: Observable<Notification[]> = this.notificationsSubject.asObservable();
+ 
 
   constructor(private token :TokenStorageService,private http: HttpClient) { 
     this.initializeWebSocketConnection();
@@ -102,6 +103,20 @@ export class NotificationService {
   disableNotification(notificationId: number): Observable<any> {
     return this.http.put(`/api/notification/disable/${notificationId}`, {});
   }
+
+
+  updateNotification(id: number, notification: Notification): Observable<Notification> {
+    const url = `/api/notification/update/${id}`;
+    return this.http.put<Notification>(url, notification);
+  }
+
+  findByIdNotification(id:number):Observable<any>{
+    const url = `/api/notification/findById/${id}`;
+    return this.http.get<any>(url);
+
+  }
+ 
+ 
   }
 
 

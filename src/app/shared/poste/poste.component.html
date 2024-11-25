@@ -4,8 +4,9 @@
 <head>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins" />
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-  <link href='/app/home/home.component.css'>
-
+  <link href='/src/app/shared/poste/poste.component.css'>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
 <body>
@@ -13,7 +14,7 @@
   
   <div class="card-container">
 
-    <div *ngIf="isUserAuthenticated &&( user.id===id || id===0)" class="card-user">
+    <div *ngIf="( user.id===id || id===0)" class="card-user">
 
       <form (ngSubmit)="onSubmit()" [formGroup]="posteForm">
       
@@ -25,7 +26,7 @@
 
           </div>
      
-        <img [src]="user.image ? user.image : '/assets/image/user.png'" class="profile-img">
+        <img [src]="user.image ? user.image : '/assets/image/user.png'" class="profile-img" (click)="navProfile(user)" >
 
         <textarea id="textPoste" rows="4" placeholder="Quoi de neuf ?" formControlName="messagePoste"></textarea>
         <button id="btnAdd" type="submit">
@@ -122,7 +123,7 @@
           <i class='bx bx-chat'></i>
         </button>
       </div>
-      <div class="edit-delette" (click)="togglePopup($event)" ><i class='bx bx-dots-horizontal-rounded'></i>
+      <div class="edit-delette" (click)="togglePopup($event)" *ngIf="this.isUserAuthenticated" ><i class='bx bx-dots-horizontal-rounded'></i>
       </div>
       <div class="popup-content" >
 
@@ -136,9 +137,12 @@
             <i class='bx bx-trash'></i>
             <span  >Supprimer</span>
           </li>
-          <li *ngIf="poste.user.id != user.id " (click) ="openPopupSignale(poste)" >
+          <li *ngIf="poste.user.id != user.id " (click)="callTogglePopupSignale(poste)" >
             <i class='bx bx-error-alt'></i>
           <span >Signaler</span></li>
+          <li (click)=" copyPosteLink(poste)"> <i class='bx bx-link'></i>
+            <span>Copier</span>
+          </li>
         </ul>
 
       </div>
@@ -154,24 +158,21 @@
        <button *ngIf="poste.showButton" (click)="addCommentToPost(poste)">  <i class='bx bxs-send' ></i></button>
     
         
-      <input type="file" #fileInput style="display: none;" (change)="onFileSelected($event)">
+      
           </div>
          
          
           <div *ngFor="let comment of  filteredComments;  let i = index">
             <div *ngIf="i < commentsToShow[poste.id] ">
-              <app-comment [comment]="comment"     [user]="user" (signaleCommentWithInfo)="onResirveSignale($event)" (signaleComment)="onCommentsignale($event)"  (deleteCommentWithInfo)="onResirve($event)" (deleteComment)="onCommentDelete($event)" [comments]="filteredComments" ></app-comment>
+              <app-comment [comment]="comment"  [isUserAuthenticated]="isUserAuthenticated"   [user]="user" (signaleCommentWithInfo)="onResirveSignale($event)" (signaleComment)="onCommentsignale($event)"  (deleteCommentWithInfo)="onResirve($event)" (deleteComment)="onCommentDelete($event)" [comments]="filteredComments" ></app-comment>
             </div>
          </div>
-         <div *ngIf="commentsToShow[poste.id] > 0  && getActiveComments(poste).lenght  > 10 " (click)="toggleComments(poste.id, poste.comments)" class="commentInfo">
-          <p>{{ commentsToShow[poste.id] }} / {{getActiveComments(poste).lenght }} commentaires affichés</p> </div>
-          <div>
-          <p *ngIf="commentsToShow[poste.id] > increment" (click)="toggleCommentsBackwards(poste.id, poste.comments)" class="commentInfo">Afficher moins de commentaires</p>
-        </div>
-      
-      
+         <div *ngIf="commentsToShow[poste.id] > 0  && getActiveComments(poste).length > 10 " (click)="toggleComments(poste.id, poste.comments)" class="commentInfo">
+          <p>{{ commentsToShow[poste.id] }} / {{getActiveComments(poste).length }} commentaires affichés</p> </div>
           
-    </div>
+    
+        
+      </div>
     
       <div *ngFor="let catIcon of poste.icons">
 
@@ -267,13 +268,15 @@
     </div>
   </div>
   <!------------------------------------PouPPoste------------------------------------------------------------->
-<div   class="popupPoste" #popupPoste  *ngIf="isPopupPosteVisible" >
+<div   class="popupPoste" #popupPoste *ngIf="isPopupPosteVisible" >
   <div  *ngIf="selectedPost" class="card-list">
     <div  class="user-profile">
       <div>
+       
         <p >{{selectedPost.user.nom}} {{selectedPost.user.prenom}}</p>
         <span> {{selectedPost.dateCreate | date:'dd-MM-yy HH:mm'}}</span>
-        <img [src]="selectedPost.user.image" class="profile-img">
+        <img [src]="selectedPost.user.image ? selectedPost.user.image : '/assets/image/user.png'" class="profile-img" (click)="navProfile(selectedPost.user)"  class="profile-img">
+       
       </div>
     </div>
     
@@ -303,12 +306,7 @@
       
     
     <img [src]="selectedPost.image" class="post-image">
-    <div class="commentTaille"  (click)="toggleCommentsPart(selectedPost.id, selectedPost,$event)">
-    <div  *ngIf="getActiveComments(selectedPost).length > 0" >
-      <div *ngIf="getActiveComments(selectedPost).length ==1"><p>{{ getActiveComments(selectedPost).length}} commentaire</p></div>
-      <div *ngIf="getActiveComments(selectedPost).length > 1"> <p>{{ getActiveComments(selectedPost).length }} commentaires</p></div>
-    </div>
-    </div>
+  </div>
     <div class="btnIte"  >
       <button (click)=" toggleLike(selectedPost)">
         <i class='bx bxs-like' [ngClass]="{ 'liked': isLike[selectedPost.id.toString()] }"></i>
@@ -323,10 +321,10 @@
       </button>
     </div>
    
-</div>
+
   
    
-    <div class="edit-delette" (click)="togglePopup($event)"><i class='bx bx-dots-horizontal-rounded'></i>
+    <div class="edit-delette" (click)="togglePopup($event)" *ngIf="this.isUserAuthenticated" ><i class='bx bx-dots-horizontal-rounded'></i>
     </div>
     <div class="popup-content">
 
@@ -349,7 +347,12 @@
    
     <!-------------------------Comment----------------------------------------------------------->
     <div class="comment">
-      
+      <div class="commentTaille"  (click)="toggleCommentsPart(selectedPost.id, selectedPost,$event)">
+        <div  *ngIf="getActiveComments(selectedPost).length > 0" >
+          <div *ngIf="getActiveComments(selectedPost).length ==1"><p>{{ getActiveComments(selectedPost).length}} commentaire</p></div>
+          <div *ngIf="getActiveComments(selectedPost).length > 1"> <p>{{ getActiveComments(selectedPost).length }} commentaires</p></div>
+        </div>
+        </div>
       <div  *ngIf="isTextareaVisible(selectedPost)" [formGroup]="commentForm"  class="commentText">
         <textarea id="textComm" rows="2" placeholder="" (click)="selectedPost.showButton = true" [ngModel]="messageComment" (input)="adjustTextareaSize($event)" (keydown.enter)="addNewLine()" [formControl]="commentForm.get('messageComment')"></textarea>
       <button *ngIf="selectedPost.showButton" (click)="addCommentToPost(selectedPost)">  <i class='bx bxs-send' ></i></button>
@@ -357,14 +360,12 @@
     
         <div *ngFor="let comment of  filteredComments; let i = index">
           <div *ngIf="i < commentsToShow[selectedPost.id]" >            
-            <app-comment [comment]="comment"   [user]="user" (deleteCommentWithInfo)="onResirve($event)" (deleteComment)="onCommentDelete($event)" (signaleCommentWithInfo)="onResirveSignale($event)" (signaleComment)="onCommentsignale($event)"[comments]="filteredComments"></app-comment>
+            <app-comment [comment]="comment"  [isUserAuthenticated]="isUserAuthenticated" [user]="user" (deleteCommentWithInfo)="onResirve($event)" (deleteComment)="onCommentDelete($event)" (signaleCommentWithInfo)="onResirveSignale($event)" (connectCommentWithInfo)="onResirveConnect($event)" (signaleComment)="onCommentsignale($event)"(connectComment)="onCommentConnect()" [comments]="filteredComments"></app-comment>
           </div>
        </div>
        <div *ngIf="commentsToShow[selectedPost.id] > 0  && getActiveComments(selectedPost).length > 10 " (click)="toggleComments(selectedPost.id, selectedPost.comments)" class="commentInfo">
         <p>{{ commentsToShow[selectedPost.id] }} / {{getActiveComments(selectedPost).length }} commentaires affichés</p> </div>
-        <div>
-        <!--p *ngIf="commentsToShow[selectedPost.id] > increment" (click)="toggleCommentsBackwards(selectedPost.id, selectedPost.comments)" class="commentInfo">Afficher moins de commentaires</p-->
-      </div>
+        
   
       
     </div>
@@ -450,7 +451,20 @@
     </button>
   </div>
   </div>
-<div class="overlay" #overlay *ngIf="isOverlayVisible  && !disableOverlay" (click)="onOverlayClick()"></div>
+  <div   class="popupConnect" *ngIf="isPopupConnectVisible">
+    <div class="cardConnect">
+      <p>Veuillez vous connecter  !</p>
+      <button (click)="login()">
+        <div class="svg-valider">
+  
+          <i  class='bx bx-log-in-circle'></i>
+        </div>
+  
+        <span >Vers page de connexion</span>
+      </button>
+    </div>
+    </div>
+<div class="overlay" #overlay *ngIf="isOverlayVisible" (click)="onOverlayClick()"></div>
 </body>
 
 </html>

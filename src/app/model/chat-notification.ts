@@ -2,8 +2,12 @@ export class ChatNotification {
 
     id:string;
     senderId:string;
+    senderUsername:string;
+    senderNom:string;
+    senderPrenom:string;
+    senderEmail:string;
     imageProfile:string;
-    recipientId:string;
+    recipientUsername:string;
     content:string;
     image:string;
     video:string;

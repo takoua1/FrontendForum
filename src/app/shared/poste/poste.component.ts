@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, Renderer2, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, Renderer2, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { TokenStorageService } from '../../services/token-storage.service';
@@ -6,7 +6,7 @@ import { PosteService } from '../../services/poste.service';
 import { User } from '../../model/user';
 import { Poste } from '../../model/poste';
 
-
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Comment } from '../../model/comment';
 import { CommentService } from '../../services/comment.service';
 
@@ -19,7 +19,7 @@ import { Notification } from '../../model/notification';
 import { NotificationService } from '../../services/notification.service';
 import { SignaleService } from '../../services/signale.service';
 import { Signale } from '../../model/signale';
-import { firstValueFrom, tap } from 'rxjs';
+import { firstValueFrom, forkJoin, map, of, switchMap, tap } from 'rxjs';
 import { BlockService } from '../../services/block.service';
 import { AuthService } from '../../services/auth.service';
 import { CommentComponent } from '../comment/comment.component';
@@ -32,7 +32,9 @@ export interface Report {
   selector: 'app-poste',
  
   templateUrl: './poste.component.html',
-  styleUrl: './poste.component.css'
+  styleUrl: './poste.component.css',
+  encapsulation: ViewEncapsulation .None
+
 })
 export class PosteComponent implements OnInit {
   currentUser: any;
@@ -54,6 +56,7 @@ export class PosteComponent implements OnInit {
   selectedCategory = 'Catégorie';
    @Input() category:string;
    @Input() profile:number;
+  
    @Input() username:string;
   isDropdownVisible = true;
   textToCopy = 'Texte à copier';
@@ -64,6 +67,7 @@ export class PosteComponent implements OnInit {
   isOverlayVisible: boolean = false;
   isPopupVisible: boolean = false;
   isPopupPosteVisible: boolean = false;
+  isPopupConnectVisible: boolean = false;
   isUserAuthenticated: boolean = false;
   imageUrl: string | ArrayBuffer | null = null;
   hasImage: boolean = false;
@@ -81,6 +85,7 @@ export class PosteComponent implements OnInit {
   isCommentsVisible: boolean = false;
   isDeleteComment: boolean = false;
   isSignaleComment:boolean = false;
+  isConnectComment:boolean = false;
   isActive:any;
   isLike:  { [key: number]: boolean } = {};
   isDislike:  { [key: string]: boolean } = {};
@@ -100,7 +105,8 @@ export class PosteComponent implements OnInit {
   public posts: any[];
   filteredPostes: Poste[] = [];
   showComments: { [id: number]: boolean } = {};
-  commentsToShow: { [postId: string]: number } = {};
+ commentsToShow: { [postId: string]: number } = {};
+ @Input() commentsLimit!: number;
   increment = 10;
   isDeletePoste: boolean = false;
   isSignalePoste: boolean = false;
@@ -117,12 +123,16 @@ export class PosteComponent implements OnInit {
     private userService: UserService, private token: TokenStorageService, private posteService: PosteService
     , private commentService: CommentService,private router: Router,private route: ActivatedRoute,
      private sharedService: SharedService,private  interaService: InteractionService,private notifService:NotificationService
-    ,private signaleService :SignaleService,private blockService: BlockService,private authService: AuthService) {
+    ,private signaleService :SignaleService,private blockService: BlockService,private snackBar: MatSnackBar,
+    private authService: AuthService,private el: ElementRef, private renderer: Renderer2) {
       this.user = new User();
       
       this.totalLikesMap = {};
       this.totalDislikesMap={};
-      
+     /* window.addEventListener("load", () => {
+        const popup = document.querySelector('.popupPoste') as HTMLElement;
+        popup!.style.top = `${window.scrollY + 100}px`; // Place la popup 100px en dessous de la position de défilement
+      });*/
   }
 
   id:number;
@@ -147,6 +157,9 @@ export class PosteComponent implements OnInit {
     'Spam ou contenu trompeur',
     
   ];
+ 
+
+  popupElement: HTMLElement;
 
   report: Report = {
     type: '',
@@ -155,6 +168,7 @@ export class PosteComponent implements OnInit {
   currentStep = 1;
   reportType: string = '';
   reportDescription: string = '';
+
   @Output() toggleOverlay = new EventEmitter<boolean>();
   @Output() togglePoste = new EventEmitter<boolean>();
   @Output() closePoste = new EventEmitter<void>(); 
@@ -162,7 +176,9 @@ export class PosteComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  ngOnInit():void{
+ 
+ async ngOnInit(){
+   
     this.isUserAuthenticated = this.authService.isUserAuthenticated();
     this.id = this.id =Number (this.route.snapshot.paramMap.get('id'));
     console.log("id:",this.id);
@@ -184,22 +200,23 @@ export class PosteComponent implements OnInit {
 
     window.addEventListener('btnEvent', this.checkSidebarStatus);
 
-    this.findUser(this.currentUser.username)
+ await   this.findUser(this.currentUser.username)
     .then(user => {
       console.log('Utilisateur trouvé:', user); // Affichez l'utilisateur trouvé
-      this.loadPosts();
+      
        // Appelle loadPosts après avoir trouvé l'utilisateur
     })
     .catch(error => {
       console.error('Erreur lors de la recherche de l\'utilisateur:', error);
     });
+    this.loadPosts();
       this.updateCommentsCount();
   
     
     this.syncTextareas();
-   
   }
-
+ 
+  
 
   toggleComments(postId: string, comments: Comment[]) {
 
@@ -293,16 +310,12 @@ export class PosteComponent implements OnInit {
       {  
         this.toggleTextarea( poste)
         console.log("this.textareaVisibility[poste.message]",this.textareaVisibility[this.selectedPost.message]);
-       // container?.classList.add('active');
-        
+      
        
       }
       
   
-  /*  const commentPopup = document.querySelector('.commentPopup');
-   
-  
-    commentPopup?.classList.add('active');*/
+
   }
 
 
@@ -326,71 +339,63 @@ export class PosteComponent implements OnInit {
     
 
   loadPosts() {
-    this.posteService.fetchPosts().subscribe(() => {
-        this.posteService.listePoste().subscribe(postes => {
-            let tempFilteredPostes = [];
-
-            // Filtrage des postes par profil ou catégorie
-            if (this.profile !== 0) {
-              
-                tempFilteredPostes = postes.filter(poste => poste.user.id === this.profile);
-            } else if (this.category && this.category !== 'Catégorie') {
-                tempFilteredPostes = postes.filter(poste => poste.category === this.category);
-            } else {
-                tempFilteredPostes = postes; // Aucun filtrage
-            }
-
-            // Vérification des utilisateurs bloqués avant d'afficher les postes
-            if (this.isUserAuthenticated) {
-           
-                const blockedCheckPromises = tempFilteredPostes.map(poste => {
-               
-                  
-                    return this.blockService.isUserBlocked(this.user.id, poste.user.id).toPromise().then(isBlockedByCurrentUser => {
-                        return this.blockService.isUserBlocked(poste.user.id, this.user.id).toPromise().then(isBlockedByPostOwner => {
-                            // Si l'utilisateur actuel n'est pas bloqué par le propriétaire du poste
-                            // et que le propriétaire du poste n'est pas bloqué par l'utilisateur actuel
-                            if (!isBlockedByCurrentUser && !isBlockedByPostOwner) {
-                                const matchingIcons = this.categories.filter(catIcon => catIcon.name === poste.category);
-                                const postWithIcons = { ...poste, icons: matchingIcons };
-                               
-                                // Charger les interactions de type "like" et "dislike"
-                                return this.findUser(this.currentUser.username).then(() => {
-                                    this.loadLikeInteraction(postWithIcons);
-                                    this.loadDislikeInteraction(postWithIcons);
-                                    this.getTotalLikes(postWithIcons);
-                                    this.getTotalDislikes(postWithIcons);
-                                    return postWithIcons; // Retourner le poste mis à jour
-                                });
-                            } else {
-                                return null; // Retourner null si l'utilisateur est bloqué
-                            }
-                        });
-                    });
-                });
-
-                // Attendre que toutes les vérifications de blocage soient terminées
-                Promise.all(blockedCheckPromises).then(results => {
-                    this.filteredPostes = results.filter(post => post !== null); // Filtrer les nulls
-                }).catch(error => {
-                    console.error('Erreur lors de la vérification des utilisateurs bloqués', error);
-                });
-            } else {
-                // Si l'utilisateur n'est pas authentifié, on affiche tous les postes sans filtrage
-                this.filteredPostes = tempFilteredPostes.map(poste => {
-                
+    this.posteService.fetchPosts().pipe(
+      switchMap(() => this.posteService.listePoste()), // Charger les postes
+      map(postes => {
+        // Filtrage des postes par profil ou catégorie
+        if (this.profile !== 0) {
+          return postes.filter(poste => poste.user.id === this.profile);
+        } else if (this.category && this.category !== 'Catégorie') {
+          return postes.filter(poste => poste.category === this.category);
+        } else {
+          return postes; // Aucun filtrage
+        }
+      }),
+      switchMap(tempFilteredPostes => {
+        if (this.isUserAuthenticated) {
+          // Vérification des utilisateurs bloqués
+          const blockedCheckObservables = tempFilteredPostes.map(poste => {
+            if (poste.user.id !== this.user.id) {
+              return forkJoin([
+                this.blockService.isUserBlocked(this.user.id, poste.user.id),
+                this.blockService.isUserBlocked(poste.user.id, this.user.id)
+              ]).pipe(
+                map(([isBlockedByCurrentUser, isBlockedByPostOwner]) => {
+                  if (!isBlockedByCurrentUser && !isBlockedByPostOwner) {
                     const matchingIcons = this.categories.filter(catIcon => catIcon.name === poste.category);
                     return { ...poste, icons: matchingIcons };
-                });
-               
+                  } else {
+                    return null; // Poste bloqué
+                  }
+                })
+              );
+            } else {
+              return of(poste); // Poste non bloqué
             }
-        }, error => {
-            console.error('Erreur lors de la récupération des postes', error);
-        });
-    }, error => {
-        console.error('Erreur lors de la récupération des postes', error);
-    });
-}
+          });
+  
+          return forkJoin(blockedCheckObservables).pipe(
+            map(results => results.filter(post => post !== null)) // Filtrer les postes valides
+          );
+        } else {
+          // Pour les utilisateurs non authentifiés
+          return of(tempFilteredPostes.map(poste => {
+            const matchingIcons = this.categories.filter(catIcon => catIcon.name === poste.category);
+            return { ...poste, icons: matchingIcons };
+          }));
+        }
+      })
+    ).subscribe(
+      filteredPostes => {
+        this.filteredPostes = filteredPostes; // Mettre à jour les postes filtrés
+        console.log('Postes filtrés et affichés :', this.filteredPostes);
+      },
+      error => {
+        console.error('Erreur lors du chargement des postes :', error);
+      }
+    );
+  }
+  
 
   
  
@@ -523,7 +528,8 @@ export class PosteComponent implements OnInit {
   
 
   toggleDislike(poste:Poste){
-    let inter = new Interaction();
+    if(this.isUserAuthenticated)
+   { let inter = new Interaction();
     this.posteService.getPosteById(poste.id).subscribe(
       updatedPoste => {
           poste = updatedPoste;
@@ -573,7 +579,8 @@ export class PosteComponent implements OnInit {
   notif.recipients=[poste.user];    
     notif.poste=poste;
    notif.enabled=true;
-    notif.message=`${this.user.nom} n'aime pas votre poste ${this.truncateText(poste.message,15)} `;
+   const postMessage =  this.truncateText(poste.message, 10) ;
+   notif.message = `${this.user.nom} n'aime pas votre post « ${postMessage} »`;
    this.interaService.onInteractionPoste(inter).subscribe(
     (reponse: any) => {
       this.reponseMessage = reponse;
@@ -617,11 +624,15 @@ export class PosteComponent implements OnInit {
 (error) => {
 console.error('Error fetching poste:', error);
 }
-);
+);}
+else{
+  this.openVerifierconnect();
+}
   }
 
   async toggleLike(poste: Poste) {
-    let inter = new Interaction();
+    if(this.isUserAuthenticated)
+  {  let inter = new Interaction();
     
     // Rafraîchissement des données du poste avant d'effectuer une action
     this.posteService.getPosteById(poste.id).subscribe(
@@ -666,7 +677,8 @@ console.error('Error fetching poste:', error);
                     notif.recipients = [poste.user];    
                     notif.poste = poste;
                     notif.enabled = true;
-                    notif.message = `${this.user.nom} aime votre poste ${this.truncateText(poste.message, 15)} `;
+                    const postMessage =  this.truncateText(poste.message, 10) ;
+                    notif.message = `${this.user.nom} aime votre post « ${postMessage} »`;
                     
                     this.interaService.onInteractionPoste(inter).subscribe(
                         (reponse: any) => {
@@ -712,7 +724,10 @@ console.error('Error fetching poste:', error);
         (error) => {
             console.error('Error fetching poste:', error);
         }
-    );
+    );}
+    else {
+      this.openVerifierconnect();
+    }
 }
   loadLikeInteraction(poste: Poste) {
     this.interaService.getInteractionByUserIdAndPosteIdType(this.user.id, poste.id,"like").subscribe(
@@ -816,7 +831,8 @@ console.error('Error fetching poste:', error);
         const index =  this.filteredPostes.findIndex(p => p.id === updatedPoste.id);
         console.log("index ",index )
         if (index !== -1) {
-            this.filteredPostes[index] = updatedPoste; // Remplacez l'ancien poste par le mis à jour
+            this.filteredPostes[index] = updatedPoste;
+           this.loadPosts()
             
         } else {
             console.warn('Poste non trouvé dans la liste des postes.');
@@ -920,12 +936,26 @@ console.error('Error fetching poste:', error);
     this.isPopupPosteVisible=false;
 
     this.disableOverlay=false;
+    const popupDelete = document.querySelector('.popupDelete') as HTMLElement;
+    const overlay = document.querySelector('.overlay') as HTMLElement;
+
+   
+      popupDelete.style.display = 'none';
+      overlay.style.display = 'none';
+
+   
    
   }
+
+
 
   // Méthode pour gérer le clic sur l'overlay
   onOverlayClick() {
     this. closePopupOverlay();
+    
+   
+
+
   }
   togglePopupDelete(event: MouseEvent, poste: any) {
     const popupDelete = document.querySelector('.popupDelete') as HTMLElement;
@@ -972,11 +1002,12 @@ validerInform()
   callTogglePopupSignale(poste: any): void {
 
     this.poste = poste;
-    this.sharedService.togglePopupSignale();
     this.isSignalePoste= true;
+    this.sharedService.togglePopupSignale();
+    
 
   }
-
+ 
 
 
   clickUploadImagePoste(action: string) {
@@ -1004,16 +1035,26 @@ validerInform()
 
       });
     });*/
-    this.isOverlayVisible = true;
+    if(this.isUserAuthenticated)
+   { this.isOverlayVisible = true;
     this.isPopupVisible = true;
 
-    this.toggleAction(action);
+    this.toggleAction(action);}
+    else {
+
+      this.openVerifierconnect();
+    }
   }
 
 
 
   onSubmit() {
-    this.errorMessage = null;
+
+    if(this.isUserAuthenticated)
+
+ {  
+   console.log("this.authService.isUserAuthenticated()",this.authService.isUserAuthenticated())
+  this.errorMessage = null;
     this.errorMesCateg = null;
     this.submissionAttempted = true;
 
@@ -1057,7 +1098,10 @@ validerInform()
       location.reload();
 
 
-    }
+    }}
+    else
+  { this.openVerifierconnect();
+    console.log("this.authService.isUserAuthenticated()",this.authService.isUserAuthenticated())}
   }
   selectCategory(category: any) {
     this.selectedCategory = category.name;
@@ -1078,13 +1122,13 @@ validerInform()
     console.log(this.isUserAuthenticated)
 
   }
-  navProfile(user:User)
-  {
-    this.router.navigate(['/profile', user.id]).then(() => {
-      // Rafraîchir la page après la navigation
-      window.location.reload();
-    });  
-  }
+    navProfile(user:User)
+    {
+     
+        this.router.navigate(['/profile', user.id]).then(() => {
+          window.location.reload();
+        });
+      }
   findUser(username: string): Promise<User> {
     return new Promise((resolve, reject) => {
        this.userService.findByUsername(username).subscribe(
@@ -1144,6 +1188,7 @@ validerInform()
 
 
   clickMenu() {
+   
     const optionMenu = document.querySelector('.select-menu');
     const selectbtn = document.querySelector('.btn');
     selectbtn?.addEventListener('click', () => {
@@ -1191,7 +1236,13 @@ validerInform()
  onCommentsignale(event: boolean) {
     this.isSignaleComment = event; // Récupérer la valeur de isDeleteComment depuis le composant Comment
   }
+  onCommentConnect(event: boolean) {
+    this.isConnectComment = event; // Récupérer la valeur de isDeleteComment depuis le composant Comment
+  }
   onResirveSignale(event: Comment) {
+    this.comment = event;
+  } 
+  onResirveConnect(event: Comment) {
     this.comment = event;
   } 
   onResirve(event: Comment) {
@@ -1200,6 +1251,8 @@ validerInform()
   deepCopy<T>(data: T[]): T[] {
     return JSON.parse(JSON.stringify(data));
 }
+
+
   deleteObject() {
     console.log("comment etat", this.isDeleteComment);
     console.log(this.comment);
@@ -1216,7 +1269,7 @@ validerInform()
             this.filteredPostes = this.filteredPostes.filter(poste => poste.id !== this.poste.id);
 
           //this.loadPosts();
-          //this.closePopupOverlay()
+          
         },
 
         (error) => {
@@ -1302,6 +1355,7 @@ validerInform()
            
      
      this.changeDetectorRef .detectChanges();
+    
  
    }
    
@@ -1346,6 +1400,7 @@ validerInform()
       console.log("suppression Comment");
       this.isDeleteComment = false;
     }
+    this.closePopupOverlay()
   }
 
   triggerCommentChange() {
@@ -1420,7 +1475,8 @@ validerInform()
 
   }
   toggleTextarea(object: any): void {
-
+    if(this.isUserAuthenticated)
+{
     const container = document.querySelector('.containerPopupPoste');
     const comment = document.querySelector('.listeComment');
     if (object && object.message) {
@@ -1442,6 +1498,10 @@ validerInform()
         comment?.classList.remove('active');
         console.log( "textArea",this.textareaVisibility[object.message]);
        
+      }}
+      else{
+
+        this.openVerifierconnect();
       }
   }
   
@@ -1502,18 +1562,21 @@ validerInform()
    let notif=new  Notification;
    notif.enabled=true;
     notif.actor= this.user;
- let messageTruncate :string =this. truncateText(comment.text,15);
+ let messageTruncate :string =this. truncateText(comment.text,10);
 
-    notif.message= `${this.user.nom} a commenté ${this. truncateText(comment.text,15)}sur votre post ${this. truncateText(poste.message,30)}`;
+ const commentText =  this.truncateText(comment.text, 10) ;
+const postMessage =  this.truncateText(poste.message, 20) ;
+
+notif.message = `${this.user.nom} a commenté « ${commentText} » sur votre post « ${postMessage} »`;
     notif.recipients=[poste.user];
     notif.reaction="commente";
     notif.poste=p;
    
     notif.read=false;
     
-   this.commentService.addCommentToPost(comment).subscribe(
-      (reponse: any) => {
-        comment =reponse;
+ const reponse= await  this.commentService.addCommentToPost(comment).toPromise();
+ 
+        
        
         this.reponseMessage = reponse;
         notif. comment=reponse;
@@ -1538,7 +1601,7 @@ validerInform()
           console.log('Poste avant mise à jour:', this.filteredPostes[index]);
           this.filteredPostes[index] = {
               ...this.filteredPostes[index],
-              comments: [...this.filteredPostes[index].comments, comment] // Ajouter le commentaire
+              comments: [...this.filteredPostes[index].comments, reponse] // Ajouter le commentaire
           };
           console.log('Poste après mise à jour:', this.filteredPostes[index]);
           this.loadFilteredComments(this.filteredPostes[index])
@@ -1547,13 +1610,9 @@ validerInform()
 
       } else {
           console.warn('Poste non trouvé dans la liste des postes.');
-      }},
-      
-      (error) => {
-
-        console.error('Error add comment:', error);
       }
-    );
+      
+     
     
 
   this.posteService.getPosteById(poste.id).subscribe(
@@ -1612,14 +1671,18 @@ console.error('Error fetching poste:', error);
     if (event.target === this.overlay.nativeElement) {
       this.popupSignale.nativeElement.style.display = 'none';
       this.overlay.nativeElement.style.display = 'none';
-      // Supprimer l'écouteur après fermeture
-      this.overlay.nativeElement.removeEventListener('click', this.closePopup.bind(this));
+      this.isOverlayVisible=false;
+    this.onOverlayClick()
+     // this.overlay.nativeElement.removeEventListener('click', this.closePopup.bind(this));
       this.currentStep=1;
     }
   }
   
   closeSignale() {
-    this.closePopup({ target: this.overlay.nativeElement } as MouseEvent);
+   // this.closePopup({ target: this.overlay.nativeElement } as MouseEvent);
+    this.isOverlayVisible=false;
+    this.popupSignale.nativeElement.style.display = 'none';
+    this.onOverlayClick()
     this.currentStep=1;
   }
 sendSignale()
@@ -1642,6 +1705,7 @@ sendSignale()
     }
   signale.estTraite=false;
   this.signaleService.sendSignale(signale);
+  this.closeSignale();
   console.log("signlae", signale);
 
   this.reportDescription='';
@@ -1657,39 +1721,49 @@ updateCommentsCount(): void {
     this.commentsToShow[poste.id] = enabledComments.length;
   });
 }
- getActiveComments(poste: Poste): Comment[] {
+getActiveComments(poste: Poste): Comment[] {
   
   return poste.comments.filter(comment => comment.enabled) ;
 }
 
-getFilteredAndSortedComments(poste: Poste): Promise<Comment[]> {
-  const commentPromises: Promise<Comment | null>[] = poste.comments.map(comment => {
-    return new Promise((resolve, reject) => {
-      // Vérifiez si l'utilisateur actuel a bloqué l'utilisateur du commentaire
-      this.blockService.isUserBlocked(this.user.id, comment.user.id).subscribe(
-        (isBlockedByCurrentUser) => {
-          // Vérifiez également si l'utilisateur du commentaire a bloqué l'utilisateur actuel
-          this.blockService.isUserBlocked(comment.user.id, this.user.id).subscribe(
-            (isBlockedByCommentUser) => {
-              // Si ni l'utilisateur actuel n'est bloqué par le propriétaire du commentaire
-              // ni l'inverse, renvoyez le commentaire
-              if (!isBlockedByCurrentUser && !isBlockedByCommentUser) {
-                resolve(comment);  // Renvoie le commentaire
-              } else {
-                resolve(null);  // Renvoie null si l'utilisateur est bloqué
+async getFilteredAndSortedComments(poste: Poste): Promise<Comment[]> {
+  if (!this.isUserAuthenticated) {
+    // Si non authentifié, renvoyez tous les commentaires activés et triés par date
+    return Promise.resolve(
+      poste.comments
+        .filter(comment => comment.enabled)  // Ajout du filtrage par 'enabled'
+        .sort((a, b) => new Date(b.dateCreate).getTime() - new Date(a.dateCreate).getTime())
+    );
+  }
+
+  const commentPromises: Promise<Comment | null>[] = poste.comments
+    .filter(comment => comment.enabled)  // Filtrage par 'enabled' avant les vérifications de blocage
+    .map(comment => {
+      return new Promise((resolve, reject) => {
+        // Vérifie si l'utilisateur actuel a bloqué l'utilisateur du commentaire
+        this.blockService.isUserBlocked(this.user.id, comment.user.id).subscribe(
+          (isBlockedByCurrentUser) => {
+            // Vérifie également si l'utilisateur du commentaire a bloqué l'utilisateur actuel
+            this.blockService.isUserBlocked(comment.user.id, this.user.id).subscribe(
+              (isBlockedByCommentUser) => {
+                // Si ni l'utilisateur actuel n'est bloqué par le propriétaire du commentaire ni l'inverse, renvoyez le commentaire
+                if (!isBlockedByCurrentUser && !isBlockedByCommentUser) {
+                  resolve(comment);  // Renvoyer le commentaire
+                } else {
+                  resolve(null);  // Renvoyer null si l'utilisateur est bloqué
+                }
+              },
+              (error) => {
+                reject(error);
               }
-            },
-            (error) => {
-              reject(error);
-            }
-          );
-        },
-        (error) => {
-          reject(error);
-        }
-      );
+            );
+          },
+          (error) => {
+            reject(error);
+          }
+        );
+      });
     });
-  });
 
   // Utiliser Promise.all pour attendre la résolution de toutes les vérifications
   return Promise.all(commentPromises).then(results => {
@@ -1700,6 +1774,7 @@ getFilteredAndSortedComments(poste: Poste): Promise<Comment[]> {
     return filteredComments.sort((a, b) => new Date(b.dateCreate).getTime() - new Date(a.dateCreate).getTime());
   });
 }
+
 
 
 loadFilteredComments(poste: Poste): void {
@@ -1849,6 +1924,31 @@ async onCommentChanged(event: any) {
   }
   trackByCommentId(index: number, comment: any): number {
     return comment.id;  // Angular se base sur l'id pour suivre les modifications
+  }
+
+
+  openVerifierconnect(){
+
+    this.isOverlayVisible = true;
+    this.isPopupConnectVisible = true;
+  }
+  login(){
+    this.router.navigate(['/login']);  
+
+  }
+  copyPosteLink(poste:any)
+  {
+    const posteLink = `${window.location.origin}/detail/${poste.id}`;
+  navigator.clipboard.writeText(posteLink).then(() => {
+    this.snackBar.open('Le lien du poste a été copié dans le presse-papier !', '', {
+      duration: 3000, // Durée en ms
+    });
+  }).catch(err => {
+    console.error('Erreur lors de la copie du lien : ', err);
+    this.snackBar.open('Échec de la copie du lien', 'Fermer', {
+      duration: 3000,
+    });
+  });
   }
 }
 

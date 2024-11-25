@@ -1,7 +1,7 @@
 import { Injectable, NgZone, OnDestroy } from '@angular/core';
 
 import { TokenStorageService } from './token-storage.service';
-import { Observable, Subscription, fromEvent, interval, map, merge, tap, timer } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription, fromEvent, interval, map, merge, tap, timer } from 'rxjs';
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { User } from '../model/user';
@@ -12,6 +12,9 @@ import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 })
 export class AuthService implements OnDestroy{
   private isAuthenticated = false; 
+
+  private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.isUserAuthenticated());
+  
   private heartbeatInterval: Subscription | undefined;
   private visibilityChangeSubscription: Subscription | undefined;
   private windowFocusSubscription: Subscription | undefined;
@@ -24,7 +27,15 @@ export class AuthService implements OnDestroy{
   //  this.monitorUserActivity();
   this.isAuthenticated= window.localStorage.getItem('isAuthenticated') === 'true';
    }
- 
+   get isAuthenticated$() {
+    return this.isAuthenticatedSubject.asObservable();
+  }
+  
+  // Appeler cette méthode pour mettre à jour l'état lors de la connexion/déconnexion
+  updateAuthStatus(isAuthenticated: boolean) {
+    window.sessionStorage.setItem('isAuthenticated', isAuthenticated.toString());
+    this.isAuthenticatedSubject.next(isAuthenticated);
+  }
   login(username:string,password:string):Observable<any>
   {
   return this.http.post<any>(`/api/auth/signin`,
@@ -33,6 +44,7 @@ export class AuthService implements OnDestroy{
  {
  this.startHeartbeat();
   this.isAuthenticated=true;
+  this.updateAuthStatus(true);
   window.localStorage.setItem('isAuthenticated', 'true');
  }
  else{
@@ -57,6 +69,7 @@ export class AuthService implements OnDestroy{
     return window.sessionStorage.getItem('isAuthenticated') === 'true';
   }
   logout(): Observable<string> {
+    this.updateAuthStatus(false);
     const username = this.tokenStorage.getUser().username;
   
     console.log('username',username);

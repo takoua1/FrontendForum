@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Input, OnInit, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
 import { NotificationService } from '../services/notification.service';
 import { TokenStorageService } from '../services/token-storage.service';
 import { Poste } from '../model/poste';
@@ -13,6 +13,9 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
 import { CommentService } from '../services/comment.service';
 import { Comment } from '../model/comment';
 import { FormControl, FormGroup } from '@angular/forms';
+import { BlockService } from '../services/block.service';
+import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-notification',
   
@@ -41,6 +44,7 @@ export class NotificationComponent implements OnInit{
   user: User = new User();currentUser:any;
    showChilds:{ [key: number]: boolean } = {};
   commentsToShow: { [postId: string]: number } = {};
+  commentsChildShow: { [postId: string]: number } = {};
   textareaVisibility: { [key: string]: boolean } = {};
   isLike:  { [key: string]: boolean } = {};
   isDislike:  { [key: string]: boolean } = {};
@@ -48,6 +52,10 @@ export class NotificationComponent implements OnInit{
   totalDislikesMap: { [postId: number]: number } = {};
   textareaContent: string = '';
   reponseMessage: any;
+  isOverlayVisible: boolean = false;
+  isPopupPosteVisible: boolean = false;
+  filteredComments: any[] = [];
+  commentHierarchy: Comment[] = [];
   categories = [
     { name: 'Jeux', icon: 'bx bx-game', selected: false },
     { name: 'Education', icon: 'bx bxs-pen', selected: false },
@@ -60,14 +68,16 @@ export class NotificationComponent implements OnInit{
     @ViewChild('popupPoste') popupPoste: ElementRef ;
   @ViewChild('overlay') overlay: ElementRef ;
   @ViewChild('popupDelete', { static: false }) popupDelete!: ElementRef;
-  constructor(private notifService:NotificationService,
-    private token :TokenStorageService, private userService :UserService,
-    private interaService:InteractionService, private posteService:PosteService,private renderer: Renderer2, private commentService:CommentService){
+  isUserAuthenticated: boolean = false;
+  constructor(private notifService:NotificationService,private readonly changeDetectorRef: ChangeDetectorRef,private blockService:BlockService,
+    private token :TokenStorageService, private userService :UserService,private authService:AuthService,
+    private interaService:InteractionService,private router:Router,
+     private posteService:PosteService,private renderer: Renderer2, private commentService:CommentService){
 
   }
   ngOnInit(): void { 
     
-    
+  
     this.currentUser = this.token.getUser();
     this.findUser( this.currentUser.username);
     this.listeNotification();
@@ -78,10 +88,16 @@ export class NotificationComponent implements OnInit{
     this.commentForm = new FormGroup({
       messageComment: new FormControl('')
     });
+    this.isAuthenticated();
   }
 
  
-  
+  isAuthenticated(){
+    const user = this.token.getToken(); 
+    this.isUserAuthenticated = user !== null; 
+    console.log(this.isUserAuthenticated); 
+
+  }
 
    listeNotification() {
     console.log('passer')
@@ -144,47 +160,43 @@ export class NotificationComponent implements OnInit{
         return formattedDate;
       }
     }
-    loadCommentsForPoste(posteId: number) {
-      this.commentService.getCommentsByPostId(posteId).subscribe(
-        (comments: any[]) => {
-          this.selectedPost.comments = comments.filter(comment => comment.enabled);
-          
-          
-        },
-        error => {
-          console.error('Error fetching comments:', error);
-        }
-      );
-    }
-    openPostPopup(event: MouseEvent, not: any) {
-      console.log("Notification post:", not.poste);
-     
-      this.loadLikeInteraction(not.poste);
-      this.loadDislikeInteraction(not.poste);
-      this.getTotalLikes(not.poste);
-      this.getTotalDislikes(not.poste);
+ 
+   /* openPostPopup(event: MouseEvent, not: any): void {
       if (!not || !not.poste) {
         console.error("Notification or post is undefined");
         return;
       }
-  
-     
+      
+      console.log("Notification post:", not.poste);
+    
+      // Charger les interactions
+      this.loadLikeInteraction(not.poste);
+      this.loadDislikeInteraction(not.poste);
+      this.getTotalLikes(not.poste);
+      this.getTotalDislikes(not.poste);
+    
       this.selectedPost = not.poste;
       this.loadCommentsForPoste(this.selectedPost.id);
-      console.log("this.selectedPost",this.selectedPost)
+      console.log("this.selectedPost", this.selectedPost);
     
+      // Charger l'icône de catégorie
       this.matchingIcon = this.categories.find(catIcon => catIcon.name === not.poste.category);
-  
-      console.log("Matching icon:", this.matchingIcon.name);
-  
+      if (this.matchingIcon) {
+        console.log("Matching icon:", this.matchingIcon.name);
+      } else {
+        console.warn("Matching icon not found for category:", not.poste.category);
+      }
+    
       if (!this.popupPoste || !this.overlay) {
         console.error("Popup or overlay element not found");
         return;
       }
-  
+    
+      // Afficher le popup et l'overlay
       this.renderer.setStyle(this.popupPoste.nativeElement, 'display', 'block');
       this.renderer.setStyle(this.overlay.nativeElement, 'display', 'block');
-  
+    
+      // Gestion de la fermeture du popup
       const closePopup = (event: MouseEvent) => {
         if (event.target === this.overlay.nativeElement) {
           this.renderer.setStyle(this.popupPoste.nativeElement, 'display', 'none');
@@ -192,31 +204,36 @@ export class NotificationComponent implements OnInit{
           this.overlay.nativeElement.removeEventListener('click', closePopup);
         }
       };
-  
       this.overlay.nativeElement.addEventListener('click', closePopup);
-  
+    
+      // Délai pour afficher le commentaire (ajuster si nécessaire)
       setTimeout(() => {
-        const container = this.popupPoste.nativeElement.querySelector('.containerPopupPoste');
-        const comment = this.popupPoste.nativeElement.querySelector('.listeComment');
-  
+       const container = this.popupPoste.nativeElement.querySelector('.containerPopupPoste');
+       const comment = this.popupPoste.nativeElement.querySelector('.listeComment');
+    
         if (!container) {
           console.error("Container element not found");
           return;
         }
-  
+    
         if (!comment) {
           console.error("Comment element not found");
           return;
         }
-  
-        if (not.comment ) {
-          console.log(not.comment);
-          this.renderer.addClass(container, 'active');
-          this.renderer.addClass(comment, 'active');
+    
+        // Si une notification est liée à un commentaire spécifique
+        if (not.comment) {
+          console.log("Notification comment:", not.comment);
+      this.toggleCommentsPart(this.selectedPost.id.toString(),this.selectedPost, event)
+         // this.renderer.addClass(container, 'active');
+         // this.renderer.addClass(comment, 'active');
+    
+          // Attente pour que les commentaires parents soient affichés
           setTimeout(() => {
             const commentId = not.comment.id;
             this.expandParentComments(this.selectedPost.comments, commentId);
-  
+    
+            // Délai pour défiler jusqu'au commentaire
             setTimeout(() => {
               const commentElement = document.getElementById('comment-' + commentId);
               if (commentElement) {
@@ -224,17 +241,162 @@ export class NotificationComponent implements OnInit{
               } else {
                 console.warn("Comment element not found for ID:", commentId);
               }
-            }, 1000); // Adjust delay if necessary
-          }, 300);
+            }, 300); // Délai ajusté
+    
+          }, 300); // Délai ajusté
+    
         } else {
-          this.renderer.removeClass(container, 'active');
-          this.renderer.removeClass(comment, 'active');
+         this.renderer.removeClass(container, 'active');
+         this.renderer.removeClass(comment, 'active');
         }
-      }, 0); // Adjust delay if necessary
-    }
+      }, 0); // Délai pour le chargement du popup
+    }*/
+
+
+      openPostPopup(event: MouseEvent, not: Notification ) {
+        this.selectedPost = not.poste;
+        
+        this.loadFilteredComments(not.poste).then(() => {
+        this.loadCommentsForPoste(not.poste);
+        this.loadLikeInteraction(not.poste);
+        this.loadDislikeInteraction(not.poste);
+        this.getTotalLikes(not.poste);
+        // Utilisez un délai pour attendre que `filteredComments` soit rempli
+   
+      // Affichez les commentaires après que `loadFilteredComments` a mis à jour `filteredComments`
+      this.filteredComments.forEach((comment, index) => {
+          console.log(`Index: ${index}, Comment ID: ${comment.id}, Content: ${comment.content}`);
+      });
   
+        this.isOverlayVisible = true;
+        this.isPopupPosteVisible = true;
+      
+        this.matchingIcon = this.categories.find(catIcon => catIcon.name === not.poste.category);
+        setTimeout(() => {
+          if (not.comment) {
+              console.log("Notification comment:", not.comment);
+             
+             
+     
+     this.commentService.getCommentHierarchy(not.comment.id).subscribe(
+      (hierarchy) => {
+          this.commentHierarchy = hierarchy;
+          console.log("Comment Hierarchy:", this.commentHierarchy);
+          const firstComment = this.commentHierarchy[0];
+          const targetIndex = this.filteredComments.findIndex(comment => comment.id === firstComment.id);
+          console.log("targetIndex",targetIndex)
+         this.commentsToShow[not.poste.id] = Math.ceil((targetIndex + 1) / 10) * 10;
+        
+          this.scrollToComment(firstComment.id.toString());
+      },
+      (error) => {
+          console.error('Erreur lors du chargement de la hiérarchie des commentaires:', error);
+      }
+  );
+}
+}, 100);
+});
+}
+          
+      
 
-
+expandHierarchy(hierarchy: Comment[]) {
+  hierarchy.forEach(comment => {
+      // Assurez-vous que chaque niveau est "ouvert" ou visible
+      this.commentsToShow[this.selectedPost.id] = Math.max(this.commentsToShow[this.selectedPost.id], hierarchy.length * 10);
+      console.log("Déroulement des commentaires dans la hiérarchie :", comment);
+  });
+}
+       
+          
+       
+            expandHierarchyForTargetComment(postId: number, targetCommentId: number): Promise<void> {
+              return new Promise((resolve) => {
+                  const expandRecursively = (comments: any[]): boolean => {
+                      for (const comment of comments) {
+                          if (comment.id === targetCommentId) {
+                              // Marquer le commentaire cible comme visible
+                              this.commentsToShow[comment.id] = comment.childComments ? comment.childComments.length : 1;
+                              resolve(); // Résoudre la promesse lorsque le commentaire cible est trouvé
+                              return true;
+                          }
+          
+                          // Si le commentaire a des enfants
+                          if (comment.childComments && comment.childComments.length > 0) {
+                              // Si un enfant est le commentaire cible, on marque le parent comme visible
+                              if (expandRecursively(comment.childComments)) {
+                                  this.commentsToShow[comment.id] = comment.childComments.length;
+                                  return true;
+                              }
+                          }
+                      }
+                      return false;
+                  };
+          
+                  expandRecursively(this.filteredComments);
+              });
+          }
+          
+       loadFilteredComments(poste: Poste): Promise<void> {
+        return this.getFilteredAndSortedComments(poste).then(filteredComments => {
+            this.filteredComments = filteredComments;
+            this.changeDetectorRef.detectChanges();
+        });
+    }
+      getFilteredAndSortedComments(poste: Poste): Promise<Comment[]> {
+       
+        
+        const commentPromises: Promise<Comment | null>[] = poste.comments.map(comment => {
+          return new Promise((resolve, reject) => {
+            // Vérifiez si l'utilisateur actuel a bloqué l'utilisateur du commentaire
+            this.blockService.isUserBlocked(this.user.id, comment.user.id).subscribe(
+              (isBlockedByCurrentUser) => {
+                // Vérifiez également si l'utilisateur du commentaire a bloqué l'utilisateur actuel
+                this.blockService.isUserBlocked(comment.user.id, this.user.id).subscribe(
+                  (isBlockedByCommentUser) => {
+                    // Si ni l'utilisateur actuel n'est bloqué par le propriétaire du commentaire
+                    // ni l'inverse, renvoyez le commentaire
+                    if (!isBlockedByCurrentUser && !isBlockedByCommentUser) {
+                      resolve(comment);  // Renvoie le commentaire
+                    } else {
+                      resolve(null);  // Renvoie null si l'utilisateur est bloqué
+                    }
+                  },
+                  (error) => {
+                    reject(error);
+                  }
+                );
+              },
+              (error) => {
+                reject(error);
+              }
+            );
+          });
+        });
+      
+        // Utiliser Promise.all pour attendre la résolution de toutes les vérifications
+        return Promise.all(commentPromises).then(results => {
+          // Filtrer les résultats pour enlever les commentaires bloqués (null)
+          const filteredComments = results.filter(comment => comment !== null) as Comment[];
+      
+          // Trier les commentaires filtrés par date
+          return filteredComments.sort((a, b) => new Date(b.dateCreate).getTime() - new Date(a.dateCreate).getTime());
+        });
+      }
+      loadCommentsForPoste(poste: Poste) {
+        this.commentService.getCommentsByPostId(poste.id).subscribe(
+          (comments: Comment[]) => {
+            poste.comments = comments.filter(comment => comment.enabled);
+            
+            
+          },
+          error => {
+            console.error('Error fetching comments:', error);
+          }
+        );
+        this.changeDetectorRef.detectChanges();
+      }
+      
     toggleForComment()
     {
       const container = this.popupPoste.nativeElement.querySelector('.containerPopupPoste');
@@ -268,41 +430,54 @@ export class NotificationComponent implements OnInit{
         }
     }
   
-    scrollToComment(commentId: string) {
+   /* scrollToComment(commentId: string): void {
       const commentElement = document.getElementById('comment-' + commentId);
       if (commentElement) {
         commentElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
       } else {
         console.warn("Comment element not found for ID:", commentId);
       }
+    }*/
+      scrollToComment(commentId: string) {
+        // Attendre que le DOM se mette à jour pour vérifier la présence du commentaire
+        setTimeout(() => {
+            const targetComment = document.getElementById(`comment-${commentId}`);
+            if (targetComment) {
+                // Si le commentaire est visible, on scrolle vers lui
+                targetComment.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else {
+                console.warn('Le commentaire cible n’a pas pu être localisé dans le DOM.');
+            }
+        }, 100);
     }
-    
-    expandParentComments(comments: any[], targetCommentId: string) {
+    // Fonction récursive pour marquer les parents comme visibles jusqu'au commentaire cible
+    expandParentComments(comments: any[], targetCommentId: string): void {
+      // Fonction récursive interne pour rechercher le commentaire cible et marquer les parents
       const findParentRecursive = (comments: any[], targetId: string): boolean => {
         for (const comment of comments) {
-          if(comment.enabled)
-     {     if (comment.id === targetId) {
-            // Marquer le commentaire cible comme visible
-            this.showChilds[comment.id] = true;
-            return true;
-          }
-  
-          if (comment.childComments && comment.childComments.length > 0) {
-            // Chercher récursivement dans les enfants
-            if (findParentRecursive(comment.childComments, targetId)) {
-              // Marquer le parent comme visible si l'un des enfants contient le commentaire cible
-              this.showChilds[comment.id] = true;
-              console.log("comment show",comment.id)
+          // Vérifie que le commentaire est activé avant de vérifier les enfants
+          if (comment.enabled) {
+            // Si l'ID du commentaire correspond à l'ID cible
+            if (comment.id === targetId) {
+              this.commentsToShow[comment.id] = 10; // Marquer le commentaire cible comme visible
               return true;
             }
+    
+            // Vérifie les commentaires enfants s'ils existent
+            if (comment.childComments && comment.childComments.length > 0) {
+              if (findParentRecursive(comment.childComments, targetId)) {
+                this.commentsToShow[comment.id] = 10; // Marquer les parents comme visibles
+                console.log("Comment parent marked as visible:", comment.id);
+                return true;
+              }
+            }
           }
-        }}
-        return false;
+        }
+        return false; // Retourne false si le commentaire cible n'est pas trouvé dans la hiérarchie actuelle
       };
     
       // Appeler la fonction récursive pour trouver et marquer les parents jusqu'au premier niveau
       findParentRecursive(comments, targetCommentId);
-    
     }
   
     toggleCommentParents(comments: any[], targetCommentId: string) {
@@ -316,7 +491,12 @@ export class NotificationComponent implements OnInit{
         }
       }
     }
-  
+    toggleExpand(poste: any): void {
+      poste.expanded = !poste.expanded;
+    }
+    isTextOverflow(message: string): boolean {
+      return message.length > 100; // Modifier la limite ici si nécessaire
+    }
     showCommentPath(commentId: string, comments: any[]) {
       comments.forEach(comment => {
         if (comment.id === commentId) {
@@ -370,44 +550,45 @@ export class NotificationComponent implements OnInit{
     console.log("back");
   }
   toggleCommentsPart(postId: string, poste:any, event: MouseEvent) {
-    this.commentsToShow[postId] = this.commentsToShow[postId] ? 0 : poste.comments.length;
-   
-    const container = document.querySelector('.containerPopupPoste');
-    const comment = document.querySelector('.listeComment');
-   
-    const commentPopup = document.querySelector('.commentPopup');
+    this.loadCommentsForPoste(poste);
+     
+     this.commentsToShow[postId] = this.commentsToShow[postId] ? 0 : 10;
     
-   
-        if( this.textareaVisibility[poste.message]=== true)
-          {  
-            container?.classList.add('active');
+     const container = document.querySelector('.containerPopupPoste');
+     const comment = document.querySelector('.listeComment');
+    
+     const commentPopup = document.querySelector('.commentPopup');
+     
+    
+         if( this.textareaVisibility[poste.message]=== true)
+           {  
+             container?.classList.add('active');
+             
             
-           
-          }
-          else
-            {
-              console.log( this.textareaVisibility[poste.message])
+           }
+           else
+             {
+               console.log( this.textareaVisibility[poste.message])
+             
+               container?.classList.toggle('active');
+               comment?.classList.toggle('active');
+              console.log( "teste comment",comment?.classList.contains('active'));
+             }
+     
+             this.isActive = comment?.classList.contains('active');
+ 
+    
+    console.log(this.isActive);
+     const overlay = document.querySelector('.overlay') as HTMLElement;
+     overlay?.addEventListener('click', function () {
+       container?.classList.remove('active');
+               comment?.classList.remove('active');
             
-              container?.classList.toggle('active');
-              comment?.classList.toggle('active');
-             console.log( "teste comment",comment?.classList.contains('active'));
-            }
-    
-            this.isActive = comment?.classList.contains('active');
-
+     
+     });
    
-   console.log(this.isActive);
-    const overlay = document.querySelector('.overlay') as HTMLElement;
-    overlay?.addEventListener('click', function () {
-      container?.classList.remove('active');
-              comment?.classList.remove('active');
-           
-    
-    });
-   
-   
-   
-  }
+   }
+ 
   isTextareaVisible(poste: any): boolean {
   
     return this.textareaVisibility[poste.message];
@@ -816,7 +997,19 @@ togglePopup(event: MouseEvent) {
   }
 }
 
+goToPostDetail(not: Notification) {
+  if(not.poste)
+{ this.router.navigate(['/detail', not?.poste.id], { queryParams: { notifId: not.id } }).then(() => {
 
+    window.location.reload();
+  });}
+else{
+    this.router.navigate(['/profile', not.actor.id]).then(() => {
+      window.location.reload();
+
+    })
+  
+}}
 
 
 }

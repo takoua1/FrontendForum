@@ -20,4 +20,5 @@ export class User {
     lastActive:string;
     role:string;
     image:string;
+  
 }

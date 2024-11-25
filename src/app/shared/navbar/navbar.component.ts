@@ -2,7 +2,7 @@ import { AfterViewChecked, ChangeDetectorRef, Component, ElementRef, OnInit, Que
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { PosteService } from '../../services/poste.service';
-import { Subject, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
+import { Subject, Subscription, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 import { UserService } from '../../services/user.service';
 import { TokenStorageService } from '../../services/token-storage.service';
 import { User } from '../../model/user';
@@ -16,6 +16,10 @@ import { Comment } from '../../model/comment';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { CommentService } from '../../services/comment.service';
 import { FormControl, FormGroup } from '@angular/forms';
+import { BlockService } from '../../services/block.service';
+import { FollowService } from '../../services/follow.service';
+import { ChatService } from '../../services/chat.service';
+import { MessageMailService } from '../../services/message-mail.service';
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
@@ -41,6 +45,7 @@ export class NavbarComponent implements OnInit {
   notifications: any[] = [];
   notificationsList: any[] = [];
   unreadCount: number = 0;
+  unreadMessageCount: number = 0;
   showNotificationPopup: boolean = false;
   selectedPost: Poste;
   comment: Comment;
@@ -48,7 +53,7 @@ export class NavbarComponent implements OnInit {
   matchingIcon: any;
   isActive:any;
   increment = 10;
- 
+  textLimit = 100;
    showChilds:{ [key: number]: boolean } = {};
   commentsToShow: { [postId: string]: number } = {};
   textareaVisibility: { [key: string]: boolean } = {};
@@ -59,6 +64,14 @@ export class NavbarComponent implements OnInit {
   textareaContent: string = '';
   reponseMessage: any;
   commentForm: any = FormGroup;
+  isPopupPosteVisible: boolean = false;
+  isOverlayVisible: boolean = false;
+  filteredComments: any[] = [];
+  commentHierarchy: Comment[] = [];
+  mailCountSubscription: Subscription | undefined;
+  mailCount: number = 0;
+  mails: any[]=[] ;
+  mailSubscription: Subscription | undefined;
   categories = [
     { name: 'Jeux', icon: 'bx bx-game', selected: false },
     { name: 'Education', icon: 'bx bxs-pen', selected: false },
@@ -72,9 +85,10 @@ export class NavbarComponent implements OnInit {
   @ViewChild('overlay') overlay: ElementRef ;
   @ViewChild('popupSupp', { static: false }) popupDelete!: ElementRef;
     constructor(private authService:AuthService, private userService: UserService
-      ,private router: Router,private posteService: PosteService,  
-      private token: TokenStorageService,private notifService:NotificationService,
-      private renderer: Renderer2, private interaService:InteractionService,private cdr: ChangeDetectorRef,private commentService:CommentService) {
+      ,private router: Router,private posteService: PosteService,private mailService:MessageMailService ,
+      private token: TokenStorageService,private notifService:NotificationService,private readonly changeDetectorRef: ChangeDetectorRef,
+      private renderer: Renderer2, private interaService:InteractionService,private cdr: ChangeDetectorRef,
+      private commentService:CommentService,private chatService:ChatService, private blockService:BlockService,private followService:FollowService) {
       this.user = new User();
     }
 
@@ -101,6 +115,7 @@ export class NavbarComponent implements OnInit {
    this.settingActive();
   
   this.getUnreadCount();
+  this.getunreadMessageCount();
     this.notifService.getPrivateNotification().subscribe((notif: any) => {
       console.log('Before adding notification, notifications array:', this.notifications);
       if (this.notifications) {
@@ -120,7 +135,26 @@ export class NavbarComponent implements OnInit {
     this.notifService.notifications$.subscribe(
       notifications => this.notificationsList = notifications
     );
-
+    this.chatService.getUnreadCountUpdates().subscribe((count) => {
+      this.unreadMessageCount = count;
+    });
+    this.mailCountSubscription = this.mailService.getUnTraitesCount().subscribe(count => {
+    
+      this.mailCount = count;
+      console.log(this.mailCount);
+    });
+    this.loadMails();
+    this.mailSubscription=  this.mailService.getMailStatus().subscribe((mail) => {
+      if (mail) {
+              console.log("mail",mail)
+        this.mailService.updateUnTraitesCount(this.mails);
+     
+      }
+    },
+    (error) => {
+      console.error('Error receiving signale status:', error);
+    });
+  
   }
 
 
@@ -142,21 +176,70 @@ export class NavbarComponent implements OnInit {
     })
 
   }
+  getunreadMessageCount()
+  
+  {const user = this.token.getUser();
+    this.chatService.getUnreadTotal(this.currentUser.username).subscribe((count:number)=>{
+      this.unreadMessageCount=count;
+      console.log("this.unreadMessageCount",this.unreadMessageCount)
+      this.cdr.detectChanges();
+    })
+  }
+  
   toggleNotificationPopup(): void {
     this.showNotificationPopup = !this.showNotificationPopup;
-   
-      const user = this.token.getUser();
-      this.notifService.getNotificationsForUser(user.username).subscribe(notifications => {
-        this.notificationsList = notifications;
-      });
-      this.notifService.markNotificationsAsRead(user.username).subscribe(() => {
+  
+    const user = this.token.getUser();
+  
+    // Récupérer les notifications pour l'utilisateur
+    this.notifService.getNotificationsForUser(user.username).subscribe(
+      (notifications: any[]) => {
+        const filteredNotifications: Notification[] = [];
+  
+        // Vérifier le blocage et le statut d'amitié pour chaque notification
+        const checkBlockedAndFriendStatusPromises = notifications.map(notification => {
+          return Promise.all([
+            this.blockService.isUserBlocked(this.user.id, notification.actor.id).toPromise(),
+            this.blockService.isUserBlocked(notification.actor.id, this.user.id).toPromise(),
+            this.followService.isFollowing(this.user.id,notification.actor.id).toPromise()  // Vérification si c'est un ami
+          ])
+          .then(([isBlockedByCurrentUser, isBlockedByNotificationActor, isFriend]) => {
+            // Ajouter la propriété isFriend à la notification
+            notification.actor.isFriend = isFriend;  // Ajout de l'information sur l'amitié
+  
+            // Si l'utilisateur n'a pas bloqué l'acteur de la notification et vice versa, on l'ajoute à la liste filtrée
+            if (!isBlockedByCurrentUser && !isBlockedByNotificationActor) {
+              filteredNotifications.push(notification);
+            }
+          })
+          .catch(error => {
+            console.error("Erreur lors de la vérification du blocage ou de l'amitié", error);
+          });
+        });
+  
+        // Attendre que toutes les vérifications de blocage et d'amitié soient terminées
+        Promise.all(checkBlockedAndFriendStatusPromises).then(() => {
+          // Mettre à jour la liste des notifications après filtrage
+          this.notificationsList = filteredNotifications;
+        });
+  
+      },
+      (error) => {
+        console.error("Erreur lors de la récupération des notifications", error);
+      }
+    );
+  
+    // Marquer les notifications comme lues
+    this.notifService.markNotificationsAsRead(user.username).subscribe(
+      () => {
         this.unreadCount = 0;
-        
-
-
-      });
-      
+      },
+      (error) => {
+        console.error("Erreur lors de la mise à jour des notifications comme lues", error);
+      }
+    );
   }
+  
 goToNotification(){
   this.router.navigate(['/notification']);
 }
@@ -286,20 +369,9 @@ goToNotification(){
     }
     
   }
-  loadCommentsForPoste(posteId: number) {
-    this.commentService.getCommentsByPostId(posteId).subscribe(
-      (comments: any[]) => {
-        this.selectedPost.comments = comments.filter(comment => comment.enabled);
-        
-        
-      },
-      error => {
-        console.error('Error fetching comments:', error);
-      }
-    );
-  }
+ 
 
-  openPostPopup(event: MouseEvent, not: any) {
+ /* openPostPopup(event: MouseEvent, not: any) {
     console.log("Notification post:", not.poste);
     this.loadLikeInteraction(not.poste);
     this.loadDislikeInteraction(not.poste);
@@ -372,76 +444,244 @@ goToNotification(){
       }
     }, 0); // Adjust delay if necessary
   }
+*/
+goToPostDetail(not: Notification) {
+  if(not.poste)
+{ this.router.navigate(['/detail', not?.poste.id], { queryParams: { notifId: not.id } }).then(() => {
 
+    window.location.reload();
+  });}
+else{
+    this.router.navigate(['/profile', not.actor.id]).then(() => {
+      window.location.reload();
 
-
-  toggleForComment()
-  {
-    const container = this.popupPoste.nativeElement.querySelector('.containerPopupPoste');
-    const comment = this.popupPoste.nativeElement.querySelector('.listeComment');
-    this.renderer.addClass(container, 'active');
-      this.renderer.addClass(comment, 'active');
-  }
-  toggleTextarea(object: any): void {
-
-    const container = document.querySelector('.containerPopupPoste');
-    const comment = document.querySelector('.listeComment');
-    if (object && object.message) {
-      this.textareaVisibility[object.message] = !this.textareaVisibility[object.message];
-    }
-
-   if( this.textareaVisibility[object.message]=== true)
-      {
-        container?.classList.add('active');
-        console.log( "textArea2",this.textareaVisibility[object.message]);
-      }
-     else if( this.textareaVisibility[object.message]=== false && this.isActive===true)
-      {
-        container?.classList.add('active');
-        console.log( "textArea1",this.textareaVisibility[object.message]);
-      }
-      else  {
-        container?.classList.remove('active');
-        comment?.classList.remove('active');
-        console.log( "textArea",this.textareaVisibility[object.message]);
-       
-      }
-  }
-
-  scrollToComment(commentId: string) {
-    const commentElement = document.getElementById('comment-' + commentId);
-    if (commentElement) {
-      commentElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    } else {
-      console.warn("Comment element not found for ID:", commentId);
-    }
-  }
+    })
   
-  expandParentComments(comments: any[], targetCommentId: string) {
-    const findParentRecursive = (comments: any[], targetId: string): boolean => {
-      for (const comment of comments) {
-        if (comment.id === targetId) {
-          // Marquer le commentaire cible comme visible
-          this.showChilds[comment.id] = true;
+}}
+openPostPopup(event: MouseEvent, not: Notification ) {
+  this.selectedPost = not.poste;
+  
+  this.loadFilteredComments(not.poste).then(() => {
+  this.loadCommentsForPoste(not.poste);
+  this.loadLikeInteraction(not.poste);
+  this.loadDislikeInteraction(not.poste);
+  this.getTotalLikes(not.poste);
+  // Utilisez un délai pour attendre que `filteredComments` soit rempli
+
+// Affichez les commentaires après que `loadFilteredComments` a mis à jour `filteredComments`
+this.filteredComments.forEach((comment, index) => {
+    console.log(`Index: ${index}, Comment ID: ${comment.id}, Content: ${comment.content}`);
+});
+
+  this.isOverlayVisible = true;
+  this.isPopupPosteVisible = true;
+
+  this.matchingIcon = this.categories.find(catIcon => catIcon.name === not.poste.category);
+  setTimeout(() => {
+    if (not.comment) {
+        console.log("Notification comment:", not.comment);
+       
+       
+
+this.commentService.getCommentHierarchy(not.comment.id).subscribe(
+(hierarchy) => {
+    this.commentHierarchy = hierarchy;
+    console.log("Comment Hierarchy:", this.commentHierarchy);
+    const firstComment = this.commentHierarchy[0];
+    const targetIndex = this.filteredComments.findIndex(comment => comment.id === firstComment.id);
+    console.log("targetIndex",targetIndex)
+   this.commentsToShow[not.poste.id] = Math.ceil((targetIndex + 1) / 10) * 10;
+  
+    this.scrollToComment(firstComment.id.toString());
+},
+(error) => {
+    console.error('Erreur lors du chargement de la hiérarchie des commentaires:', error);
+}
+);
+}
+}, 100);
+});
+}
+    
+
+
+expandHierarchy(hierarchy: Comment[]) {
+hierarchy.forEach(comment => {
+// Assurez-vous que chaque niveau est "ouvert" ou visible
+this.commentsToShow[this.selectedPost.id] = Math.max(this.commentsToShow[this.selectedPost.id], hierarchy.length * 10);
+console.log("Déroulement des commentaires dans la hiérarchie :", comment);
+});
+}
+ 
+    
+ 
+      expandHierarchyForTargetComment(postId: number, targetCommentId: number): Promise<void> {
+        return new Promise((resolve) => {
+            const expandRecursively = (comments: any[]): boolean => {
+                for (const comment of comments) {
+                    if (comment.id === targetCommentId) {
+                        // Marquer le commentaire cible comme visible
+                        this.commentsToShow[comment.id] = comment.childComments ? comment.childComments.length : 1;
+                        resolve(); // Résoudre la promesse lorsque le commentaire cible est trouvé
+                        return true;
+                    }
+    
+                    // Si le commentaire a des enfants
+                    if (comment.childComments && comment.childComments.length > 0) {
+                        // Si un enfant est le commentaire cible, on marque le parent comme visible
+                        if (expandRecursively(comment.childComments)) {
+                            this.commentsToShow[comment.id] = comment.childComments.length;
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            };
+    
+            expandRecursively(this.filteredComments);
+        });
+    }
+    
+ loadFilteredComments(poste: Poste): Promise<void> {
+  return this.getFilteredAndSortedComments(poste).then(filteredComments => {
+      this.filteredComments = filteredComments;
+      this.changeDetectorRef.detectChanges();
+  });
+}
+getFilteredAndSortedComments(poste: Poste): Promise<Comment[]> {
+ 
+  
+  const commentPromises: Promise<Comment | null>[] = poste.comments.map(comment => {
+    return new Promise((resolve, reject) => {
+      // Vérifiez si l'utilisateur actuel a bloqué l'utilisateur du commentaire
+      this.blockService.isUserBlocked(this.user.id, comment.user.id).subscribe(
+        (isBlockedByCurrentUser) => {
+          // Vérifiez également si l'utilisateur du commentaire a bloqué l'utilisateur actuel
+          this.blockService.isUserBlocked(comment.user.id, this.user.id).subscribe(
+            (isBlockedByCommentUser) => {
+              // Si ni l'utilisateur actuel n'est bloqué par le propriétaire du commentaire
+              // ni l'inverse, renvoyez le commentaire
+              if (!isBlockedByCurrentUser && !isBlockedByCommentUser) {
+                resolve(comment);  // Renvoie le commentaire
+              } else {
+                resolve(null);  // Renvoie null si l'utilisateur est bloqué
+              }
+            },
+            (error) => {
+              reject(error);
+            }
+          );
+        },
+        (error) => {
+          reject(error);
+        }
+      );
+    });
+  });
+
+  // Utiliser Promise.all pour attendre la résolution de toutes les vérifications
+  return Promise.all(commentPromises).then(results => {
+    // Filtrer les résultats pour enlever les commentaires bloqués (null)
+    const filteredComments = results.filter(comment => comment !== null) as Comment[];
+
+    // Trier les commentaires filtrés par date
+    return filteredComments.sort((a, b) => new Date(b.dateCreate).getTime() - new Date(a.dateCreate).getTime());
+  });
+}
+loadCommentsForPoste(poste: Poste) {
+  this.commentService.getCommentsByPostId(poste.id).subscribe(
+    (comments: Comment[]) => {
+      poste.comments = comments.filter(comment => comment.enabled);
+      
+      
+    },
+    error => {
+      console.error('Error fetching comments:', error);
+    }
+  );
+  this.changeDetectorRef.detectChanges();
+}
+toggleForComment()
+{
+  const container = this.popupPoste.nativeElement.querySelector('.containerPopupPoste');
+  const comment = this.popupPoste.nativeElement.querySelector('.listeComment');
+  this.renderer.addClass(container, 'active');
+    this.renderer.addClass(comment, 'active');
+}
+toggleTextarea(object: any): void {
+
+  const container = document.querySelector('.containerPopupPoste');
+  const comment = document.querySelector('.listeComment');
+  if (object && object.message) {
+    this.textareaVisibility[object.message] = !this.textareaVisibility[object.message];
+  }
+
+ if( this.textareaVisibility[object.message]=== true)
+    {
+      container?.classList.add('active');
+      console.log( "textArea2",this.textareaVisibility[object.message]);
+    }
+   else if( this.textareaVisibility[object.message]=== false && this.isActive===true)
+    {
+      container?.classList.add('active');
+      console.log( "textArea1",this.textareaVisibility[object.message]);
+    }
+    else  {
+      container?.classList.remove('active');
+      comment?.classList.remove('active');
+      console.log( "textArea",this.textareaVisibility[object.message]);
+     
+    }
+}
+
+scrollToComment(commentId: string) {
+  // Attendre que le DOM se mette à jour pour vérifier la présence du commentaire
+  setTimeout(() => {
+      const targetComment = document.getElementById(`comment-${commentId}`);
+      if (targetComment) {
+          // Si le commentaire est visible, on scrolle vers lui
+          targetComment.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+          console.warn('Le commentaire cible n’a pas pu être localisé dans le DOM.');
+      }
+  }, 100);
+}
+// Fonction récursive pour marquer les parents comme visibles jusqu'au commentaire cible
+expandParentComments(comments: any[], targetCommentId: string): void {
+// Fonction récursive interne pour rechercher le commentaire cible et marquer les parents
+const findParentRecursive = (comments: any[], targetId: string): boolean => {
+  for (const comment of comments) {
+    // Vérifie que le commentaire est activé avant de vérifier les enfants
+    if (comment.enabled) {
+      // Si l'ID du commentaire correspond à l'ID cible
+      if (comment.id === targetId) {
+        this.commentsToShow[comment.id] = 10; // Marquer le commentaire cible comme visible
+        return true;
+      }
+
+      // Vérifie les commentaires enfants s'ils existent
+      if (comment.childComments && comment.childComments.length > 0) {
+        if (findParentRecursive(comment.childComments, targetId)) {
+          this.commentsToShow[comment.id] = 10; // Marquer les parents comme visibles
+          console.log("Comment parent marked as visible:", comment.id);
           return true;
         }
-
-        if (comment.childComments && comment.childComments.length > 0) {
-          // Chercher récursivement dans les enfants
-          if (findParentRecursive(comment.childComments, targetId)) {
-            // Marquer le parent comme visible si l'un des enfants contient le commentaire cible
-            this.showChilds[comment.id] = true;
-            console.log("comment show",comment.id)
-            return true;
-          }
-        }
       }
-      return false;
-    };
-
-    // Appeler la fonction récursive pour trouver et marquer les parents jusqu'au premier niveau
-    findParentRecursive(comments, targetCommentId);
+    }
   }
+  return false; // Retourne false si le commentaire cible n'est pas trouvé dans la hiérarchie actuelle
+};
+
+// Appeler la fonction récursive pour trouver et marquer les parents jusqu'au premier niveau
+findParentRecursive(comments, targetCommentId);
+}
+  
+toggleExpand(poste: any): void {
+  poste.expanded = !poste.expanded;
+}
+isTextOverflow(message: string): boolean {
+  return message.length > 100; // Modifier la limite ici si nécessaire
+}
 
   toggleCommentParents(comments: any[], targetCommentId: string) {
     for (const comment of comments) {
@@ -962,6 +1202,21 @@ if (popupContent) {
   (popupContent as HTMLElement).style.display = ((popupContent as HTMLElement).style.display === 'block') ? 'none' : 'block';
 }
 }
+
+
+loadMails()
+  { const user = this.token.getUser();
+    this.mailService.getMails(user.username).subscribe(
+      (data: any[]) => {
+        this.mails = data;
+      this.mailService.updateUnTraitesCount(this.mails);
+       
+     
+      
+      })
+     
+      }
+
 }
 
 

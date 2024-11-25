@@ -49,7 +49,7 @@
             </div>
             <div class="input-box">
                 <input type="submit" class="submit" value="Se connecter"  (click)="login()" >
-                <span *ngIf="isLoginFailed">Nom d'utilisateur ou mot de passe incorrect. Merci de réessayer."</span>
+                <span *ngIf="messageError">{{messageError}}</span>
             </div>
             <div class="two-col">
                
@@ -98,8 +98,9 @@
                 <mat-error *ngIf="(registerForm.controls.username.touched || registerForm.controls.username.dirty ) && registerForm.controls.username.invalid">
                     <span *ngIf="registerForm.controls.username.errors.required">Remplir Username!</span>
                     <span *ngIf="registerForm.controls.username.errors.pattern">Commencer Par Une Lettre!</span>
+                    <span *ngIf="searchUsername && checkUserExists()">Nom d'Utilisateur existe.</span>
                 </mat-error>
-                <span *ngIf="searchUsername && checkUserExists()">Nom d'Utilisateur existe.</span>
+              
             </div>
             <div class="input-box">
                 <input type="text" class="input-field" placeholder="E-mail" [(ngModel)]="searchEmail" (input)="filterUser()" formControlName="email">
@@ -161,7 +162,7 @@
         <div [formGroup]="forgotPasswordForm" class="forgot-password-container" id="forgotPassword" (ngSubmit)="onSubmit()">
               <div class="top">
                 <span> Retour au page de connexion
-                  <a (click)="linkLogin()">S'inscrire</a></span>
+                  <a (click)="linkLogin()">Se connecter</a></span>
                 <header>Mot de passe oublié</header>
                </div>
             
@@ -181,7 +182,7 @@
             </div>
              
            
-            <div *ngIf="message">{{ message }}</div>
+            <div  class="succees"*ngIf="message">{{ message }}</div>
           </div>
        
     </div>

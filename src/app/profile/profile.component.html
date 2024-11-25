@@ -2,7 +2,7 @@
 <html>
 <head>
     
-     <link  href='/src/app/home/home.component.css'>
+     <link  href='/src/app/profile/profile.component.css'>
      <link href=' https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/css/bootstrap.min.css'>
      <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
      <meta charset="UTF-8">
@@ -311,11 +311,14 @@
       <div class="name">{{user.nom}} {{user.prenom}}</div>
     
       <div class="social-icons">
-        <a [href]="user.compteFacebook" class="fb"><i class='bx bxl-facebook'></i></a>
-        <a [href]="user.compteTwitter" class="twitter"><i class='bx bxl-twitter'  ></i></a>
-        <a [href]="user.compteInstagram" class="insta" ><i class='bx bxl-instagram' ></i></a>
-        <a [href]="user.compteLinked" class="linked" ><i class='bx bxl-linkedin-square'></i></a>
-       
+        <a [href]="user.compteFacebook" class="fb" *ngIf="user.compteFacebook"><i class='bx bxl-facebook'></i></a>
+        <a  class="fb" *ngIf="!user.compteFacebook"><i class='bx bxl-facebook'></i></a>
+        <a [href]="user.compteTwitter" class="twitter" *ngIf="user.compteTwitter"><i class='bx bxl-twitter'  ></i></a>
+        <a  class="twitter" *ngIf="!user.compteTwitter"><i class='bx bxl-twitter'  ></i></a>
+        <a [href]="user.compteInstagram" class="insta" *ngIf="user.compteInstagram" ><i class='bx bxl-instagram' ></i></a>
+        <a  class="insta" *ngIf="!user.compteInstagram" ><i class='bx bxl-instagram' ></i></a>
+        <a [href]="user.compteLinked" class="linked" *ngIf="user.compteLinked" ><i class='bx bxl-linkedin-square'></i></a>
+        <a class="linked"  *ngIf="!user.compteLinked" ><i class='bx bxl-linkedin-square'></i></a>
       </div>
       <div class="profile-card-inf" >
         <div class="profile-card-inf__item" (click)="showSection('followers')">
@@ -347,6 +350,10 @@
                     <li  *ngIf="user.username !== currentUser.username" >
                       <i class='bx bx-block'></i>
                     <span class="bloquer" (click)="popupBlock(user)">Bloquer</span></li>
+                    <li (click)=" copyProfileLink()">
+                      <i class='bx bx-link'></i>
+                      <span class="copier">Copier</span>
+                    </li>
                   </ul>
           
                 </div>
@@ -355,10 +362,10 @@
      </div>
     
       <div class="profile-card-ctr" *ngIf="user.username !== currentUser.username">
-        <i  class='bx bxl-messenger'></i>
+        <i  class='bx bxl-messenger' (click)="openChat()"></i>
         <button  class="profile-card__button button--blue js-message-btn" (click)="openChat()">Message</button>
         
-        <i  *ngIf="isFollowingStatus === false"  class='bx bxs-plus-circle' ></i>
+        <i class='bx bxs-plus-circle' ></i>
 
         <button class="profile-card__button  button--blue
           "  *ngIf="isFollowingStatus === false"  (click)="followUser()">Suivre</button>
@@ -383,7 +390,7 @@
    
      
        
-          <app-poste id="posts" #posteComponent class="section poste" [category]="'Catégorie'" [disableOverlay]="true" [profile]="user.id" (toggleOverlay)="handleOverlay($event)"></app-poste>
+  <app-poste id="posts"   #posteComponent class="section poste" [category]="'Catégorie'"  [profile]="user.id"   ></app-poste>
           
      
       <div class="section followers-list"  id="followers">
@@ -396,7 +403,7 @@
              <div class="body-friend"  *ngFor="let follower of followers">
 
                 <div class="user-row">
-                <div class="user-info">
+                <div class="user-info" (click)="navProfile(follower)">
                   <img [src]= "follower.image ?   follower.image : '/assets/image/user.png'"  alt="user"/>
                   <span>{{follower.nom}} {{follower.prenom}}</span>
                    <span class="email">{{follower.email}}</span>
@@ -418,7 +425,7 @@
              <div class="body-friend" *ngFor="let followedUser of followedUsers">
  
                <div class="user-row">
-               <div class="user-info">
+               <div class="user-info" (click)="navProfile(followedUser)">
                  <img [src]= "followedUser.image ?   followedUser.image : '/assets/image/user.png'" alt="user"/>
                  <span>{{followedUser.nom}} {{followedUser.prenom}}</span>
                  <span class="email">{{followedUser.email}}</span>
@@ -451,47 +458,56 @@
               </ul>
               
                 <div class="tab-pane mennu" id="overview-tab-pane" >
-                  <span>Bio</span>
-                  <p>{{user.bio}}</p>
+                  
+                  <label>Bio</label>
+                  <p class="bio-text">{{user.bio}}</p>
                  
                   <div class="row-content">
-                    <div class="title">
+                    <div *ngIf="user.username === currentUser.username" class="title">
+                      <i class="bx bx-user"></i>
                       <div class="p-2">Nom d'utilisateur</div>
                     </div>
-                    <div class="info_title">
+                    <div *ngIf="user.username === currentUser.username" class="info_title">
                       <div class="p-2">{{user.username}}</div>
                     </div>
                     <div class="title">
+                      <i class="bx bx-user"></i>
                       <div class="p-2">Prénom</div>
                     </div>
                     <div class="info_title">
+                     
                       <div class="p-2">{{user.prenom}}</div>
                     </div>
                     <div class="title">
+                      <i class="bx bx-user"></i>
                       <div class="p-2">Nom de famille</div>
                     </div>
                     <div class="info_title">
                       <div class="p-2">{{user.nom}}</div>
                     </div>
                     <div class="title">
+                      <i class='bx bxs-graduation'></i>
                       <div class="p-2">Éducation</div>
                     </div>
                     <div class="info_title">
                       <div class="p-2">{{user.education}}</div>
                     </div>
                     <div class="title">
+                      <i class='bx bx-map'></i>
                       <div class="p-2">Addresse</div>
                     </div>
                     <div class="info_title">
                       <div class="p-2">{{user.adresse}}</div>
                     </div>
                     <div class="title">
+                      <i class='bx bxs-flag-alt'></i>
                       <div class="p-2">Pays</div>
                     </div>
                     <div class="info_title">
                       <div class="p-2">{{user.pays}}</div>
                     </div>
                     <div class="title">
+                      <i class='bx bx-building'></i>
                       <div class="p-2">Emploi</div>
                     </div>
                     <div class="info_title">
@@ -499,12 +515,14 @@
                     </div>
                    
                     <div class="title">
+                      <i class='bx bx-mobile'></i>
                       <div class="p-2">Téléphone</div>
                     </div>
                     <div class="info_title">
                       <div class="p-2">{{user.tel}}</div>
                     </div>
                     <div class="title">
+                      <i class='bx bxs-envelope' ></i>
                       <div class="p-2">E-mail</div>
                     </div>
                     <div class="info_title">
@@ -515,22 +533,26 @@
                 <div class="form-box mennu" id="profile-tab-pane"  [formGroup]="profileForm">
                   <div class="form-profile">
                     <div class="input-box" >
-                    <span class="about">Bio</span>
+                     
+                    <label class="about">Bio</label>
                   </div>
                     <div class="input-box">
-                   
+                      
                     <textarea class="textarea-field" formControlName="bio" [ngModel]="user.bio"></textarea>
                     </div>
                     <div class="input-box">
                       <i class="bx bx-user"></i>
-                    <input type="text" class="input-field" id="username"  placeholder="Nom d'Utlisateur" formControlName="username"  [ngModel]="user.username">
+                    <input type="text" class="input-field" id="username"  placeholder="Nom d'Utlisateur"   
+                    formControlName="username"  
+                   [ngModel]="user.username">
                    
                     </div>
                     <mat-error *ngIf="(profileForm.controls.username.touched || profileForm.controls.username.dirty ) && profileForm.controls.username.invalid">
                       <span *ngIf="profileForm.controls.username.errors.required">Remplir Username!</span>
                       <span *ngIf="profileForm.controls.username.errors.pattern">Commencer Par Une Lettre!</span>
+                      
                   </mat-error>
-                 
+                  <span *ngIf="usernameExists">Nom d'utilisateur existe !</span>
                       <div class="input-box">
                         <i class="bx bx-user"></i>
                          <input type="text" class="input-field" placeholder="Prénom" formControlName="prenom"  [ngModel]="user.prenom">
@@ -557,7 +579,7 @@
                       
                       </div>
                       <div class="input-box">
-                        <i class='bx bxs-school'></i>
+                        <i class='bx bx-building'></i>
                         <input type="text" class="input-field" placeholder="Emploi" formControlName="emploi"[ngModel]="user.emploi">
                         
                         </div>  
@@ -568,6 +590,10 @@
                          <input type="tel" class="input-field" placeholder="Téléphone"  formControlName="tel" [ngModel]="user.tel">
                          
                          </div>
+                         <mat-error *ngIf="(profileForm.controls.tel.touched || profileForm.controls.tel.dirty) && profileForm.controls.tel.invalid">
+                          <span *ngIf="profileForm.controls.tel.errors.pattern">  Le numéro doit commencer par "+" ou "00" et être suivi de 8 à 15 chiffres (espaces autorisés) !</span>   
+
+                         </mat-error>
                          <div class="input-box">
                           <i class='bx bxs-envelope' ></i>
                            <input type="Email" class="input-field" placeholder="E-mail"  formControlName="email"[ngModel]="user.email">
@@ -576,8 +602,9 @@
                            <mat-error *ngIf="(profileForm.controls.email.touched || profileForm.controls.email.dirty ) && profileForm.controls.email.invalid">
                             <span *ngIf="profileForm.controls.email.errors.required">Remplir E-mail!</span>
                             <span *ngIf="profileForm.controls.email.errors.pattern">Saisir E-mail Non Valide!</span>
-                        </mat-error> 
-                           
+                          
+                          </mat-error> 
+                          <span *ngIf="emailExists">E-mail existe !</span>
                         <div class="input-box">
                           <i class='bx bx-map'></i>
                           <input type="text" class="input-field" placeholder="Adresse" formControlName="adresse"[ngModel]="user.adresse">
@@ -585,264 +612,22 @@
                           </div>
                             
                             
-                          <div class="custom-select-wrapper">
-                            <div class="custom-select">
+                          <div class="custom-select-wrapper" >
+                            <div class="custom-select"  (click)="toggleDropdown()">
                               
-                              <div class="select-trigger">
+                              <div class="select-trigger" >
                                 
                                 <i class='bx bxs-flag-alt'></i>
                              
-                                <span *ngIf="user.pays===null">Pays</span>
-                                <span *ngIf="user.pays">{{ user.pays }}</span>
+                                <label *ngIf="!user.pays">Pays</label>
+                                <label *ngIf="user.pays">{{ user.pays }}</label>
                                 <div class="arrow"></div>
                               </div>
                             
-                              <div class="custom-options">
-                              <span class="custom-option" (click)="onSelectCountry('Afghanistan')" data-value="Afghanistan">Afghanistan</span>
-                              <span class="custom-option"  (click)="onSelectCountry('Åland Islands')"data-value="Åland Islands">Åland Islands</span>
-                              <span class="custom-option" (click)="onSelectCountry('custom-option')" data-class="custom-option" data-value="Albania">Albania</span>
-                              <span class="custom-option" (click)="onSelectCountry('Algeria')" data-value="Algeria">Algeria</span>
-                              <span class="custom-option"  (click)="onSelectCountry('American Samoa')" data-value="American Samoa">American Samoa</span>
-                              <span class="custom-option"   (click)="onSelectCountry('Andorra')" data-value="Andorra">Andorra</span>
-                              <span class="custom-option"  (click)="onSelectCountry('Angola')"  data-value="Angola">Angola</span>
-                              <span class="custom-option"  (click)="onSelectCountry('Anguilla')" data-value="Anguilla">Anguilla</span>
-                              <span class="custom-option"  (click)="onSelectCountry('Antarctica')" data-value="Antarctica">Antarctica</span>
-                              <span class="custom-option"  (click)="onSelectCountry('Antigua and Barbuda')" data-value="Antigua and Barbuda">Antigua and Barbuda</span>
-                              <span class="custom-option" (click)="onSelectCountry('Argentina')"  data-value="Argentina">Argentina</span>
-                              <span class="custom-option"  (click)="onSelectCountry('Armenia')" data-value="Armenia">Armenia</span>
-                              <span class="custom-option"  (click)="onSelectCountry('Aruba')"  data-value="Aruba">Aruba</span>
-                              <span class="custom-option"  (click)="onSelectCountry('Australia')" data-value="Australia">Australia</span>
-                              <span class="custom-option"  (click)="onSelectCountry('Austria')" data-value="Austria">Austria</span>
-                              <span class="custom-option"  (click)="onSelectCountry('Azerbaijan')" data-value="Azerbaijan">Azerbaijan</span>
-                              <span class="custom-option"  (click)="onSelectCountry('Bahamas')" data-value="Bahamas">Bahamas</span>
-                              <span class="custom-option"  (click)="onSelectCountry('Bahrain')" data-value="Bahrain">Bahrain</span>
-                              <span class="custom-option"  (click)="onSelectCountry('Bangladesh')" data-value="Bangladesh">Bangladesh</span>
-                              <span class="custom-option"  (click)="onSelectCountry('Barbados')" data-value="Barbados">Barbados</span>
-                              <span class="custom-option"  (click)="onSelectCountry('Belarus')" data-value="Belarus">Belarus</span>
-                              <span class="custom-option"  (click)="onSelectCountry('Belgium')" data-value="Belgium">Belgium</span>
-                              <span class="custom-option"  (click)="onSelectCountry('Belize')" data-value="Belize">Belize</span>
-                              <span class="custom-option" (click)="onSelectCountry('Benin')"data-value="Benin">Benin</span>
-                              <span class="custom-option"  (click)="onSelectCountry('Bermuda')"data-value="Bermuda">Bermuda</span>
-                              <span class="custom-option"  (click)="onSelectCountry('Bhutan')"data-value="Bhutan">Bhutan</span>
-                              <span class="custom-option" (click)="onSelectCountry('Bolivia')" data-value="Bolivia">Bolivia</span>
-                              <span class="custom-option"  (click)="onSelectCountry('Bosnia and Herzegovina')" data-value="Bosnia and Herzegovina">Bosnia and Herzegovina</span>
-                              <span class="custom-option"  (click)="onSelectCountry('Botswana')" data-value="Botswana">Botswana</span>
-                              <span class="custom-option"   (click)="onSelectCountry('Bouvet Islan')"data-value="Bouvet Island">Bouvet Island</span>
-                              <span class="custom-option"  (click)="onSelectCountry('Brazil')" data-value="Brazil">Brazil</span>
-                              <span class="custom-option"  (click)="onSelectCountry('British Indian Ocean Territory')" data-value="British Indian Ocean Territory">British Indian Ocean Territory</span>
-                              <span class="custom-option"  (click)="onSelectCountry('Brunei Darussalam')" data-value="Brunei Darussalam">Brunei Darussalam</span>
-                              <span class="custom-option"  (click)="onSelectCountry('Bulgaria')" data-value="Bulgaria">Bulgaria</span>
-                              <span class="custom-option"  (click)="onSelectCountry('Burkina Faso')" data-value="Burkina Faso">Burkina Faso</span>
-                              <span class="custom-option"  (click)="onSelectCountry('Burundi')" data-value="Burundi">Burundi</span>
-                              <span class="custom-option"  (click)="onSelectCountry('Cambodia')" data-value="Cambodia">Cambodia</span>
-                              <span class="custom-option"  (click)="onSelectCountry('Cameroon')" data-value="Cameroon">Cameroon</span>
-                              <span class="custom-option" (click)="onSelectCountry('Belize')"  data-value="Canada">Canada</span>
-                              <span class="custom-option"  (click)="onSelectCountry('Canada')"data-value="Cape Verde">Cape Verde</span>
-                              <span class="custom-option"  (click)="onSelectCountry('Cayman Islands')"data-value="Cayman Islands">Cayman Islands</span>
-                              <span class="custom-option"  (click)="onSelectCountry('Central African Republic')"data-value="Central African Republic">Central African Republic</span>
-                              <span class="custom-option"  (click)="onSelectCountry('Chad')"data-value="Chad">Chad</span>
-                              <span class="custom-option"  (click)="onSelectCountry('Chile')"data-value="Chile">Chile</span>
-                              <span class="custom-option"  (click)="onSelectCountry('China')"data-value="China">China</span>
-                              <span class="custom-option"  (click)="onSelectCountry('Christmas Island')" data-value="Christmas Island">Christmas Island</span>
-                              <span class="custom-option"  (click)="onSelectCountry('Cocos (Keeling) Islands')"data-value="Cocos (Keeling) Islands">Cocos (Keeling) Islands</span>
-                              <span class="custom-option"  (click)="onSelectCountry('Colombia')"data-value="Colombia">Colombia</span>
-                              <span class="custom-option"  (click)="onSelectCountry('Comoros')"data-value="Comoros">Comoros</span>
-                              <span class="custom-option"  (click)="onSelectCountry('Congo')"data-value="Congo">Congo</span>
-                              <span class="custom-option"  (click)="onSelectCountry('Congo, The Democratic Republic of The')"data-value="Congo, The Democratic Republic of The">Congo, The Democratic Republic of The</span>
-                              <span class="custom-option"  (click)="onSelectCountry('Cook Islands')"data-value="Cook Islands">Cook Islands</span>
-                              <span class="custom-option"  (click)="onSelectCountry('Costa Rica')"data-value="Costa Rica">Costa Rica</span>
-                              <span class="custom-option"  (click)="onSelectCountry('Cote D`ivoire')"data-value="Cote D'ivoire">Cote D'ivoire</span>
-                              <span class="custom-option"  (click)="onSelectCountry('Croatia')"data-value="Croatia">Croatia</span>
-                              <span class="custom-option"  (click)="onSelectCountry('Cuba')"data-value="Cuba">Cuba</span>
-                              <span class="custom-option"  (click)="onSelectCountry('Cyprus')"data-value="Cyprus">Cyprus</span>
-                              <span class="custom-option"  (click)="onSelectCountry('Czech Republic')"data-value="Czech Republic">Czech Republic</span>
-                              <span class="custom-option" (click)="onSelectCountry('Denmark')" data-value="Denmark">Denmark</span>
-                              <span class="custom-option" (click)="onSelectCountry('Djibouti')" data-value="Djibouti">Djibouti</span>
-                              <span class="custom-option" (click)="onSelectCountry('Dominica')" data-value="Dominica">Dominica</span>
-                              <span class="custom-option" (click)="onSelectCountry('Dominican Republic')" data-value="Dominican Republic">Dominican Republic</span>
-                              <span class="custom-option" (click)="onSelectCountry('Ecuador')" data-value="Ecuador">Ecuador</span>
-                              <span class="custom-option" (click)="onSelectCountry('Egypt')" data-value="Egypt">Egypt</span>
-                              <span class="custom-option" (click)="onSelectCountry('El Salvador')" data-value="El Salvador">El Salvador</span>
-                              <span class="custom-option" (click)="onSelectCountry('Equatorial Guinea')" data-value="Equatorial Guinea">Equatorial Guinea</span>
-                              <span class="custom-option" (click)="onSelectCountry('Eritrea')" data-value="Eritrea">Eritrea</span>
-                              <span class="custom-option" (click)="onSelectCountry('Estonia')" data-value="Estonia">Estonia</span>
-                              <span class="custom-option" (click)="onSelectCountry('Ethiopia')" data-value="Ethiopia">Ethiopia</span>
-                              <span class="custom-option" (click)="onSelectCountry('Falkland Islands (Malvinas)')" data-value="Falkland Islands (Malvinas)">Falkland Islands (Malvinas)</span>
-                              <span class="custom-option" (click)="onSelectCountry('Faroe Islands')" data-value="Faroe Islands">Faroe Islands</span>
-                              <span class="custom-option" (click)="onSelectCountry('Fiji')" data-value="Fiji">Fiji</span>
-                              <span class="custom-option" (click)="onSelectCountry('Finland')" data-value="Finland">Finland</span>
-                              <span class="custom-option" (click)="onSelectCountry('France')" data-value="France">France</span>
-                              <span class="custom-option" (click)="onSelectCountry('French Guiana')"data-value="French Guiana">French Guiana</span>
-                              <span class="custom-option" (click)="onSelectCountry('French Polynesia')"data-value="French Polynesia">French Polynesia</span>
-                              <span class="custom-option" (click)="onSelectCountry('French Southern Territories')"data-value="French Southern Territories">French Southern Territories</span>
-                              <span class="custom-option" (click)="onSelectCountry('Gabon')"data-value="Gabon">Gabon</span>
-                              <span class="custom-option" (click)="onSelectCountry('Gambia')"data-value="Gambia">Gambia</span>
-                              <span class="custom-option" (click)="onSelectCountry('Georgia')"data-value="Georgia">Georgia</span>
-                              <span class="custom-option" (click)="onSelectCountry('Germany')"data-value="Germany">Germany</span>
-                              <span class="custom-option" (click)="onSelectCountry('Ghana')"data-value="Ghana">Ghana</span>
-                              <span class="custom-option" (click)="onSelectCountry('Gibraltar')"data-value="Gibraltar">Gibraltar</span>
-                              <span class="custom-option" (click)="onSelectCountry('Greece')"data-value="Greece">Greece</span>
-                              <span class="custom-option" (click)="onSelectCountry('Greenland')"data-value="Greenland">Greenland</span>
-                              <span class="custom-option" (click)="onSelectCountry('Grenada')"data-value="Grenada">Grenada</span>
-                              <span class="custom-option" (click)="onSelectCountry('Guadeloupe')"data-value="Guadeloupe">Guadeloupe</span>
-                              <span class="custom-option" (click)="onSelectCountry('Guam')"data-value="Guam">Guam</span>
-                              <span class="custom-option" (click)="onSelectCountry('Guatemala')"data-value="Guatemala">Guatemala</span>
-                              <span class="custom-option" (click)="onSelectCountry('Guernsey')"data-value="Guernsey">Guernsey</span>
-                              <span class="custom-option" (click)="onSelectCountry('Guinea')"data-value="Guinea">Guinea</span>
-                              <span class="custom-option" (click)="onSelectCountry('Guinea-bissau')"data-value="Guinea-bissau">Guinea-bissau</span>
-                              <span class="custom-option" (click)="onSelectCountry('Guyana')"data-value="Guyana">Guyana</span>
-                              <span class="custom-option" (click)="onSelectCountry('Haiti')"data-value="Haiti">Haiti</span>
-                              <span class="custom-option" (click)="onSelectCountry('Heard Island and Mcdonald Islands')"data-value="Heard Island and Mcdonald Islands">Heard Island and Mcdonald Islands</span>
-                              <span class="custom-option" (click)="onSelectCountry('Holy See (Vatican City State)')"data-value="Holy See (Vatican City State)">Holy See (Vatican City State)</span>
-                              <span class="custom-option" (click)="onSelectCountry('Honduras')"data-value="Honduras">Honduras</span>
-                              <span class="custom-option" (click)="onSelectCountry('Hong Kong')"data-value="Hong Kong">Hong Kong</span>
-                              <span class="custom-option" (click)="onSelectCountry('Hungary')"data-value="Hungary">Hungary</span>
-                              <span class="custom-option" (click)="onSelectCountry('Iceland')"data-value="Iceland">Iceland</span>
-                              <span class="custom-option" (click)="onSelectCountry('India')"data-value="India">India</span>
-                              <span class="custom-option" (click)="onSelectCountry('Indonesia')"data-value="Indonesia">Indonesia</span>
-                              <span class="custom-option" (click)="onSelectCountry('Iran, Islamic Republic of')"data-value="Iran, Islamic Republic of">Iran, Islamic Republic of</span>
-                              <span class="custom-option" (click)="onSelectCountry('Iraq')"data-value="Iraq">Iraq</span>
-                              <span class="custom-option" (click)="onSelectCountry('Ireland')"data-value="Ireland">Ireland</span>
-                              <span class="custom-option" (click)="onSelectCountry('Isle of Man')"data-value="Isle of Man">Isle of Man</span>
-                              <span class="custom-option" (click)="onSelectCountry('Italy')"data-value="Italy">Italy</span>
-                              <span class="custom-option" (click)="onSelectCountry('Jamaica')"data-value="Jamaica">Jamaica</span>
-                              <span class="custom-option" (click)="onSelectCountry('Japan')"data-value="Japan">Japan</span>
-                              <span class="custom-option" (click)="onSelectCountry('Jersey')"data-value="Jersey">Jersey</span>
-                              <span class="custom-option" (click)="onSelectCountry('Jordan')"data-value="Jordan">Jordan</span>
-                              <span class="custom-option" (click)="onSelectCountry('Kazakhstan')"data-value="Kazakhstan">Kazakhstan</span>
-                              <span class="custom-option" (click)="onSelectCountry('Kenya')"data-value="Kenya">Kenya</span>
-                              <span class="custom-option" (click)="onSelectCountry('Kiribati')"data-value="Kiribati">Kiribati</span>
-                              <span class="custom-option" (click)="onSelectCountry('Korea, Democratic Peoples Republic of')"data-value="Korea, Democratic People's Republic of">Korea, Democratic People's Republic of</span>
-                              <span class="custom-option" (click)="onSelectCountry('Korea, Republic of')"data-value="Korea, Republic of">Korea, Republic of</span>
-                              <span class="custom-option" (click)="onSelectCountry('Kuwait')"data-value="Kuwait">Kuwait</span>
-                              <span class="custom-option" (click)="onSelectCountry('Kyrgyzstan')"data-value="Kyrgyzstan">Kyrgyzstan</span>
-                              <span class="custom-option" (click)="onSelectCountry('Lao Peoples Democratic Republic')"data-value="Lao People's Democratic Republic">Lao People's Democratic Republic</span>
-                              <span class="custom-option" (click)="onSelectCountry('Latvia')"data-value="Latvia">Latvia</span>
-                              <span class="custom-option" (click)="onSelectCountry('Lebanon')"data-value="Lebanon">Lebanon</span>
-                              <span class="custom-option" (click)="onSelectCountry('Lesotho')"data-value="Lesotho">Lesotho</span>
-                              <span class="custom-option" (click)="onSelectCountry('Haiti')"data-value="Liberia">Liberia</span>
-                              <span class="custom-option" (click)="onSelectCountry('Libyan Arab Jamahiriya')"data-value="Libyan Arab Jamahiriya">Libyan Arab Jamahiriya</span>
-                              <span class="custom-option" (click)="onSelectCountry('Liechtenstein')"data-value="Liechtenstein">Liechtenstein</span>
-                              <span class="custom-option" (click)="onSelectCountry('Lithuania')"data-value="Lithuania">Lithuania</span>
-                              <span class="custom-option" (click)="onSelectCountry('Luxembourg')"data-value="Luxembourg">Luxembourg</span>
-                              <span class="custom-option" (click)="onSelectCountry('Macao')"data-value="Macao">Macao</span>
-                              <span class="custom-option" (click)="onSelectCountry('Macedonia, The Former Yugoslav Republic of')"data-value="Macedonia, The Former Yugoslav Republic of">Macedonia, The Former Yugoslav Republic of</span>
-                              <span class="custom-option" (click)="onSelectCountry('Madagascar')"data-value="Madagascar">Madagascar</span>
-                              <span class="custom-option" (click)="onSelectCountry('Malawi')"data-value="Malawi">Malawi</span>
-                              <span class="custom-option" (click)="onSelectCountry('Malaysia')"data-value="Malaysia">Malaysia</span>
-                              <span class="custom-option" (click)="onSelectCountry('Maldives')"data-value="Maldives">Maldives</span>
-                              <span class="custom-option" (click)="onSelectCountry('Mali')"data-value="Mali">Mali</span>
-                              <span class="custom-option" (click)="onSelectCountry('Malta')"data-value="Malta">Malta</span>
-                              <span class="custom-option" (click)="onSelectCountry('Marshall Islands')"data-value="Marshall Islands">Marshall Islands</span>
-                              <span class="custom-option" (click)="onSelectCountry('Martinique')"data-value="Martinique">Martinique</span>
-                              <span class="custom-option" (click)="onSelectCountry('Mauritania')"data-value="Mauritania">Mauritania</span>
-                              <span class="custom-option" (click)="onSelectCountry('Mauritius')"data-value="Mauritius">Mauritius</span>
-                              <span class="custom-option" (click)="onSelectCountry('Mayotte')"data-value="Mayotte">Mayotte</span>
-                              <span class="custom-option" (click)="onSelectCountry('Mexico')"data-value="Mexico">Mexico</span>
-                              <span class="custom-option" (click)="onSelectCountry('Micronesia, Federated States of')"data-value="Micronesia, Federated States of">Micronesia, Federated States of</span>
-                              <span class="custom-option" (click)="onSelectCountry('Moldova, Republic of')"data-value="Moldova, Republic of">Moldova, Republic of</span>
-                              <span class="custom-option" (click)="onSelectCountry('Monaco')"data-value="Monaco">Monaco</span>
-                              <span class="custom-option" (click)="onSelectCountry('Mongolia')"data-value="Mongolia">Mongolia</span>
-                              <span class="custom-option" (click)="onSelectCountry('Montenegro')"data-value="Montenegro">Montenegro</span>
-                              <span class="custom-option" (click)="onSelectCountry('Montserrat')"data-value="Montserrat">Montserrat</span>
-                              <span class="custom-option" (click)="onSelectCountry('Morocco')"data-value="Morocco">Morocco</span>
-                              <span class="custom-option" (click)="onSelectCountry('Mozambique')"data-value="Mozambique">Mozambique</span>
-                              <span class="custom-option" (click)="onSelectCountry('Myanmar')"data-value="Myanmar">Myanmar</span>
-                              <span class="custom-option" (click)="onSelectCountry('Namibia')"data-value="Namibia">Namibia</span>
-                              <span class="custom-option" (click)="onSelectCountry('Nauru')"data-value="Nauru">Nauru</span>
-                              <span class="custom-option" (click)="onSelectCountry('Nepal')"data-value="Nepal">Nepal</span>
-                              <span class="custom-option" (click)="onSelectCountry('Netherlands')"data-value="Netherlands">Netherlands</span>
-                              <span class="custom-option" (click)="onSelectCountry('Netherlands Antilles')"data-value="Netherlands Antilles">Netherlands Antilles</span>
-                              <span class="custom-option" (click)="onSelectCountry('New Caledonia')"data-value="New Caledonia">New Caledonia</span>
-                              <span class="custom-option" (click)="onSelectCountry('New Zealand')"data-value="New Zealand">New Zealand</span>
-                              <span class="custom-option" (click)="onSelectCountry('Nicaragua')"data-value="Nicaragua">Nicaragua</span>
-                              <span class="custom-option" (click)="onSelectCountry('Niger')"data-value="Niger">Niger</span>
-                              <span class="custom-option" (click)="onSelectCountry('Nigeria')"data-value="Nigeria">Nigeria</span>
-                              <span class="custom-option" (click)="onSelectCountry('Niue')"data-value="Niue">Niue</span>
-                              <span class="custom-option" (click)="onSelectCountry('Norfolk Island')"data-value="Norfolk Island">Norfolk Island</span>
-                              <span class="custom-option" (click)="onSelectCountry('Northern Mariana Islands')"data-value="Northern Mariana Islands">Northern Mariana Islands</span>
-                              <span class="custom-option" (click)="onSelectCountry('Norway')"data-value="Norway">Norway</span>
-                              <span class="custom-option" (click)="onSelectCountry('Oman')"data-value="Oman">Oman</span>
-                              <span class="custom-option" (click)="onSelectCountry('Pakistan')"data-value="Pakistan">Pakistan</span>
-                              <span class="custom-option" (click)="onSelectCountry('Palau')"data-value="Palau">Palau</span>
-                              <span class="custom-option" (click)="onSelectCountry('Palestine')"data-value="Palestine">Palestine</span>
-
-                              <span class="custom-option" (click)="onSelectCountry('Panama')"data-value="Panama">Panama</span>
-                              <span class="custom-option" (click)="onSelectCountry('Papua New Guinea')"data-value="Papua New Guinea">Papua New Guinea</span>
-                              <span class="custom-option" (click)="onSelectCountry('Paraguay')"data-value="Paraguay">Paraguay</span>
-                              <span class="custom-option" (click)="onSelectCountry('Peru')"data-value="Peru">Peru</span>
-                              <span class="custom-option" (click)="onSelectCountry('Philippines')"data-value="Philippines">Philippines</span>
-                              <span class="custom-option" (click)="onSelectCountry('Pitcairn')"data-value="Pitcairn">Pitcairn</span>
-                              <span class="custom-option" (click)="onSelectCountry('Poland')"data-value="Poland">Poland</span>
-                              <span class="custom-option" (click)="onSelectCountry('Portugal')"data-value="Portugal">Portugal</span>
-                              <span class="custom-option" (click)="onSelectCountry('Puerto Rico')"data-value="Puerto Rico">Puerto Rico</span>
-                              <span class="custom-option" (click)="onSelectCountry('Qatar')"data-value="Qatar">Qatar</span>
-                              <span class="custom-option" (click)="onSelectCountry('Reunion')"data-value="Reunion">Reunion</span>
-                              <span class="custom-option" (click)="onSelectCountry('Romania')"data-value="Romania">Romania</span>
-                              <span class="custom-option" (click)="onSelectCountry('Russian Federation')"data-value="Russian Federation">Russian Federation</span>
-                              <span class="custom-option" (click)="onSelectCountry('Rwanda')"data-value="Rwanda">Rwanda</span>
-                              <span class="custom-option" (click)="onSelectCountry('Saint Helena')"data-value="Saint Helena">Saint Helena</span>
-                              <span class="custom-option" (click)="onSelectCountry('Saint Kitts and Nevis')"data-value="Saint Kitts and Nevis">Saint Kitts and Nevis</span>
-                              <span class="custom-option" (click)="onSelectCountry('Saint Lucia')"data-value="Saint Lucia">Saint Lucia</span>
-                              <span class="custom-option" (click)="onSelectCountry('Saint Pierre and Miquelon')"data-value="Saint Pierre and Miquelon">Saint Pierre and Miquelon</span>
-                              <span class="custom-option" (click)="onSelectCountry('Saint Vincent and The Grenadines')"data-value="Saint Vincent and The Grenadines">Saint Vincent and The Grenadines</span>
-                              <span class="custom-option" (click)="onSelectCountry('Samoa')"data-value="Samoa">Samoa</span>
-                              <span class="custom-option" (click)="onSelectCountry('San Marino')"data-value="San Marino">San Marino</span>
-                              <span class="custom-option" (click)="onSelectCountry('Sao Tome and Principe')"data-value="Sao Tome and Principe">Sao Tome and Principe</span>
-                              <span class="custom-option" (click)="onSelectCountry('Saudi Arabia')"data-value="Saudi Arabia">Saudi Arabia</span>
-                              <span class="custom-option" (click)="onSelectCountry('Senegal')"data-value="Senegal">Senegal</span>
-                              <span class="custom-option" (click)="onSelectCountry('Serbia')"data-value="Serbia">Serbia</span>
-                              <span class="custom-option" (click)="onSelectCountry('Seychelles')"data-value="Seychelles">Seychelles</span>
-                              <span class="custom-option" (click)="onSelectCountry('Sierra Leone')"data-value="Sierra Leone">Sierra Leone</span>
-                              <span class="custom-option" (click)="onSelectCountry('Singapore')"data-value="Singapore">Singapore</span>
-                              <span class="custom-option" (click)="onSelectCountry('Slovakia')"data-value="Slovakia">Slovakia</span>
-                              <span class="custom-option" (click)="onSelectCountry('Slovenia')"data-value="Slovenia">Slovenia</span>
-                              <span class="custom-option" (click)="onSelectCountry('Solomon Islands')"data-value="Solomon Islands">Solomon Islands</span>
-                              <span class="custom-option" (click)="onSelectCountry('Somalia')"data-value="Somalia">Somalia</span>
-                              <span class="custom-option" (click)="onSelectCountry('South Africa')"data-value="South Africa">South Africa</span>
-                              <span class="custom-option" (click)="onSelectCountry('South Georgia and The South Sandwich Islands')"data-value="South Georgia and The South Sandwich Islands">South Georgia and The South Sandwich Islands</span>
-                              <span class="custom-option" (click)="onSelectCountry('Spain')"data-value="Spain">Spain</span>
-                              <span class="custom-option" (click)="onSelectCountry('Sri Lanka')"data-value="Sri Lanka">Sri Lanka</span>
-                              <span class="custom-option" (click)="onSelectCountry('Sudan')"data-value="Sudan">Sudan</span>
-                              <span class="custom-option" (click)="onSelectCountry('Suriname')"data-value="Suriname">Suriname</span>
-                              <span class="custom-option" (click)="onSelectCountry('Svalbard and Jan Mayen')"data-value="Svalbard and Jan Mayen">Svalbard and Jan Mayen</span>
-                              <span class="custom-option" (click)="onSelectCountry('Swaziland')"data-value="Swaziland">Swaziland</span>
-                              <span class="custom-option" (click)="onSelectCountry('Sweden')"data-value="Sweden">Sweden</span>
-                              <span class="custom-option" (click)="onSelectCountry('Switzerland')"data-value="Switzerland">Switzerland</span>
-                              <span class="custom-option" (click)="onSelectCountry('Syrian Arab Republic')"data-value="Syrian Arab Republic">Syrian Arab Republic</span>
-                              <span class="custom-option" (click)="onSelectCountry('Taiwan')"data-value="Taiwan">Taiwan</span>
-                              <span class="custom-option" (click)="onSelectCountry('Tajikistan')"data-value="Tajikistan">Tajikistan</span>
-                              <span class="custom-option" (click)="onSelectCountry('Tanzania, United Republic of')"data-value="Tanzania, United Republic of">Tanzania, United Republic of</span>
-                              <span class="custom-option" (click)="onSelectCountry('Thailand')"data-value="Thailand">Thailand</span>
-                              <span class="custom-option" (click)="onSelectCountry('Timor-leste')"data-value="Timor-leste">Timor-leste</span>
-                              <span class="custom-option" (click)="onSelectCountry('Togo')"data-value="Togo">Togo</span>
-                              <span class="custom-option" (click)="onSelectCountry('Tokelau')"data-value="Tokelau">Tokelau</span>
-                              <span class="custom-option" (click)="onSelectCountry('Tonga')"data-value="Tonga">Tonga</span>
-                              <span class="custom-option" (click)="onSelectCountry('Trinidad and Tobago')"data-value="Trinidad and Tobago">Trinidad and Tobago</span>
-                              <span class="custom-option" (click)="onSelectCountry('Tunisia')"data-value="Tunisia">Tunisia</span>
-                              <span class="custom-option" (click)="onSelectCountry('Turkey')"data-value="Turkey">Turkey</span>
-                              <span class="custom-option" (click)="onSelectCountry('Turkmenistan')"data-value="Turkmenistan">Turkmenistan</span>
-                              <span class="custom-option" (click)="onSelectCountry('Turks and Caicos Islands')"data-value="Turks and Caicos Islands">Turks and Caicos Islands</span>
-                              <span class="custom-option" (click)="onSelectCountry('Tuvalu')"data-value="Tuvalu">Tuvalu</span>
-                              <span class="custom-option" (click)="onSelectCountry('Uganda')"data-value="Uganda">Uganda</span>
-                              <span class="custom-option" (click)="onSelectCountry('Ukrain')"data-value="Ukraine">Ukraine</span>
-                              <span class="custom-option" (click)="onSelectCountry('United Arab Emirate')"data-value="United Arab Emirates">United Arab Emirates</span>
-                              <span class="custom-option" (click)="onSelectCountry('United Kingdom')"data-value="United Kingdom">United Kingdom</span>
-                              <span class="custom-option" (click)="onSelectCountry('United States')"data-value="United States">United States</span>
-                              <span class="custom-option" (click)="onSelectCountry('United States Minor Outlying Islands')"data-value="United States Minor Outlying Islands">United States Minor Outlying Islands</span>
-                              <span class="custom-option" (click)="onSelectCountry('Uruguay')"data-value="Uruguay">Uruguay</span>
-                              <span class="custom-option" (click)="onSelectCountry('Uzbekistan')"data-value="Uzbekistan">Uzbekistan</span>
-                              <span class="custom-option" (click)="onSelectCountry('Vanuatu')"data-value="Vanuatu">Vanuatu</span>
-                              <span class="custom-option" (click)="onSelectCountry('Venezuela')"data-value="Venezuela">Venezuela</span>
-                              <span class="custom-option" (click)="onSelectCountry('Viet Nam')"data-value="Viet Nam">Viet Nam</span>
-                              <span class="custom-option" (click)="onSelectCountry('Virgin Islands, British')"data-value="Virgin Islands, British">Virgin Islands, British</span>
-                              <span class="custom-option" (click)="onSelectCountry('Virgin Islands, U.S.')"data-value="Virgin Islands, U.S.">Virgin Islands, U.S.</span>
-                              <span class="custom-option" (click)="onSelectCountry('Wallis and Futuna')"data-value="Wallis and Futuna">Wallis and Futuna</span>
-                              <span class="custom-option" (click)="onSelectCountry('Western Sahara')"data-value="Western Sahara">Western Sahara</span>
-                              <span class="custom-option" (click)="onSelectCountry('Western Sahara')"data-value="Yemen">Yemen</span>
-                              <span class="custom-option" (click)="onSelectCountry('Zambia')"data-value="Zambia">Zambia</span>
-                              <span (click)="onSelectCountry('Zimbabwe')"value="Zimbabwe">Zimbabwe</span>
-                              </div>
+                              <div class="custom-options" *ngIf="dropdownOpen">
+                              <label  class="custom-option" 
+                                *ngFor="let country of countries"   (click)="onSelectCountry(country)"> {{ country }}</label>
+                           </div>
                             </div>
                           </div>
                           
@@ -870,8 +655,8 @@
                                  <input type="text" class="input-field" placeholder="Instagram" formControlName="instagram" [ngModel]="user.compteInstagram">
                                  
                               </div>
-                             
-
+                            
+                         
                               <div class="update" (click)="updateProfile()">
               
                                 <button id="btnAdd" type="submit" >
@@ -881,11 +666,13 @@
                                       <i class='bx bx-check'></i>
                                     </div>
                                   </div>
-                                  <span>Changer Profil</span>
+                                  <label>Changer Profil</label>
                                 </button>
+                                <span >{{this.errorUpdate}}</span>
                             </div>
-                 
+                       
                     </div>
+                   
                 </div>
                 
                 <div class="form-box-password mennu" id="password-tab-pane"  [formGroup]="passForm">
@@ -893,7 +680,7 @@
                   <div class="form-profile">
                     <div class="input-box">
                       <i class="bx bx-lock-alt"></i>
-                    <input type="text" class="input-password" placeholder="Mot de Passe Actuel" formControlName="currentPassword">
+                    <input type="password" class="input-password" placeholder="Mot de Passe Actuel" formControlName="currentPassword">
                     
                     </div>
                     <mat-error *ngIf="passForm.controls.currentPassword.touched && passForm.controls.currentPassword.invalid">
@@ -902,7 +689,7 @@
                   </mat-error>
                     <div class="input-box">
                       <i class="bx bx-lock-alt"></i>
-                    <input type="text" class="input-password" placeholder="Nouveau Mot de Passe" formControlName="newPassword">
+                    <input type="password" class="input-password" placeholder="Nouveau Mot de Passe" formControlName="newPassword">
                    
                     </div>
                     <mat-error *ngIf="(passForm.controls.newPassword.touched || passForm.controls.newPassword.dirty) && passForm.controls.newPassword.invalid">
@@ -928,7 +715,7 @@
                   </mat-error>
                     <div class="input-box">
                       <i class="bx bx-lock-alt"></i>
-                    <input type="text"class="input-password" placeholder="Confirmez le Mot de Passe" formControlName="confirmationPassword">
+                    <input type="password"class="input-password" placeholder="Confirmez le Mot de Passe" formControlName="confirmationPassword">
                     </div>
                    
                     <mat-error *ngIf="passForm.controls.confirmationPassword.touched && passForm.controls.confirmationPassword.errors?.required">
@@ -948,9 +735,12 @@
                             <i class='bx bx-check'></i>
                           </div>
                         </div>
-                        <span>Changer Profil</span>
+                        <label>Changer Mot de Passe</label>
                       </button>
-                  </div>  
+                  </div> 
+                  
+                  <div *ngIf="errorMessage" style="color: red;">{{ errorMessage }}</div>
+                  <div *ngIf="successMessage" style="color: green;">{{ successMessage }}</div>
                     </div>
                 
                   </div>
@@ -971,6 +761,7 @@
                   <span>{{user.nom}} {{user.prenom}}</span>
                    <span class="email">{{user.email}}</span>
                 </div>
+                <i class='bx bx-lock-open-alt' ></i>
                   <button (click)="unblockUser(user.id)" class="action-block">Débloquer</button>
                    </div>
                   </div>

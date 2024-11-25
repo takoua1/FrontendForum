@@ -108,6 +108,10 @@ getCommentWithParent(commentId: number): Observable<Comment>
 {
   return this.http.get<Comment>(`/api/comment/with-parent/${commentId}`);
 }
+
+getCommentHierarchy(commentId: number): Observable<Comment[]> {
+  return this.http.get<Comment[]>(`/api/comment/hierarchy/${commentId}`);
+}
 triggerListUpdated(): void {
   this.listUpdatedSource.next();
 }

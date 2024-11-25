@@ -15,7 +15,7 @@
         <div class="structure">
             <div class="left"  >
             <div class="top">
-                <div class="profile">
+                <div class="profile" >
                     <img [src]="user.image ? user.image : '/assets/image/user.png'" class="profile-img" (click)="navProfile(user)" >
                     <p>{{user.nom}} {{user.prenom}}</p>
                 </div>
@@ -45,7 +45,7 @@
                             <p>{{user.nom}} {{user.prenom}}</p>
                           </div>
                           
-                          <div class="status">
+                          <div class="status" *ngIf="user.isFriend">
                             <i class='bx bxs-circle' [ngClass]="{'connected': user.status === 'CONNECTE', 'disconnected': user.status === 'DECONNECTE'}"></i>
                             <span *ngIf="user.status === 'CONNECTE'"> Connecté</span>
                             <span *ngIf="user.status === 'DECONNECTE'"> Déconnecté depuis {{ user.offlineDuration }}</span>
@@ -88,6 +88,7 @@
                    
                   <app-message-card
                   [messages]="messages"
+                  [groupes]="groupes"
                   [messagesGroupe]="messagesGroupe"
                   [filteredMessages]="filteredMessages"
                   [user]="user"
@@ -98,7 +99,9 @@
                   [actifNew]="actif"
                   [actifDetail]="actifDetail"
                    [chat]="chat"
+                   [isMemberGroup] = "isMemberGroup"
                  [key]="refreshKey"
+                 [messages]="messages"
                  [messagePrivieList]="messagePrivieList"
                   (groupLinkClicked)="selectChat($event)"
                 ></app-message-card>

@@ -22,6 +22,7 @@ export class SharedService {
     this.togglePopupDelete();}
   togglePopupDelete(): void {
     const popupDelete = document.querySelector('.popupDelete') as HTMLElement;
+
     const overlay = document.querySelector('.overlay') as HTMLElement;
     popupDelete.style.display = 'block';
     overlay.style.display = 'block';
@@ -35,6 +36,22 @@ export class SharedService {
 
 this.togglePopupSignale();
   }
+  triggerTogglePopupConnect(): void {
+
+this.togglePopupConnect()
+  }
+  togglePopupConnect(): void {
+    const popupConnect =document.querySelector('.popupConnect') as HTMLElement;   
+    const overlay = document.querySelector('.overlay') as HTMLElement;
+
+    popupConnect.style.display = 'block';
+    overlay.style.display = 'block';
+    overlay.addEventListener('click', function () {
+      popupConnect.style.display = 'none';
+      overlay.style.display = 'none';
+    });
+  }
+
   togglePopupSignale() {
    const popupSignale  = document.querySelector('.popupSignale') as HTMLElement;
     const overlay = document.querySelector('.overlay') as HTMLElement;

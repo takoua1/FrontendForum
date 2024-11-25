@@ -419,9 +419,7 @@
     box-sizing: border-box;
     width: 900px;
     top:10rem;
-   
-  
-  
+   padding: 19px;
     background: rgba(217, 217, 217, 0.58);
     border: 1px solid white;
     box-shadow: 12px 17px 51px rgba(0, 0, 0, 0.22);
@@ -435,8 +433,8 @@
     user-select: none;
     font-weight: bolder;
     color: black;
-    margin-bottom: 15px;
-    padding:  30px;
+    margin-bottom: 50px;
+  
   }
   
   .card-container .card-list:hover {
@@ -456,7 +454,7 @@
     top: 0;
     left: 0;
     width: 45px;
-   
+   height: 45px;
     border-radius: 50%;
     margin-right: 10px;
   }
@@ -469,7 +467,7 @@
   
   position: relative;
     border-radius: 10px;
-   
+   width :80%;
      margin: 10px;
     display: inline-block;
     border: 1px solid white;
@@ -500,15 +498,18 @@
   }
   
   .toggle-button {
+
+    position: absolute;
     background-color: transparent;
     border: none;
     color:#6d80c5;
     cursor: pointer;
     margin-top: 5px;
+    left: 20px;
   }
   .card-list  .containerPoste .post-image {
-    max-width: 60%;
-    height: auto;
+    max-width: 43%;
+    
   margin-top: 5%;
     border-radius: 4px;
     margin-bottom: 5px;
@@ -524,12 +525,12 @@
   }
   
   .card-list .btnIte {
+    position:relative;
     width: 60%;
    
-    margin-left: 14%;
-   bottom: 10px;
-    left: 0;
-    margin-bottom: 50px;
+ display: flex;
+    margin-left: 26%;
+  margin-top: 10px;
   }
   .card-list .btnIte  button:nth-child(3) {
     background-color: #007bff; /* Change la couleur de fond du bouton en bleu */
@@ -592,6 +593,7 @@
     border-radius: 50%;
     background-color: rgba(0, 0, 0, 0.1)
   }
+ 
   
   .popup-content {
     position: absolute;
@@ -656,6 +658,11 @@
   .popup-content ul li  .bx-trash, .bx-error-alt {
     color:rgb(255, 5, 5)
   }
+  .popup-content ul li  .bx-link
+{
+  color: #97b7e3;
+
+}
   .popupCardUser {
     position: fixed;
     top: 20%;
@@ -1275,8 +1282,8 @@
   position:fixed;
   
     width: 100%;
-   left: 23%;
-   top: 10rem;
+   margin-left: 23%;
+   top: 20rem;
       z-index: 9999;
    
 
@@ -1293,9 +1300,10 @@
      
         box-sizing: border-box;
         width: 900px;
-       max-height: 500px;
+       max-height: 600px;
      
         overflow-y: auto;
+        overflow-x:hidden;
          padding: 30px;
         background: rgba(217, 217, 217, 0.58);
         border: 1px solid white;
@@ -1310,7 +1318,7 @@
         user-select: none;
         font-weight: bolder;
         color: black;
-        margin-bottom: 15px;
+        margin-bottom: 20px;
         bottom: 20px;
       
       }
@@ -1354,14 +1362,26 @@
        top:10px;
        border-radius: 10px;
      
-        width: 40%;
-      
+        width: 80%;
+        display: flex;
+        flex-direction: column;
          transition: all 0.5s ease;
         display: inline-block;
         border: 1px solid white;
         bottom: 40px;
       }
    
+      
+      .popupPoste .card-list  .containerPopupPoste  .toggle-button {
+
+        position: absolute;
+        background-color: transparent;
+        border: none;
+        color:#6d80c5;
+        cursor: pointer;
+        margin-top: 20px;
+        left: 125px;
+      }
       .popupPoste   .card-list .containerPopupPoste .post-text {
         color: black;
        padding: 10px;
@@ -1376,7 +1396,20 @@
       
      }
       
+     .popupPoste  .comment .commentText   button{
+      position:relative;
+       width: 40px;
+       top:-55px;
+       
+       height: 25px;
       
+       left:35%;
+       align-items: center;
+       justify-content: center;
+       border: none;
+       border-radius: 10px;
+      
+     }
       
       .popupPoste  .card-list  .containerPopupPoste .post-image {
        
@@ -1394,19 +1427,29 @@
         color: #1876f2;
       right: 0px;
       }
-      .popupPoste  .card-list .containerPopupPoste  .commentTaille 
+      .comment{
+    
+        display: flex;
+    flex-direction: column;
+      }
+      app-comment {
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      .comment  .commentTaille 
     
       {
       
-     position: relative;
-       top:10px;
-       left: 180px;
-        color: #616060;
-    display: flex;
+        position: relative;
+        margin-top: -30px;
+        color: #090909;
+        float: right;
         font-size: 12px;
-     
+       margin-left: 35rem;
+       width: 150px;
+    }
         
-      }
+      
       .popupPoste  .card-list  .containerPopupPoste .btnIte {
      
         margin-top:15px;
@@ -1520,6 +1563,8 @@
     transition: .2s ease;
     width:95%;
    margin-right: 90px;
+
+   
     resize: none;
     border: none;
       }
@@ -1542,154 +1587,263 @@
          color: #66a6ff;
        }
   
-       .popupPoste  .card-list   .commentPopup .listeComment  .commentInfo{
-        margin-top:10px;
-        color: #717070;
-        font-size: 15px;
+     
+       .popupSignale{
+        position: fixed;
+        margin-top: 7%;
+           left:30%;
+         width: 95%;
+       display: none;
+       
+           z-index: 9999;
+    
       }
-  .popupSignale{
-    position: fixed;
-   top:2%;
-       left:30%;
-     width: 95%;
-   display: none;
-   
-       z-index: 9999;
+      .popupSignale .cardSignale{
+        box-sizing: border-box;
+        width: 600px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+         padding: 30px;
+        background: rgba(217, 217, 217, 0.58);
+        border: 1px solid white;
+        box-shadow: 12px 17px 51px rgba(0, 0, 0, 0.22);
+        backdrop-filter: blur(20px);
+        border-radius: 17px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.5s;
+        align-items: center;
+        justify-content: center;
+        user-select: none;
+        font-weight: bolder;
+        color: black;
+        margin-bottom: 15px;
+        bottom: 20px;
+        overflow-y: auto;
+      
+        
+      }
+      .error-message {
+        color: #ff4d4f;
+        background-color: #ffe6e6;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 15px;
+        text-align: center;
+        font-weight: bold;
+      }
+      .popupSignale .cardSignale span {
+        margin-bottom: 1rem;
+        font-size: 18px;
+        margin-left: -6rem;
+      }
+      
+      .popupSignale .cardSignale .signale-options {
+        display: flex;
+      flex-direction: column; /* Affiche les boutons radio verticalement */
+      align-items: flex-start; /* Aligne les éléments à gauche */
+      width: 100%; /* Prend toute la largeur disponible */
+      margin-bottom: 1rem;
+      }
+      
+      .popupSignale .cardSignale .signale-options div {
+        display: flex;
+        align-items: center;
+        margin: 0.5rem; /* Espacement entre les éléments */
+      }
+      
+      .popupSignale .cardSignale input[type="radio"] {
+        margin-right: 0.5rem;
+      }
+      
+      .popupSignale .cardSignale .signale-options div label {
+        color: #4189e0;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.2rem;
+        font-size:13px ;
+        padding: 0.5rem; /* Ajoute du padding autour du texte */
+        border-radius: 5px; /* Arrondir les coins du label */
+        background: rgba(255, 255, 255, 0.3);  /* Ajoute un fond léger pour le label */
+      }
+      
+      .popupSignale .cardSignale textarea {
+        width: 536px;
+    
+        padding: 0.5rem;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+        position: relative;
+        height: 263px;
+        border-radius: 10px;
+        outline: none;
+        transition: .2s ease;
+       
+        display: flex;
+       
+      
+        resize: none;
+        border: none;
+      
+      }
+    
+    
+    
+      .popupSignale .cardSignale div button {
+     
+        font-size: 12px;
+      
+        
+      float: right;
+        padding: 0.5rem 1rem;
+        background: linear-gradient(to bottom, #4dc7d9 0%, #66a6ff 100%);
+        color: white;
+      
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        border-radius: 25px;
+        box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s;
+      }
+      
+      .popupSignale .cardSignale div button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0px 8px 15px white;
+      }
+      
+      .popupSignale .cardSignale div button:active {
+        transform: scale(0.95);
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+      }
+      
+      .popupSignale .cardSignale div button span {
+        display: block;
+     
+        margin-bottom: 0.3rem;
+        margin-left: 0.4em;
+        transition: all 0.3s;
+        align-items: center;
+        font-size: 12px;
+      }
+      
+      .popupSignale .cardSignale div button i {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        fill: white;
+        transition: all 0.3s;
+      }
+      
+      .popupSignale .cardSignale  div button.svg-valider {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.2);
+        margin-right: 0.5em;
+        transition: all 0.3s;
+      }
+      
+      .popupSignale .cardSignale div button:hover .valider {
+        background-color: rgba(255, 255, 255, 0.5);
+      }
+      
+      .popupSignale .cardSignale div button:hover i {
+        transform: rotate(45deg);
+      }
 
+   
+      
+
+  .popupConnect {
+    position: fixed;
+    top: 50%;
+    left: 40%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+   
+    z-index: 10000;
   }
-  .popupSignale .cardSignale{
+  
+  .popupConnect .cardConnect {
+    position: absolute;
     box-sizing: border-box;
-    width: 40%;
-    height: 100%;
+  
     display: flex;
-    flex-direction: column;
-     padding: 30px;
-    background: rgba(217, 217, 217, 0.58);
+    width: 300px;
+    height: 130px;
+    background: rgba(255, 253, 253, 0.829);
     border: 1px solid white;
     box-shadow: 12px 17px 51px rgba(0, 0, 0, 0.22);
-    backdrop-filter: blur(20px);
+    backdrop-filter: blur(6px);
     border-radius: 17px;
     text-align: center;
     cursor: pointer;
     transition: all 0.5s;
+  
     align-items: center;
     justify-content: center;
     user-select: none;
     font-weight: bolder;
     color: black;
-    margin-bottom: 15px;
-    bottom: 20px;
-    overflow-y: auto;
-  
-    
-  }
-  .error-message {
-    color: #ff4d4f;
-    background-color: #ffe6e6;
-    padding: 10px;
-    border-radius: 5px;
-    margin-bottom: 15px;
-    text-align: center;
-    font-weight: bold;
-  }
-  .popupSignale .cardSignale span {
-    margin-bottom: 1rem;
-    font-size: 18px;
-    margin-left: -6rem;
-  }
-  
-  .popupSignale .cardSignale .signale-options {
-    display: flex;
-  flex-direction: column; /* Affiche les boutons radio verticalement */
-  align-items: flex-start; /* Aligne les éléments à gauche */
-  width: 100%; /* Prend toute la largeur disponible */
-  margin-bottom: 1rem;
-  }
-  
-  .popupSignale .cardSignale .signale-options div {
-    display: flex;
-    align-items: center;
-    margin: 0.5rem; /* Espacement entre les éléments */
-  }
-  
-  .popupSignale .cardSignale input[type="radio"] {
-    margin-right: 0.5rem;
-  }
-  
-  .popupSignale .cardSignale .signale-options div label {
-    color: #4189e0;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.2rem;
-    font-size:13px ;
-    padding: 0.5rem; /* Ajoute du padding autour du texte */
-    border-radius: 5px; /* Arrondir les coins du label */
-    background: rgba(255, 255, 255, 0.3);  /* Ajoute un fond léger pour le label */
-  }
-  
-  .popupSignale .cardSignale textarea {
-    width: 280px;
-
-    padding: 0.5rem;
-    border-radius: 4px;
-    border: 1px solid #ddd;
-    position: relative;
-    height: 50%;
-    border-radius: 10px;
-    outline: none;
-    transition: .2s ease;
-   
-    display: flex;
-   
-  
-    resize: none;
-    border: none;
+    top: 10px;
   
   }
-
-
-
-  .popupSignale .cardSignale div button {
- 
+  
+  .popupConnect .cardConnect:hover {
+  
+    transform: scale(1.05);
+  }
+  
+  .popupConnect .cardConnect p {
+    position: absolute;
+    top: 10px;
+    font-size: 15px;
+    color: #97b7e3;
+  }
+  
+  .popupConnect .cardConnect button {
+    position: absolute;
     font-size: 12px;
   
-    
-  float: right;
-    padding: 0.5rem 1rem;
+    top: 80px;
+   
     background: linear-gradient(to bottom, #4dc7d9 0%, #66a6ff 100%);
     color: white;
-  
+    padding: 0.5em 1em;
     display: flex;
     align-items: center;
     justify-content: center;
     border: none;
     border-radius: 25px;
+   
     box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
     transition: all 0.3s;
   }
   
-  .popupSignale .cardSignale div button:hover {
+  .popupConnect .cardConnect button:hover {
     transform: translateY(-3px);
     box-shadow: 0px 8px 15px white;
   }
   
-  .popupSignale .cardSignale div button:active {
+  .popupIConnect .cardConnect button:active {
     transform: scale(0.95);
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
   }
   
-  .popupSignale .cardSignale div button span {
+  .popupConnect .cardConnect button span {
     display: block;
- 
-    margin-bottom: 0.3rem;
     margin-left: 0.4em;
     transition: all 0.3s;
-    align-items: center;
-    font-size: 12px;
   }
   
-  .popupSignale .cardSignale div button i {
+  .popupConnect .cardConnect button i {
     font-size: 18px;
     width: 18px;
     height: 18px;
@@ -1697,7 +1851,7 @@
     transition: all 0.3s;
   }
   
-  .popupSignale .cardSignale  div button.svg-valider {
+  .popupConnect .cardConnect .svg-valider {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1709,11 +1863,11 @@
     transition: all 0.3s;
   }
   
-  .popupSignale .cardSignale div button:hover .valider {
+  .popupConnect .cardConnect button:hover .valider {
     background-color: rgba(255, 255, 255, 0.5);
   }
   
-  .popupSignale .cardSignale div button:hover i {
+  .popupConnect.cardConnect button:hover i {
     transform: rotate(45deg);
   }
   .overlay {
@@ -1740,17 +1894,34 @@
     border-radius: 10px;
     outline: none;
     transition: .2s ease;
-    width: 62%;
+    width: 71%;
     padding-left: 5px;
     padding-right:  75px;
     display: flex;
-    left: 200px;
+    left: 136px;
    
     resize: none;
     border: none;
     margin-bottom: 60px;
-  }
   
+  }
+  a{
+    font-size: 0.8rem;
+  }
+  .comment .commentText   button{
+    position:relative;
+     width: 40px;
+   top: -54px;
+     
+     height: 25px;
+    
+     left:31%;
+     align-items: center;
+     justify-content: center;
+     border: none;
+     border-radius: 10px;
+    
+   }
   /*.card-list .comment .commentText  .uplodImage{
     position: relative;
     top:-15px;
@@ -1790,10 +1961,7 @@
     visibility: hidden;
     
   }
-  .comment {
-    position: relative;
   
-  }
   .comment  .commentText .bx-camera{
     position: relative;
     float: right;
@@ -1802,20 +1970,7 @@
     color:#69738b92 ;
     right: 130px;}
   
-  .comment .commentText   button{
-   position:absolute;
-    width: 40px;
-   top:48px;
-    
-    height: 25px;
-    bottom:75px;
-    right:15%;
-    align-items: center;
-    justify-content: center;
-    border: none;
-    border-radius: 10px;
-   
-  }
+  
   .comment .commentText .bxs-send {
     color: #66a6ff;
   }
@@ -1825,25 +1980,25 @@
     
   { position: relative;
     
-   margin-top:-40px;
+   margin-top:-30px;
     color: #7e7e7e;
    float: right;
     font-size: 12px;
+    margin-right: 6rem;
+  }
   
-  }
-  .comment .commentInfo{
-    position: relative;
-    margin-top:10px;
-    color: #7e7e7e;
-    font-size: 15px;
-  }
+ 
+  
   .comment .commentInfo p{
     position: relative;
-   top:40px;
-   margin-bottom: 10px;
-    
-  }
-  .comment .commentContainer .commentUser{
+    top: 34px;
+    margin-left: -3px;
+    margin-bottom: 40px;
+    cursor: pointer;
+    color: #007bff;
+}
+  
+ /* .comment .commentContainer .commentUser{
     position: relative;
     margin-left: 100px;
   margin-bottom: 60px;

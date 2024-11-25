@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { MessageMailService } from '../services/message-mail.service';
-import { Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { TokenStorageService } from '../services/token-storage.service';
 import { animate, style, transition, trigger } from '@angular/animations';
 
@@ -29,6 +29,9 @@ export class BoiteReceptionComponent  implements OnInit,OnDestroy{
   mails: any[]=[] ;
   mail:any;
   mailSubscription: Subscription | undefined;
+  mailCountSubscription: Subscription | undefined;
+  mailCount: number = 0;
+  private mailSubject:  BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
   @ViewChild('overlay') overlay: ElementRef ;
   @ViewChild('popupDelete', { static: false }) popupDelete!: ElementRef;
   constructor(private mailService:MessageMailService, private token:TokenStorageService,private renderer: Renderer2)
@@ -77,6 +80,22 @@ this.loadMails();
 
   toggleDetails(mail: any) {
     mail.showDetails = !mail.showDetails;
+    console.log("this.mails",this.mails);
+    this.mailService.markMessageAsRead(mail.id).subscribe(
+      () => {
+          console.log(`Messages in Mail ID ${mail.id} marked as read.`);
+          const mailRead = this.mails.find((mailMsg:any) => mailMsg.id === mail.id);
+          if(mailRead)
+          {
+            mailRead.read = true;
+            this.mailService.updateUnTraitesCount(this.mails);
+          }
+      },
+      (error) => {
+          console.error(`Error marking messages as read for Mail ID ${mail.id}:`, error);
+      }
+  );
+
   }
 
   loadMails()
@@ -84,12 +103,16 @@ this.loadMails();
     this.mailService.getMails(user.username).subscribe(
       (data: any[]) => {
         this.mails = data;
+      this.mailService.updateUnTraitesCount(this.mails);
         this.mails.forEach(mail => {
           mail.contenu = mail.contenu.replace(/\n/g, '<br>');
         });
+        
         console.log("this.mailss",this.mails)
       
-      })}
+      })
+     
+      }
 
 
 

@@ -13,6 +13,7 @@ export class MessageMailService {
   private mailSubject:  BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
   private connectedPromise: Promise<void>;
   private isConnected = false;
+  private unTraitesCount = new BehaviorSubject<number>(0);
   constructor(private token :TokenStorageService,private http :HttpClient) {
     this.loadMailInitial();
     this.initializeWebSocketConnection();
@@ -40,8 +41,11 @@ export class MessageMailService {
     
               if (Array.isArray(currentMails)) {
                 // Ajoute le nouveau mail à la liste existante
+               
                 this.mailSubject.next([...currentMails, mail]);
-              
+                const updatedMails = [...this.mailSubject.value];
+             
+                console.log(' updatedMails is :', );
                 } else {
                     console.error('mailSubject.value is not an array:', currentMails);
                 }
@@ -62,14 +66,28 @@ public disconnect(): void {
     });
   }
 }
+
+
+getUnTraitesCount(): Observable<number> {
+  return this.unTraitesCount.asObservable();
+}
+updateUnTraitesCount(mailes: any[]): void {
+  const count = mailes.filter(mail => !mail.read).length;
+  this.unTraitesCount.next(count);
+}
   public getMailStatus():Observable<any[]>{
     return this.mailSubject.asObservable();
   }
-
+  markMessageAsRead(messageId: number): Observable<void> {
+    const url = `/api/mail/markAsRead/${messageId}`;
+    
+      return this.http.patch<void>(url, {});
+    }
   loadMailInitial(): void {
     const user = this.token.getUser();
     this.getMails(user.username).subscribe((mails: any[]) => {
       this.mailSubject.next(mails);
+      this.updateUnTraitesCount(mails);
     }, (error) => {
       console.error('Error loading initial mails:', error);
     });

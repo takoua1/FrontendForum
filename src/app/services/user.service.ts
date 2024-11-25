@@ -12,7 +12,7 @@ export class UserService {
   private usersSource = new BehaviorSubject<any[]>([]);
   private filteredUsersSource = new BehaviorSubject<any[]>([]);
   currentUsers = this.filteredUsersSource.asObservable();
-  findByUsername(username:string) :Observable<User>
+  findByUsername(username:string)
   { 
     let headers = new HttpHeaders({'Content-Type': 'application/json', Authorization:'Bearer '+ this.tokenStorage.getToken() })
     console.log(this.tokenStorage.getToken());
@@ -21,7 +21,7 @@ export class UserService {
     
     return this.http.get<User>(url ,{headers:headers});
   }
-  findById(id:number) :Observable<User>
+  findById(id:number) :Observable<any>
   { 
     let headers = new HttpHeaders({'Content-Type': 'application/json', Authorization:'Bearer '+ this.tokenStorage.getToken() })
     console.log(this.tokenStorage.getToken());
@@ -30,13 +30,10 @@ export class UserService {
     
     return this.http.get<User>(url ,{headers:headers});
   }
-  updateUser(id:number,user:User):Observable<any>{
-    let headers = new HttpHeaders({ 'Content-Type': 'application/json',Authorization:'Bearer '+ this.tokenStorage.getToken() })
-    var url=`/api/user/update/${id}`;
-
-    return this.http.patch<any>(url,user,{headers:headers});
-
-  }
+  updateUser(id: number, user: User): Observable<any> {
+    const url = `/api/user/update/${id}`;
+    return this.http.patch<any>(url, user);
+}
   updateUserImage(file: File, id: number): Observable<any> {
     let headers = new HttpHeaders({ 'Authorization': 'Bearer ' + this.tokenStorage.getToken() });
     var url = `/api/user/uploadImage/${id}`;
@@ -84,8 +81,20 @@ getOfflineDuration(username:string):Observable<string>
    return this.http.get(url, {responseType: 'text' });
  }
 
- changePassword(passwordData: any): Observable<any> {
-  const url=`/api/user//change-password`;
-  return this.http.put(url, passwordData);
+ changePassword(passwordData: ChangePasswordRequest): Observable<any> {
+  const url=`/api/user/change-password`;
+  return this.http.put(url, passwordData, { responseType: 'text' }).pipe(
+    catchError(error=> {
+      console.error("error upadte paswword",error);
+      return throwError(error);
+    })
+      
+  );
 }
+
+}
+export interface ChangePasswordRequest {
+  currentPassword: string;
+  newPassword: string;
+  confirmationPassword: string;
 }

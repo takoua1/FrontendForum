@@ -10,14 +10,24 @@
 </head>
 <body>
 
-    <div class="receiver" *ngIf="userProfile && !groupe">
-        <img class="profile" [src]="userProfile.image ? userProfile.image : '/assets/image/user.png'" alt="User Image">
+    <div class="receiver" *ngIf="userProfile && !groupe" >
+        <img class="profile" [src]="userProfile.image ? userProfile.image : '/assets/image/user.png'" alt="User Image" (click)="navProfile(userProfile)">
     <p>   {{userProfile.nom}} {{userProfile.prenom}}</p>
     <div class="edit-delette">
       <i class='bx bx-dots-vertical-rounded'></i>
-      <div *ngIf="chat" class="tooltip" (click)="popupValiderChat(chat.id)">
-        <i class='bx bx-trash' ></i>
-      <span >Supprimer</span>
+      
+
+      <div  class="tooltip" >
+        <ul *ngIf="chat">
+          <li (click)="popupValiderChat(chat.id)" >
+          <i class='bx bx-trash' ></i>
+          <span >Supprimer</span>
+        </li>   <li   class="return-option" (click)="loadPage()"> 
+
+          <i class='bx bxs-left-arrow-square'></i>
+        <span>Retour</span>
+        </li></ul>
+      
       
     </div>
     </div>
@@ -37,12 +47,17 @@
           <span >Supprimer</span>
         
         </li>
-        <li *ngIf="groupe" (click)="popupValiderQuitter(groupe.id,user.id)">
+        <li *ngIf="groupe && isMemberGroup" (click)="popupValiderQuitter(groupe.id,user.id)">
          
             <i class='bx bx-exit' ></i>
         <span >Quitter</span>
      
     
+      </li>
+      <li *ngIf="groupe"  class="return-option"  (click)="loadPage()"> 
+
+        <i class='bx bxs-left-arrow-square'></i>
+      <span>Retour</span>
       </li>
       </ul>
        
@@ -62,9 +77,10 @@
             <li  (click)="onMessageClick($event, message)"  >
                 <div class="message-content">
               
-                    <img class="logo" [src]="message.sender.image ? message.sender.image : '/assets/image/user.png'" alt="User Image">
+                    <img class="logo" [src]="message.sender.image ? message.sender.image : '/assets/image/user.png'" alt="User Image" (click)="navProfile(message.sender)">
                   
-                    <p *ngIf="message.content" [innerHTML]="parseMessage(message.content)" (click)="handleGroupLinkClick($event)"></p>
+                    <p *ngIf="message.content" [innerHTML]="parseMessage(message.content)" (click)="handleLinkClick
+($event)"></p>
                    
                   
                      
@@ -77,7 +93,7 @@
             
                       </video>
                       <audio *ngIf="message.audio" [src]="message.audio" controls></audio>
-                      <p class="timestamp" >{{formatTimestamp( message.time| date:'medium')}}</p>
+                      <p class="timestamp">{{ formatTimestamp(message.time) }}</p>
                       <span  *ngIf="message.sender.username===user.username"class="view-status" 
                       [ngClass]="{'viewed-blue': message.read, 'viewed-gray': !message.read}">
                   Vu
@@ -91,15 +107,15 @@
         
       
         <ng-container *ngFor="let item of  messagePrivieList">
-            <div (click)="onMessageClick($event, item)"  *ngIf="(userProfile.username === item.senderId && user.username === item.recipientId ) || 
-               (user.username === item.senderId && (userProfile.username === item.recipientId || user.username === item.recipientId ))"
+            <div (click)="onMessageClick($event, item)"  *ngIf="(userProfile.username === item.senderUsername && user.username === item.recipientUsername ) || 
+               (user.username === item.senderUsername && (userProfile.username === item.recipientUsername || user.username === item.recipientUsername ))"
        class="message"  
-       [ngClass]="{'left': item.senderId !== user.username, 'right': item.senderId === user.username}">
+       [ngClass]="{'left': item.senderUsername !== user.username, 'right': item.senderUsername === user.username}">
               <div class="message-content"  >
                 <img class="logo" 
                      [src]="item.imageProfile ? item.imageProfile : '/assets/image/user.png'" 
-                     alt="User Image">
-                     <p *ngIf="item.content" [innerHTML]="parseMessage(item.content)" (click)="handleGroupLinkClick($event)"></p>
+                     alt="User Image"  (click)="navProfileId(item.senderId)">
+                     <p *ngIf="item.content" [innerHTML]="parseMessage(item.content)" (click)="handleLinkClick($event)"></p>
                 
                
               </div>
@@ -111,11 +127,11 @@
               <audio *ngIf="item.audio" [src]="item.audio" controls></audio>
               <p class="timestamp" >{{ formatTimestamp(convertToDate(item.times)) }}</p>
              
-              <span class="view-status" *ngIf="item.senderId===user.username"
+              <span class="view-status" *ngIf="item.senderUsername===user.username"
             [ngClass]="{'viewed-blue': item.read, 'viewed-gray': !item.read}">
         Vu
-      </span>
-      <button  class="delete-btn" *ngIf="item.senderId === user.username" (click)="popupValider(convertToNumber(item.id))"><i class='bx bx-trash' ></i> </button>
+        </span>
+         <button  class="delete-btn" *ngIf="item.senderUsername === user.username" (click)="popupValider(convertToNumber(item.id))"><i class='bx bx-trash' ></i> </button>
             </div>
            
           </ng-container>
@@ -123,7 +139,7 @@
            
            
            
-            <div class="chat-bubble" *ngIf="typing && typingStatus.senderId===this.userProfile.username">
+            <div class="chat-bubble" *ngIf="typing">
                 <img class="logo" 
                 [src]="userProfile.image? userProfile.image : '/assets/image/user.png'" 
                 alt="User Image">
@@ -215,13 +231,13 @@
           
             <ul  #messageContainer id="messageContainer" class="chat"  >
                 <div class="message" *ngFor="let message of messagesGroupe "[ngClass]="{'left': message.sender.id !== user.id, 'right': message.sender.id === user.id}"  >
-                <li (click)="onMessageClick($event, message)"    >
+                <li (click)="onMessageClick($event, message)">
 
                     <div class="message-content" >
                      
-                        <img class="logo" [src]="message.sender.image ? message.sender.image : '/assets/image/user.png'" alt="User Image">
-                        <p class="sender-username">{{ message.sender.username }} </p>
-                        <p *ngIf="message.content" [innerHTML]="parseMessage(message.content)" (click)="handleGroupLinkClick($event)"></p>
+                        <img class="logo" [src]="message.sender.image ? message.sender.image : '/assets/image/user.png'" alt="User Image" (click)="navProfileId(message.sender.id)">
+                        <p class="sender-username">{{ message.sender.nom}} {{message.sender.prenom}} </p>
+                        <p *ngIf="message.content" [innerHTML]="parseMessage(message.content)" (click)=" handleLinkClick($event)"></p>
                     </div>
                         <img *ngIf="message.image" [src]="message.image"  class="uploaded_image">
                         <video *ngIf="message.video" controls>
@@ -229,7 +245,7 @@
                 
                           </video>
                           <audio *ngIf="message.audio" [src]="message.audio" controls></audio>
-                          <p class="timestamp" >{{formatTimestamp(message.time | date:'short')}}</p>
+                          <p class="timestamp" >{{formatTimestamp(message.time)}}</p>
                           
                           <button  class="delete-btn" *ngIf="message.sender.id === user.id" (click)="popupValider(message.id)"><i class='bx bx-trash' ></i> </button>
                           <div  class="edit-member" *ngIf="user.username === groupe.userCreature.username && message.sender.username !== user.username">
@@ -259,19 +275,20 @@
                
           
           
-            <ng-container *ngFor="let item of  combinedMessages">
+            <ng-container *ngFor="let item of  combinedMessages" >
              
                 <div (click)="onMessageClick($event, item)"
-                *ngIf=" item.groupId === groupId" class="message"  
+                *ngIf="item.groupId === groupId" class="message"  
                   
-                [ngClass]="{'left': item.senderId !== user.username, 'right': item.senderId === user.username}">
+                [ngClass]="{'left': item.senderUsername !== user.username, 'right': item.senderUsername === user.username}">
                
                 <div class="message-content">
                     <img class="logo" 
                          [src]="item.imageProfile ? item.imageProfile : '/assets/image/user.png'" 
-                         alt="User Image">
-                         <p class="sender-username">{{ item.senderId }} </p>
-                    <p *ngIf="item.content" [innerHTML]="parseMessage(item.content)" (click)="handleGroupLinkClick($event)"></p>
+                         alt="User Image" (click)="navProfileId(item.senderId)">
+                         <p class="sender-username">{{ item.senderNom}} {{item.senderPrenom}} </p>
+                    <p *ngIf="item.content" [innerHTML]="parseMessage(item.content)" (click)="handleLinkClick
+($event)"></p>
                 </div>
                     <img *ngIf="item.image" [src]="item.image"   class="uploaded_image">
                     <video *ngIf="item.video"  controls>
@@ -281,17 +298,17 @@
               <audio *ngIf="item.audio" [src]="item.audio" controls></audio>
               <p class="timestamp" >{{ formatTimestamp(convertToDate(item.times))  }}</p>
                   
-                  <button  class="delete-btn" *ngIf="item.senderId === user.username" (click)="popupValider(convertToNumber(item.id))"><i class='bx bx-trash' ></i> </button>
+                  <button  class="delete-btn" *ngIf="item.senderUsername === user.username" (click)="popupValider(convertToNumber(item.id))"><i class='bx bx-trash' ></i> </button>
                 </div>
               </ng-container>
-              <li>
+              <li *ngFor="let us of typingUsers">
            
-                
-               <div *ngFor="let us of typingUsers">
-                <div class="chat-bubble" *ngIf="us && us.username!==user.username" >
                    
+              
+                <div class="chat-bubble" *ngIf="us.username !== user.username">
+                  
                     <img class="logo" 
-                    [src]="us.image? us.image : '/assets/image/user.png'" 
+                    [src]="us.image  ? us.image : '/assets/image/user.png'" 
                     alt="User Image">
                     <div class="typing">
                       <div class="dot"></div>
@@ -299,7 +316,7 @@
                       <div class="dot"></div>
                     </div>
                 </div>
-            </div>
+           
             </li>
             </ul>
         </div>
@@ -412,32 +429,34 @@
                     <i class='bx bx-search' ></i> 
                 </div>
                     <div class="grid-item" *ngFor="let member of filteredMembers">
-                        <img [src]="member.image ? member.image : '/assets/image/user.png'" class="imgMember">
-                        <p class="name">{{member.username}}  </p>
+                        <img [src]="member.image ? member.image : '/assets/image/user.png'" class="imgMember" (click)="navProfileMemeber(member)">
+                        <p class="name">{{member.nom}} {{member.prenom}} </p>
                         <p class="date">{{ groupe.userJoinDates[member.id] | date:'medium' }}</p>
-                        <div class="contact"  *ngIf="user.username != member.username" >
+                        <div class="edit"   *ngIf="user.username === groupe.userCreature.username && user.username !== member.username"  > 
+                          <i class='bx bx-dots-vertical-rounded'></i>
+                        <div  class="tooltip">
+                          <ul>
+                            <li (click)="popupGetAdmin(groupe.id,member.username)">
+                              <i class='bx bx-crown'></i>
+                              <span >Admin</span>
+                            </li>
+                            <li (click)="popupValiderBloquer(groupe.id, member.username)" >
+                              <i class='bx bx-block' ></i>
+                              <span >Bloquer</span>
+                            </li>
+                            <li (click)="popupDeleteMember(groupe.id,member.username)">
+                            <i class='bx bx-trash' ></i>
+                            <span >Supprimer</span>
+                          </li>
+                         
+                        </ul>
+                      </div>
+                        </div>
+                         
+                        <div class="contact" *ngIf="user.username !== member.username && !member.isBlocked">
                           <i class='bx bxl-messenger'></i>
                           <button class="profile-card__button button--blue " (click)="openChat(member.id)">Message</button>
-                            <div class="edit"   *ngIf="user.username === groupe.userCreature.username"  > 
-                            <i class='bx bx-dots-vertical-rounded'></i>
-                          <div  class="tooltip">
-                            <ul>
-                              <li (click)="popupGetAdmin(groupe.id,member.username)">
-                                <i class='bx bx-crown'></i>
-                                <span >Admin</span>
-                              </li>
-                              <li (click)="popupValiderBloquer(groupe.id, member.username)" >
-                                <i class='bx bx-block' ></i>
-                                <span >Bloquer</span>
-                              </li>
-                              <li (click)="popupDeleteMember(groupe.id,member.username)">
-                              <i class='bx bx-trash' ></i>
-                              <span >Supprimer</span>
-                            </li>
-                           
-                          </ul>
-                        </div>
-                          </div>
+                         
                         </div>
                          </div>
                       </div>
@@ -450,7 +469,7 @@
                          <div class="item-images">
                                <item-images *ngFor="let message of filteredMessages" >
                             <img *ngIf="message.image" [src]="message.image"  class="uploaded_image">
-                          <p class="date" *ngIf="message.image"> {{ message.time| date:'medium':'fr-FR' }}</p>
+                          <p class="date" *ngIf="message.image"> {{ message.time| date:'medium':'fr-FR' }} par: {{message.sender.nom}} {{message.sender.prenom}}</p>
                                    </item-images>
                              </div>
                          </div>
@@ -466,7 +485,7 @@
                         <source  [src]="message.video" type="video/mp4" >
             
                           </video>
-                      <p class="date" *ngIf="message.video"> {{ message.time| date:'medium':'fr-FR'}}</p>
+                      <p class="date" *ngIf="message.video"> {{ message.time| date:'medium':'fr-FR'}} par: {{message.sender.nom}} {{message.sender.prenom}}</p>
                     </item-videos>
                     </div>
                   </div>
@@ -480,7 +499,7 @@
                   <div class="item-vocales">
                     <item-vocales *ngFor="let message of filteredMessages" >
                       <audio *ngIf="message.audio" [src]="message.audio" controls></audio>
-                      <p class="date" *ngIf="message.audio"> {{ message.time| date:'medium' }}</p>
+                      <p class="date" *ngIf="message.audio"> {{ message.time| date:'medium' }} par: {{message.sender.nom}} {{message.sender.prenom}}</p>
                     </item-vocales>
                   </div>
             </div>
@@ -492,29 +511,29 @@
                 </div>
                   
                   <div class="grid-item" *ngFor="let member of filteredBlockedMembers">
-                <img [src]="member.image ? member.image : '/assets/image/user.png'" class="imgMember">
+                <img [src]="member.image ? member.image : '/assets/image/user.png'" class="imgMember" (click)="navProfileMemeber(member)">
                 <p class="name">{{member.nom}}  {{member.prenom}}</p>
+                <div class="edit"   *ngIf="user.username === groupe.userCreature.username"  > 
+                  <i class='bx bx-dots-vertical-rounded'></i>
+                <div  class="tooltip">
+                  <ul>
+                   
+                    <li (click)="popupValiderDeblouqer(groupe.id, member.username)" >
+                      <i class='bx bx-lock-open-alt' ></i>
+                      <span >Débloquer</span>
+                    </li>
+                   
+                 
+                 
+                </ul>
                 
-                <div class="contact"  *ngIf="user.username != member.username" >
+                
+              </div>
+                </div>
+                <div class="contact"  *ngIf="user.username != member.username  && !member.isBlocked" >
                   <i class='bx bxl-messenger'></i>
                   <button class="profile-card__button button--blue " (click)="openChat(member.id)">Message</button>
-                    <div class="edit"   *ngIf="user.username === groupe.userCreature.username"  > 
-                    <i class='bx bx-dots-vertical-rounded'></i>
-                  <div  class="tooltip">
-                    <ul>
-                     
-                      <li (click)="popupValiderDeblouqer(groupe.id, member.username)" >
-                        <i class='bx bx-block' ></i>
-                        <span >Débloquer</span>
-                      </li>
-                     
-                   
-                   
-                  </ul>
                   
-                  
-                </div>
-                  </div>
                 </div>
                  </div>
                 
@@ -524,10 +543,10 @@
           </div>
             <div class="popupValider" #popupVal>
               <div class="cardValider">
-                <p *ngIf="userId===null && BlouqeId ===null &&  debloqueMember ===null && adminGroupId ===null" >Vous êtes sûr de supprimer !</p>
+                <p *ngIf="adminGroupId ===null && BlouqeId===null && membGroupId===null && username ===null && userId=== null">Vous êtes sûr de supprimer !</p>
                 <p *ngIf="userId!==null && BlouqeId ===null">Vous êtes sûr de quitter le groupe !</p>
-                <p *ngIf="username !==null && BlouqeId !==null && debloqueMember ===null ">Vous êtes sûr de bloquer !</p>
-                <p *ngIf="username !==null && debloqueMember !==null && membGroupId === null && adminGroupId ===null">Vous êtes sûr de débloquer !</p>
+                <p *ngIf="username !==null && BlouqeId !==null ">Vous êtes sûr de bloquer !</p>
+                <p *ngIf="username !==null && BlouqeId===null && debloqueMember !==null && membGroupId === null && adminGroupId ===null">Vous êtes sûr de débloquer !</p>
                 <p *ngIf="username !==null && membGroupId !==null && adminGroupId ===null">Vous êtes sûr de supprimer cette membre !</p>
                 <p *ngIf="username !==null && adminGroupId !==null ">Vous êtes sûr de donner l'adminitration !</p>
                 <button (click)="action()">
@@ -543,7 +562,7 @@
 
 
 
-            <div class="popupGroupe" >
+            <div class="popupModifierGroupe" >
               <div class="cardGroupe">
                   <div class="img-area">
                       <div class="inner-area">
@@ -568,8 +587,8 @@
               <i class='bx bx-edit'></i>
               <input type="text" required class="input-field"  placeholder="Nom De Groupe" [(ngModel)]="nameGroupe" (input)="onInputChange()">
               </div>
-              <div class="select-menu" #dropdownElement>
-                  <button (click)="clickMenu()"  class="btn">
+              <div class="select-menu" #dropdownElement (click)="clickMenu()">
+                  <button   class="btn">
                     <div class="sbtn-btn">
                       <span class="select-text" type="checkbox">{{ selectedCategory }}</span>
                       <i class='bx bxs-chevron-down'></i>
@@ -591,8 +610,8 @@
           
           
                 </div>
-              <div class="valider">
-                <button  (click)="updateGroup()">
+              <div class="valider" (click)="updateGroup()">
+                <button>
                   <div class="svg-valider">
           
                     <i class='bx bxs-user-check'></i>

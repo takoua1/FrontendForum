@@ -35,7 +35,7 @@ body, html {
   
 position: relative;
 
-width: 25%;
+width: 30%;
   height: 100%;
     background: #fff;
 }
@@ -137,36 +137,38 @@ left: 20px;
        display: flex;
        align-items: center;
        flex-direction: column;
-       gap: 20px;
+       gap: 10px;
         background: #fff;
     }
     .container .structure .left .contactChat .list .group{
-      position: relative;
-     
       width: 100%;
-      max-height: 30%;
-     
-     
-      background: var(--mainBgClr);
-      padding: 15px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, .2);
-      border-radius: 20px;
-    
-    
-  }
-  .container .structure .left .contactChat .list  .person{
-    position: relative;
-    width: 100%;
-    max-height: 50%;
+    max-height: 220px; /* Limite la hauteur pour chaque élément */
+    overflow-y: auto; /* Active le défilement vertical à l'intérieur de chaque élément */
     background: var(--mainBgClr);
     padding: 15px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, .2);
     border-radius: 20px;
+    scrollbar-width: none;
     
+  }
+  .container .structure .left .contactChat .list  .person{
+    width: 100%;
+    max-height: 245px; /* Limite la hauteur pour chaque élément */
+    overflow-y: auto; /* Active le défilement vertical à l'intérieur de chaque élément */
+    background: var(--mainBgClr);
+    padding: 15px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .2);
+    border-radius: 20px;
+    scrollbar-width: none;
+    
+}
+.container .structure .left .contactChat .list .group::-webkit-scrollbar,
+.container .structure .left .contactChat .list .person::-webkit-scrollbar {
+    display: none;
 }
 .categIcon {
   position: absolute;
-   top: -5px;
+   top: -15px;
   display: flex;
    font-size: 20px;
    color: #1876f2;
@@ -212,7 +214,7 @@ justify-content: center;
     position: relative;
     width: 100%;
     top:-20px;
-    height: 60px;
+    height: 65px;
     left: -25px;
     display: block;
     text-decoration: none;
@@ -240,7 +242,7 @@ justify-content: center;
 }
 .box .nameBx{
   position: relative;
-  top: 5px;
+  top: 15px;
   left: 65px;
   width: 100%;
   height: 100%;
@@ -288,7 +290,7 @@ justify-content: center;
       left:-22px;
         font-size: 12px;
         position:absolute;
-        bottom: 11px;
+       
         right: 0;
        
       }
@@ -314,7 +316,7 @@ justify-content: center;
    .container .structure .right  .message{
         position: absolute;
         display: flex;
-      width: 70%;
+      width: 65%;
         flex-direction: column;
     
         
@@ -500,6 +502,7 @@ justify-content: center;
       
      .select-menu button:active {
         transform: scale(0.95);
+        
         box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
       }
       
@@ -891,28 +894,28 @@ justify-content: center;
 
   }*/
 
-  @media (max-width: 780px) {
+  /*@media (max-width: 780px) {
     .container .structure .left,
     .container .structure .right .message{
-        width: 88%; /* Prendre toute la largeur sur petits écrans */
-        transition: display 0.5s; /* Remarque : display ne peut pas être animé, mais cela garantit une transition douce */
+        width: 88%; 
+        transition: display 0.5s; 
     }
 
     .container .structure .left {
-        order: 1; /* S'assurer que la liste est en haut */
+        order: 1;
     }
 
     .container .structure .right .message {
       width: 90%;
-        order: 2; /* Les messages en bas */
+        order: 2; 
     }
 
-    /* Classe pour masquer le panneau gauche */
+
     .display-none {
-        display: none; /* Rendre le panneau gauche invisible */
+        display: none; 
     }
 }
-
+*/
 
 @media (max-width: 540px) {
 

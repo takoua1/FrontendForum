@@ -42,6 +42,7 @@ import { RouterModule } from '@angular/router';
 import { SuccessComponent } from './success/success.component';
 import { ErrorComponent } from './error/error.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { DetailPosteComponent } from './detail-poste/detail-poste.component';
 
 registerLocaleData(localeFr);
 
@@ -61,7 +62,7 @@ registerLocaleData(localeFr);
     MusiqueComponent
     ,PolitiqueComponent,
       EducationComponent,SportComponent,ProfileComponent,ChatComponent,MessageCardComponent,BoiteReceptionComponent,EmojiPickerComponent,
-    SuccessComponent, ErrorComponent,ResetPasswordComponent
+    SuccessComponent, ErrorComponent,ResetPasswordComponent,DetailPosteComponent
   ],
   imports: [
     BrowserModule,

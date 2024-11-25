@@ -116,6 +116,10 @@ header{
  color: red;
  background-color: #ffe6e6; 
 }
+.succees{
+    color: green;
+ background-color: #eeffe6; 
+}
 .form-box .register-container p{
     
     color: red ;

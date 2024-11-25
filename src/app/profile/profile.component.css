@@ -1,20 +1,15 @@
 
 
 
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
-  }
+ 
 
-
+   
 .profile-container {
  position: absolute;
 
 
-    display: flex;
-width: 90%;
+display: flex;
+width: 77%;
    
    top: 8rem;
   left: 8rem;
@@ -23,6 +18,7 @@ width: 90%;
   
  
 }
+
 
 .sidebar {
   position: fixed;
@@ -252,6 +248,7 @@ top:1.4rem;
   background: rgba(241, 241, 244, 0.936);
  margin-top: 0.8rem;
   width: 120px;
+  top:22rem;
   right: 1rem;
   padding: 10px;
   border-radius: 10px;
@@ -305,7 +302,7 @@ z-index: 20;
 }
 
 
- .popup-content ul li .bxs-info-circle ,.propos{
+ .popup-content ul li .bxs-info-circle ,.propos,.copier{
   color:  #b1c0fa; 
   font-size: 22px;
 
@@ -317,7 +314,7 @@ z-index: 20;
 }
 .name{
 position: relative;
-left: 4rem;
+left: 2rem;
  
   font-size: 18px;
   font-weight: 500;
@@ -331,6 +328,8 @@ left: 2rem;
   font-weight: 400;
   font-size: 13px;
 }
+
+
  .social-icons {
  position: relative;
   margin:1rem;
@@ -384,8 +383,8 @@ left: 2rem;
 .social-icons a.insta i{
   color: #E1306C;
 }
-.social-icons a.yt i{
-  color: #ff0000;
+.social-icons a.linked i{
+  color: #0033ff;
 }
 .buttons{
   position: relative;
@@ -428,15 +427,17 @@ flex: 1;
   padding: 20px;
   background: #fff;
 }
+
 .poste{
 position: relative;
 margin-left: 25rem;
 margin-top: -5rem;
-transform: translateX(100%); /* Hors de l'écran à droite */
-opacity: 0; /* Invisible par défaut */
-transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+visibility: hidden; 
+/*transform: translateX(100%); */
+opacity: 0; 
+transition: opacity 0.5s ease-in-out, visibility 0s 0.5s;
 display: none;
-z-index: 100;
+
 }
 
 .poste::-webkit-scrollbar-track
@@ -463,9 +464,10 @@ z-index: 100;
 .poste.active{
 
   top:0;
-  transform: translateX(0%);
+  visibility: visible; /* Rendre visible */
+  opacity: 1; /* Afficher progressivement */
+  transition: opacity 0.5s ease-in-out;
   display:block;
-  opacity: 1;
 }
 .info{
   position:  relative; /* Positionné pour se superposer aux autres sections */
@@ -651,7 +653,7 @@ p{
   background-color: #fff;
   padding: 16px;
   border-bottom: 1px solid #dee2e6;
-  color: #b1c0fa;
+  color: #555;
 }
 
 .p-2 {
@@ -752,7 +754,7 @@ margin-left: -2rem;
 .input-field{
    font-size: 15px;
   background: #f3f3f3;
-  color: #b1c0fa;
+  color: #555;
   height: 50px;
   margin: 0 0rem 3rem 2rem;
   padding: 0 50px;
@@ -765,15 +767,23 @@ margin-left: -2rem;
 .textarea-field {
   font-size: 15px;
  background: #f3f3f3;
- color: #b1c0fa;
+ color: #555;
  height: 50px;
- width: 40%;
+ width: 60%;
  margin: 0.5rem 2rem 2rem 3rem;
  padding: 0 50px;
  border: none;
  border-radius: 30px;
  outline: none;
   transition: .2s ease;
+}
+textarea::-webkit-scrollbar {
+  width: 8px;
+}
+
+textarea ::-webkit-scrollbar-thumb {
+  background-color: #007bff;
+  border-radius: 4px;
 }
 textarea.textarea-field {
   height: 140px; /* Ajuster la hauteur du textarea */
@@ -783,7 +793,7 @@ textarea.textarea-field {
 .input{
   font-size: 15px;
  background: #f3f3f3;
- color: #b1c0fa;
+  color: #555;
  height: 50px;
 
  padding: 0 50px;
@@ -796,9 +806,9 @@ textarea.textarea-field {
 .input-adresse{
   font-size: 15px;
  background: #f3f3f3;
- color:#b1c0fa;
+color: #555;
  height: 50px;
- width:600px;
+ width: 60%;
  padding: 0 50px;
  border: none;
 
@@ -810,7 +820,7 @@ textarea.textarea-field {
   background: #e8e8e8;
 }
 ::-webkit-input-placeholder{
-  color:#b1c0fa;
+  color:#555;
 }
 .input-box-forms i{
   position: relative;
@@ -825,10 +835,20 @@ textarea.textarea-field {
  mat-error {
 
   position: relative;
-  left:50px;
-  top:-50px;
+  
  }
  
+ .form-profile span{
+  position: relative;
+  left:50px;
+  top:-50px;
+  color: red;
+ }
+
+ .tab-pane label{
+
+color:  #b1c0fa;;
+ }
 .input-box i{
   position: relative;
  
@@ -838,7 +858,7 @@ textarea.textarea-field {
 .custom-select-wrapper {
   position: relative;
   display: inline-block;
-  width: 620px;
+  width: 69%;
 }
 
 .custom-select {
@@ -914,7 +934,7 @@ textarea.textarea-field {
 .custom-option {
   padding: 10px;
   font-size: 16px;
-  color: #b1c0fa;
+  color: #101112;
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease;
   width: 100%; /* Chaque option prend toute la largeur du menu */
@@ -924,7 +944,7 @@ textarea.textarea-field {
 
 .custom-option:hover {
   background-color: #f3f3f3; /* Couleur de fond au survol */
-  color: #b1c0fa; /* Couleur de texte au survol */
+  /* Couleur de texte au survol */
 }
 
 .custom-option:not(:last-child) {
@@ -939,8 +959,14 @@ textarea.textarea-field {
 }
 
 .custom-options::-webkit-scrollbar-thumb {
-  background-color: #007bff;
+  background-color: #b1c0fa;
   border-radius: 4px;
+}
+
+                                
+ .select-trigger                             
+label {
+  color:#333
 }
 .select-adresse{
   font-size: 15px;
@@ -998,7 +1024,16 @@ textarea.textarea-field {
 /*.select-adresse::-webkit-scrollbar-track {
   background: rgba(47, 80, 190, 0.2);
 }*/
- 
+ .update{
+
+  padding:30px;
+ }
+                         
+                         
+.update span {
+
+  top:-2px;
+}
 .update button {
  position: relative;
   font-size: 12px;
@@ -1070,6 +1105,7 @@ textarea.textarea-field {
 
  position: absolute;
  top:0;
+
   transform: translateX(100%);
   opacity: 0; /* Assurez-vous que l'élément est masqué par défaut */
   transition: transform 0.5s ease, opacity 0.5s ease; /* Animation fluide */
@@ -1080,6 +1116,7 @@ textarea.textarea-field {
 #password-tab-pane.active, #block-tab-pane.active {
   position: absolute;
  top:9rem;
+ width:90%;
   transform: translateX(0); /* Se déplacer à sa position d'origine */
   opacity: 1; /* Le rendre visible */
 }
@@ -1131,7 +1168,24 @@ h2 {
     color: #333;
 }
 
+.bio-text {
+ 
+ padding: 10px;
+ white-space: pre-wrap; /* Conserve les sauts de ligne et les espaces comme dans le texte d'origine */
+word-wrap: break-word; 
+ font-size: 25px;
+ font: 1em sans-serif;
+ font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  margin-top: 5%;
+  cursor: text;
+  text-align: left;
 
+
+ 
+ 
+
+
+}
 
 
 
@@ -1331,7 +1385,7 @@ border-radius: 40px;
 .user-row .bxl-messenger{
   position: absolute;
   font-size:20px ;
-right: 120px;
+right: 140px;
 color: #fff;
 }
 .user-info{
@@ -1340,7 +1394,8 @@ color: #fff;
 }
 .user-info img {
 
-  width: 70px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   margin-right: 15px;
 }
@@ -1373,7 +1428,7 @@ color: #fff;
  box-shadow: 0px 4px 30px rgba(19, 127, 212, 0.4);
 
   padding: 5px 5px;
-  min-width: 110px;
+  min-width: 150px;
   border-radius: 50px;
   min-height: 45px;
   color: #fff;
@@ -1405,7 +1460,7 @@ color: #fff;
    box-shadow: 0px 4px 30px rgba(115, 212, 19, 0.4);
   
     padding: 5px 5px;
-    min-width: 110px;
+    min-width: 150px;
     border-radius: 50px;
     min-height: 45px;
     color: #fff;
@@ -1435,6 +1490,15 @@ color: #fff;
   }
 
   
+}
+
+
+.bx-lock-open-alt {
+
+  position: absolute;
+  font-size:18px ;
+right: 150px;
+color: #fff;
 }
 .popupBlock {
   position: fixed;
@@ -1613,6 +1677,11 @@ right:30px;
 .info{
   margin-left: -20rem;
 
+}
+.popup-content {
+
+  top:7rem;
+  right:4rem;
 }
 }
 /*@media (max-width: 1024px){

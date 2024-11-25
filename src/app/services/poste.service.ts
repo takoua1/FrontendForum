@@ -36,6 +36,8 @@ export class PosteService {
   );
  }*/
  fetchPosts(): Observable<any> {
+
+  const headers = new HttpHeaders().set('Content-Type', 'application/json');
   const url = `/api/poste/findAll`;
   return this.http.get<any[]>(url).pipe(
      tap(posts => {
@@ -57,7 +59,16 @@ filterPostes(searchTerm: string) {
   if (searchTerm === '') {
      this.postesSource.next(filteredPostes); // Restaurez la liste complète des "postes" si le terme de recherche est supprimé
   } else {
-    filteredPostes = filteredPostes.filter(poste => poste.message?.toLowerCase().includes(searchTerm.toLowerCase()));
+    const terms = searchTerm.toLowerCase().split(' ');
+    filteredPostes = filteredPostes.filter(poste => {
+      const messageMatches = poste.message?.toLowerCase().includes(searchTerm.toLowerCase());
+      const categMatches=poste.category?.toLowerCase().includes(searchTerm.toLowerCase());
+       // Vérifiez si les deux termes correspondent au nom ou au prénom
+       const userNomMatches = terms.every(term => poste.user.nom?.toLowerCase().includes(term));
+       const userPrenomMatches = terms.every(term => poste.user.prenom?.toLowerCase().includes(term));
+      // Retourne vrai si le message, le nom ou le prénom correspondent au terme de recherche
+      return messageMatches || categMatches || userNomMatches || userPrenomMatches;
+    });
      this.postesSource.next(filteredPostes);
   }
  }

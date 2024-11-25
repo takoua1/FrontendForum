@@ -5,11 +5,12 @@ import { Chat } from '../model/chat';
 import { TokenStorageService } from './token-storage.service';
 import { User } from '../model/user';
 import { Message } from '../model/message';
-import { BehaviorSubject, catchError, Observable, Subject, tap, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, of, Subject, tap, throwError } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ChatNotification } from '../model/chat-notification';
 import { Groupe } from '../model/groupe';
 import { GroupService } from './group.service';
+import { UserService } from './user.service';
 
 
 @Injectable({
@@ -28,7 +29,7 @@ export class ChatService {
    user:User;
  private  currentMessage :Subject<any> = new Subject<any>();
    private chatListUpdatedSource = new Subject<void>();
-  
+   private userBlockedSubject: Subject<any> = new Subject();
   
    chatListUpdated$ = this.chatListUpdatedSource.asObservable();
    typingUsers: string[] = [];
@@ -60,8 +61,13 @@ export class ChatService {
   groupUnblock$ = this.groupUnblockSource.asObservable();
   private messageSentSource = new Subject<void>();
 messageSent$ = this.messageSentSource.asObservable();
-   constructor(private http: HttpClient,private token :TokenStorageService,private groupService:GroupService) {
-   
+private unreadCounts = new BehaviorSubject<{ [chatId: string]: number }>({});
+unreadCounts$ = this.unreadCounts.asObservable();
+private unreadCountSubject = new Subject<number>();
+   constructor(private userService :UserService,private http: HttpClient,private token :TokenStorageService,private groupService:GroupService) {
+    const username = this.token.getUser().username;
+       
+         
    
  this.initializeWebSocketConnection();
    this.connect();
@@ -69,33 +75,41 @@ messageSent$ = this.messageSentSource.asObservable();
 
 
  
- initializeWebSocketConnection() {
+  initializeWebSocketConnection() {
     if (this.stompClient && this.isConnected) {
-      return; // Prevent reinitializing an existing connection
+      return; // Empêche la réinitialisation d'une connexion existante
     }
+    
     const socket = new SockJS('/api/chat-socket');
     this.stompClient = Stomp.over(socket);
-   
+  
     this.connectedPromise = new Promise((resolve, reject) => {
-      this.stompClient.onConnect = () => {
+      this.stompClient.connect({}, (frame:any) => {
         this.isConnected = true;
-        resolve();
-      };
-
+        console.log('WebSocket connecté', frame);
+        resolve(); // La promesse est résolue une fois la connexion établie
+      }, (error:any) => {
+        console.error('Erreur de connexion WebSocket', error);
+        this.isConnected = false;
+        reject(error); // Si la connexion échoue, rejeter la promesse
+      });
+  
+      // Gestion de la déconnexion
       this.stompClient.onDisconnect = () => {
         this.isConnected = false;
-        console.log('Disconnected from WebSocket');
+        console.log('Déconnecté du WebSocket');
       };
-
+  
+      // Gestion des erreurs STOMP
       this.stompClient.onStompError = (frame: any) => {
-        console.error('Broker reported error: ' + frame.headers['message']);
-        console.error('Additional details: ' + frame.body);
-        reject(frame);
+        console.error('Erreur du courtier STOMP: ' + frame.headers['message']);
+        console.error('Détails supplémentaires: ' + frame.body);
+        reject(frame); // Rejeter la promesse en cas d'erreur
       };
-
-      this.stompClient.activate();
     });
   }
+  
+
   connect(): void {
     const user = this.token.getUser();
     this.connectedPromise.then(() => {
@@ -109,7 +123,10 @@ messageSent$ = this.messageSentSource.asObservable();
             if (parsedMessage) {
               console.log('Émission de message:', parsedMessage); // Ajoutez ceci pour déboguer
               this.privateMessages.next(parsedMessage);
-              // Émettez ici
+              this.triggerChatListUpdated()
+              this.getUnreadTotal(parsedMessage.recipientUsername).subscribe((total) => {
+                this.emitUnreadCountChange(total);
+              });
               console.log('Private message received:', parsedMessage);
           }
          
@@ -290,14 +307,12 @@ messageSent$ = this.messageSentSource.asObservable();
               const parsedMessage = JSON.parse(message.body);
               if (parsedMessage.groupId === groupId.toString()) {
                   this.groupMessages[groupId].next(parsedMessage);
-                  this.groupService.triggerGroupeListUpdated();
+                this.groupService.triggerGroupeListUpdated();
               }
+           
           });
   
-          // Abonnement aux événements de saisie
-          this.stompClient.subscribe(`/topic/group/${groupId}`, (message: Message) => {
-            console.log('Received group message:', message);
-          });
+      
       
           this.stompClient.subscribe(`/topic/typing/${groupId}`, (typingEvent: any) => {
             const typingStatus = JSON.parse(typingEvent.body);
@@ -313,7 +328,93 @@ messageSent$ = this.messageSentSource.asObservable();
             }
           });
         }
-      
+
+        public subscribeToAllGroupMessages(groups: any[]) {
+          if (!this.isConnected) {
+            const user = this.token.getUser();
+            console.log('Connexion WebSocket non établie. Tentative de réinitialisation...');
+            // Attendre la résolution de la promesse de connexion avant de souscrire
+            this.connectedPromise.then(() => {
+              groups.forEach((groupe) => {
+              
+                this.stompClient.subscribe(`/topic/group/${groupe.id}`, (message: any) => {
+                  console.log('Message reçu pour le groupe', groupe.id, message);
+                  const parsedMessage = JSON.parse(message.body);
+                  if (!this.groupMessages[groupe.id]) {
+                    this.groupMessages[groupe.id] = new Subject<any>();
+                  }
+                  this.groupMessages[groupe.id].next(parsedMessage);
+        
+                    this.groupService.triggerGroupeListUpdated();
+                    this.getUnreadTotal(user.username).subscribe((total) => {
+                      this.emitUnreadCountChange(total);
+                    });
+                 
+                });
+                console.log(`Abonnement aux messages du groupe ${groupe.id}`);
+        
+                // Abonnement au statut de typing pour chaque groupe
+                this.stompClient.subscribe(`/topic/typing/${groupe.id}`, (typingEvent: any) => {
+                  const typingStatus = JSON.parse(typingEvent.body);
+                  console.log('Event de typing reçu pour le groupe', groupe.id, typingStatus);
+        
+                  if (typingStatus && typingStatus.hasOwnProperty('typing')) {
+                    // Gérer l'affichage de l'indicateur de typing
+                    if (typingStatus.typing) {
+                      this.showTypingIndicator(groupe.id);
+                    } else {
+                      this.hideTypingIndicator(groupe.id);
+                    }
+                  } else {
+                    console.error('Données de statut de typing invalides reçues:', typingStatus);
+                  }
+                });
+                console.log(`Abonnement au typing pour le groupe ${groupe.id}`);
+              });
+            }).catch((error) => {
+              console.error('Impossible de se connecter au WebSocket', error);
+            });
+          } else {
+            // Si déjà connecté, souscrire directement à chaque groupe
+            groups.forEach((groupe) => {
+              // Abonnement aux messages du groupe
+              this.stompClient.subscribe(`/topic/group/${groupe.id}`, (message: any) => {
+                console.log('Message reçu pour le groupe', groupe.id, message);
+              });
+              console.log(`Abonnement aux messages du groupe ${groupe.id}`);
+        
+              // Abonnement au statut de typing pour chaque groupe
+              this.stompClient.subscribe(`/topic/typing/${groupe.id}`, (typingEvent: any) => {
+                const typingStatus = JSON.parse(typingEvent.body);
+                console.log('Event de typing reçu pour le groupe', groupe.id, typingStatus);
+        
+                if (typingStatus && typingStatus.hasOwnProperty('typing')) {
+                  // Gérer l'affichage de l'indicateur de typing
+                  if (typingStatus.typing) {
+                    this.showTypingIndicator(groupe.id);
+                  } else {
+                    this.hideTypingIndicator(groupe.id);
+                  }
+                } else {
+                  console.error('Données de statut de typing invalides reçues:', typingStatus);
+                }
+              });
+              console.log(`Abonnement au typing pour le groupe ${groupe.id}`);
+            });
+          }
+        }
+        
+        showTypingIndicator(groupId: number) {
+          // Logique pour afficher un indicateur de typing pour un groupe donné
+          console.log(`Afficher l’indicateur de typing pour le groupe ${groupId}`);
+        }
+        
+        hideTypingIndicator(groupId: number) {
+          // Logique pour cacher l’indicateur de typing pour un groupe donné
+          console.log(`Cacher l’indicateur de typing pour le groupe ${groupId}`);
+        }
+        
+
   updateTypingStatus(username: string, isTyping: boolean): void {
     if (isTyping) {
         if (!this.typingUsers.includes(username)) {
@@ -323,10 +424,11 @@ messageSent$ = this.messageSentSource.asObservable();
         this.typingUsers = this.typingUsers.filter(user => user !== username);
     }
 }
-sendGroupTypingStatus(groupId: number, username: string, typingStatus: boolean) {
+sendGroupTypingStatus(groupId: number, username: string ,image:string, typingStatus: boolean) {
   if (this.isConnected) {
     const typingEvent = {
       username: username,
+      image:image,
       groupId: groupId.toString(),
       typing: typingStatus,
      
@@ -484,10 +586,6 @@ getGroupTypingStatus(groupId: number): Observable<any> {
         this.stompClient.send("/app/send", {}, JSON.stringify(payload));
        
       
-            
-        
-        
-      
         }
     
     
@@ -623,6 +721,20 @@ getUnreadMessageCount(chatId: number, username: string): Observable<number> {
 
   const url =`/api/chat/unread-count/${chatId}/${username}`;
   return this.http.get<number>(url);
+}
+getUnreadTotal(username: string): Observable<number> {
+
+  const url =`/api/chat/unread-total/${username}`;
+  return this.http.get<number>(url);
+}
+
+emitUnreadCountChange(count: number): void {
+  this.unreadCountSubject.next(count);
+}
+
+// Obtenir le compteur en temps réel
+getUnreadCountUpdates(): Observable<number> {
+  return this.unreadCountSubject.asObservable();
 }
 markMessagesAsRead(chatId: number, username: string): Observable<void> {
   const url =`/api/chat/messages/mark-read/${chatId}/${username}`;
@@ -788,4 +900,49 @@ updateGroupe(groupeId: number, name:string,category:string, file: File | null): 
 
 
 }
+
+listenForBlock(userId: string): Observable<any> {
+  return new Observable<any>((observer) => {
+    // Vérifier si la connexion WebSocket est déjà établie
+    if (!this.isConnected) {
+      // Si la connexion n'est pas établie, essayez de la rétablir ou attendez la connexion
+      console.log('WebSocket non connecté. Attente de la connexion...');
+      
+      // Réessayer la connexion après un délai si non connectée
+      const interval = setInterval(() => {
+        if (this.isConnected) {
+          clearInterval(interval);  // Arrêter de vérifier une fois connecté
+          console.log('WebSocket reconnecté. Abonnement...');
+          
+          // S'abonner au sujet après la connexion
+          const subscription = this.stompClient.subscribe(`/topic/user-blocked/${userId}`, (message: any) => {
+            if (message.body) {
+              observer.next(message.body); // Émettre le message de blocage
+            }
+          });
+
+          // Nettoyage de l'abonnement lorsque l'observable est détruit
+          return () => {
+            subscription.unsubscribe();
+          };
+        }
+      }, 500);  // Attendre 500ms entre chaque tentative de connexion
+    } else {
+      // Si la connexion est déjà établie, abonnez-vous immédiatement
+      const subscription = this.stompClient.subscribe(`/topic/user-blocked/${userId}`, (message: any) => {
+        if (message.body) {
+          observer.next(message.body); // Émettre le message de blocage
+        }
+      });
+
+      // Nettoyage de l'abonnement lorsque l'observable est détruit
+      return () => {
+        subscription.unsubscribe();
+      };
+    }
+  });
+}
+
+
+  
 }
