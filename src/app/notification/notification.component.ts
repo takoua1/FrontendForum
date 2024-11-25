@@ -17,21 +17,21 @@ import { BlockService } from '../services/block.service';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 @Component({
-  selector: 'app-notification',
-  
-  templateUrl: './notification.component.html',
-  styleUrl: './notification.component.css',
-  animations: [
-    trigger('notificationAnimation', [
-      transition(':enter', [
-        style({ opacity: 0, transform: 'translateY(-100%)' }),
-        animate('2000ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
-      ]),
-      transition(':leave', [
-        animate('2000ms ease-in', style({ opacity: 0, transform: 'translateY(100%)' }))
-      ])
-    ])
-  ]
+    selector: 'app-notification',
+    templateUrl: './notification.component.html',
+    styleUrl: './notification.component.css',
+    animations: [
+        trigger('notificationAnimation', [
+            transition(':enter', [
+                style({ opacity: 0, transform: 'translateY(-100%)' }),
+                animate('2000ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
+            ]),
+            transition(':leave', [
+                animate('2000ms ease-in', style({ opacity: 0, transform: 'translateY(100%)' }))
+            ])
+        ])
+    ],
+    standalone: false
 })
 export class NotificationComponent implements OnInit{
   notificationsList:Notification[] = [];

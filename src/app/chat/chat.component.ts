@@ -15,10 +15,10 @@ import { BlockService } from '../services/block.service';
 import { FollowService } from '../services/follow.service';
 
 @Component({
-  selector: 'app-chat',
-
-  templateUrl: './chat.component.html',
-  styleUrl: './chat.component.css'
+    selector: 'app-chat',
+    templateUrl: './chat.component.html',
+    styleUrl: './chat.component.css',
+    standalone: false
 })
 export class ChatComponent implements OnInit, OnDestroy {
   userId: number;

@@ -25,11 +25,11 @@ interface EmojiClickEvent extends CustomEvent {
 }
 
 @Component({
-  selector: 'app-message-card',
- 
-  templateUrl: './message-card.component.html',
-  styleUrl: './message-card.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-message-card',
+    templateUrl: './message-card.component.html',
+    styleUrl: './message-card.component.css',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class MessageCardComponent  implements OnInit, OnDestroy,AfterViewChecked {
   @Input() messages: Message[];

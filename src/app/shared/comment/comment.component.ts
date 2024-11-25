@@ -19,10 +19,10 @@ import { forkJoin, map, Observable, tap } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
-  selector: 'app-comment',
-  
-  templateUrl: './comment.component.html',
-  styleUrl: './comment.component.css'
+    selector: 'app-comment',
+    templateUrl: './comment.component.html',
+    styleUrl: './comment.component.css',
+    standalone: false
 })
 export class CommentComponent implements OnInit,AfterViewChecked{
  

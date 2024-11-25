@@ -5,21 +5,21 @@ import { TokenStorageService } from '../services/token-storage.service';
 import { animate, style, transition, trigger } from '@angular/animations';
 
 @Component({
-  selector: 'app-boite-reception',
-
-  templateUrl: './boite-reception.component.html',
-  styleUrl: './boite-reception.component.css',
-  animations: [
-    trigger('mailAnimation', [
-      transition(':enter', [
-        style({ opacity: 0, transform: 'translateY(-100%)' }),
-        animate('2000ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
-      ]),
-      transition(':leave', [
-        animate('2000ms ease-in', style({ opacity: 0, transform: 'translateY(100%)' }))
-      ])
-    ])
-  ]
+    selector: 'app-boite-reception',
+    templateUrl: './boite-reception.component.html',
+    styleUrl: './boite-reception.component.css',
+    animations: [
+        trigger('mailAnimation', [
+            transition(':enter', [
+                style({ opacity: 0, transform: 'translateY(-100%)' }),
+                animate('2000ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
+            ]),
+            transition(':leave', [
+                animate('2000ms ease-in', style({ opacity: 0, transform: 'translateY(100%)' }))
+            ])
+        ])
+    ],
+    standalone: false
 })
 
 export class BoiteReceptionComponent  implements OnInit,OnDestroy{

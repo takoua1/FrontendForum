@@ -29,12 +29,11 @@ export interface Report {
 }
 
 @Component({
-  selector: 'app-poste',
- 
-  templateUrl: './poste.component.html',
-  styleUrl: './poste.component.css',
-  encapsulation: ViewEncapsulation .None
-
+    selector: 'app-poste',
+    templateUrl: './poste.component.html',
+    styleUrl: './poste.component.css',
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class PosteComponent implements OnInit {
   currentUser: any;

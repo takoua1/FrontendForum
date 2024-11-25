@@ -9,9 +9,10 @@ import { UserService } from '../services/user.service';
 import { Subject, debounceTime, distinctUntilChanged, filter, switchMap } from 'rxjs';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+    selector: 'app-login',
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.css'],
+    standalone: false
 })
 export class LoginComponent implements OnInit {
 

@@ -24,11 +24,11 @@ export interface Report {
   description: string;  // Ajoutez cette ligne si elle est manquante
 }
 @Component({
-  selector: 'app-detail-poste',
-
-  templateUrl: './detail-poste.component.html',
-  styleUrl: './detail-poste.component.css',
-  encapsulation: ViewEncapsulation .None
+    selector: 'app-detail-poste',
+    templateUrl: './detail-poste.component.html',
+    styleUrl: './detail-poste.component.css',
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class DetailPosteComponent implements OnInit {
   currentUser: any;

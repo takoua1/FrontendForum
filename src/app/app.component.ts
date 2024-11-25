@@ -6,9 +6,10 @@ import { TokenStorageService } from './services/token-storage.service';
 import { User } from './model/user';
 import { Router } from '@angular/router';
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.css'],
+    standalone: false
 })
 export class AppComponent implements OnInit{
   title = 'TunisiaForum';

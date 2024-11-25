@@ -3,11 +3,10 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 
 import twemoji from 'twemoji';
 @Component({
-  selector: 'app-emoji-picker',
-
- 
-  templateUrl: './emoji-picker.component.html',
-  styleUrl: './emoji-picker.component.css'
+    selector: 'app-emoji-picker',
+    templateUrl: './emoji-picker.component.html',
+    styleUrl: './emoji-picker.component.css',
+    standalone: false
 })
 export class EmojiPickerComponent implements OnInit {
   emojis: any = {};

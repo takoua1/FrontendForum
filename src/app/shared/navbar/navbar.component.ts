@@ -21,20 +21,21 @@ import { FollowService } from '../../services/follow.service';
 import { ChatService } from '../../services/chat.service';
 import { MessageMailService } from '../../services/message-mail.service';
 @Component({
-  selector: 'app-navbar',
-  templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.css'],
-  animations: [
-    trigger('notificationAnimation', [
-      transition(':enter', [
-        style({ opacity: 0, transform: 'translateY(-100%)' }),
-        animate('2000ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
-      ]),
-      transition(':leave', [
-        animate('2000ms ease-in', style({ opacity: 0, transform: 'translateY(100%)' }))
-      ])
-    ])
-  ]
+    selector: 'app-navbar',
+    templateUrl: './navbar.component.html',
+    styleUrls: ['./navbar.component.css'],
+    animations: [
+        trigger('notificationAnimation', [
+            transition(':enter', [
+                style({ opacity: 0, transform: 'translateY(-100%)' }),
+                animate('2000ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
+            ]),
+            transition(':leave', [
+                animate('2000ms ease-in', style({ opacity: 0, transform: 'translateY(100%)' }))
+            ])
+        ])
+    ],
+    standalone: false
 })
 export class NavbarComponent implements OnInit {
   searchTerm: Subject<string> = new Subject<string>();

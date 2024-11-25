@@ -16,11 +16,9 @@ import { InteractionService } from '../services/interaction.service';
 
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  
-  
-
+    selector: 'app-home',
+    templateUrl: './home.component.html',
+    standalone: false
 })
 export class HomeComponent implements OnInit {
  

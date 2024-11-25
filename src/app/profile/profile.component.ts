@@ -20,10 +20,10 @@ import { Notification } from '../model/notification';
 import { NotificationService } from '../services/notification.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 @Component({
-  selector: 'app-profile',
-  templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css'],
- 
+    selector: 'app-profile',
+    templateUrl: './profile.component.html',
+    styleUrls: ['./profile.component.css'],
+    standalone: false
 })
 export class ProfileComponent implements OnInit {
   selectedFiles?: FileList;
