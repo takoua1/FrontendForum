@@ -42,7 +42,7 @@
     "ngx-easy-emoji-picker": "^0.0.13",
     "ngx-pagination": "^6.0.3",
     "ngx-socket-io": "^4.6.1",
-    "rxjs": "~7.4.0",
+    "rxjs": "^7.8.0",
     "socket.io-client": "^4.7.5",
     "sockjs-client": "^1.6.1",
     "stream": "^0.0.2",
