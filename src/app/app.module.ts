@@ -10,7 +10,7 @@ import { NavbarComponent } from './shared/navbar/navbar.component';
 import { SidebarComponent } from './shared/sidebar/sidebar.component';
 import { AdminLayoutComponent } from './layout/admin-layout/admin-layout.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { PosteService } from './services/poste.service';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { CommentComponent } from './shared/comment/comment.component';
@@ -46,36 +46,29 @@ import { DetailPosteComponent } from './detail-poste/detail-poste.component';
 
 registerLocaleData(localeFr);
 
-@NgModule({
- 
-  declarations: [
-    AppComponent,
-    LoginComponent,
-    CommentComponent,
-    NavbarComponent,
-    SidebarComponent,
-    AdminLayoutComponent,
-    NotificationComponent,
-    PosteComponent,
-    HomeComponent,
-    JeuxComponent,
-    MusiqueComponent
-    ,PolitiqueComponent,
-      EducationComponent,SportComponent,ProfileComponent,ChatComponent,MessageCardComponent,BoiteReceptionComponent,EmojiPickerComponent,
-    SuccessComponent, ErrorComponent,ResetPasswordComponent,DetailPosteComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    FormsModule,
-    ReactiveFormsModule,
-    CommonModule,
-    RouterModule, 
-    HttpClientModule, BrowserAnimationsModule
-  ],
-  providers: [{ provide: LOCALE_ID, useValue: 'fr-FR' },PosteService,authInterceptorProviders,TokenStorageService, AuthService,ChatService,NotificationService,SignaleService,MessageMailService],
-  bootstrap: [AppComponent],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
-})
+@NgModule({ declarations: [
+        AppComponent,
+        LoginComponent,
+        CommentComponent,
+        NavbarComponent,
+        SidebarComponent,
+        AdminLayoutComponent,
+        NotificationComponent,
+        PosteComponent,
+        HomeComponent,
+        JeuxComponent,
+        MusiqueComponent,
+        PolitiqueComponent,
+        EducationComponent, SportComponent, ProfileComponent, ChatComponent, MessageCardComponent, BoiteReceptionComponent, EmojiPickerComponent,
+        SuccessComponent, ErrorComponent, ResetPasswordComponent, DetailPosteComponent
+    ],
+    bootstrap: [AppComponent],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA], imports: [BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        FormsModule,
+        ReactiveFormsModule,
+        CommonModule,
+        RouterModule,
+        BrowserAnimationsModule], providers: [{ provide: LOCALE_ID, useValue: 'fr-FR' }, PosteService, authInterceptorProviders, TokenStorageService, AuthService, ChatService, NotificationService, SignaleService, MessageMailService, provideHttpClient(withInterceptorsFromDi())] })
 export class AppModule { }
