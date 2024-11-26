@@ -1,15 +1,20 @@
-/* To learn more about this file see: https://angular.io/config/tsconfig. */
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "./out-tsc/app",
-    "types": []
+    "outDir": "./out-tsc/app",  // Répertoire de sortie pour les fichiers compilés
+    "types": ["node"],  // Inclut les types Node.js
+    "esModuleInterop": true,  // Permet l'importation de modules CommonJS avec la syntaxe ES6
+    "allowJs": true  // Permet l'utilisation de fichiers JavaScript dans un projet TypeScript
+  },
+  "angularCompilerOptions": {
+    "disableTypeScriptVersionCheck": true,  // Désactive la vérification de la version de TypeScript
+    "strictInjectionParameters": true  // Active la vérification stricte des paramètres d'injection
   },
   "files": [
-    "src/main.ts",
-    "src/polyfills.ts"
+    "src/main.ts",  // Fichier d'entrée principal
+    "src/polyfills.ts"  // Fichier des polyfills pour la compatibilité des navigateurs
   ],
   "include": [
-    "src/**/*.d.ts"
+    "src/**/*.d.ts"  // Inclut tous les fichiers de définition TypeScript dans le dossier src
   ]
 }

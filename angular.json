@@ -26,10 +26,14 @@
             "customWebpackConfig": {
              "path": "./webpack.config.js"
             },
+            
             "index": "src/index.html",
             "polyfills": [
               "src/polyfills.ts"
             ],
+            "allowedCommonJsDependencies": [
+      "sockjs-client"
+    ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
