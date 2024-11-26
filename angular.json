@@ -19,10 +19,12 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:application",
+          "builder": "@angular-builders/custom-webpack:browser",
           "options": {
-            "outputPath": {
-              "base": "dist/ForumSocialXs"
+            "main": "src/main.ts",
+            "outputPath": "dist/ForumSocialX",
+            "customWebpackConfig": {
+             "path": "./webpack.config.js"
             },
             "index": "src/index.html",
             "polyfills": [
@@ -37,8 +39,8 @@
               "@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.css"
             ],
-            "scripts": [],
-            "browser": "src/main.ts"
+            "scripts": []
+           
           },
           "configurations": {
             "production": {
