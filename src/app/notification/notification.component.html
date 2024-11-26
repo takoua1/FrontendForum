@@ -1,0 +1,96 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet"  href="https://fonts.googleapis.com/css?family=Poppins" />
+<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+<link  href='/src/app/notification/notification.component.css'  >
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<div class="title">
+    <p><strong>Notifications</strong></p>
+</div>
+<!--div class="box-notif">
+ 
+  <div class = "cont"  *ngFor="let not of notificationsList" (click)="openPostPopup($event,not)">
+  
+ <div class = "sec new" >
+ 
+ <div class = "profCont">
+  <img class = "profile" [src]="not.actor.image ?not.actor.image : '/assets/image/user.png'" class="notification-user-avatar">
+  <i *ngIf="not.reaction === 'commente'" class="bx bx-chat notification-reaction"></i>
+   <i *ngIf="not.reaction === 'like'" class="bx bx-like notification-reaction"></i>
+   </div>
+  <div class = "txt">{{not.message}}</div>
+  <i class='bx bx-trash'></i>
+ <div class = "txt sub">11/7 - 2:30 pm</div>
+   </div>
+  </div>   
+   </div-->
+ 
+   <div class="notification" *ngFor="let not of notificationsList" @notificationAnimation>
+    <div class="notification-header">
+      <i class='bx bx-x notification-close' (click)="PopupDelete(not)"></i>
+     
+    </div>
+    <div class="notification-container" (click)="goToPostDetail(not)">
+    
+      <div class="notification-media">
+        <img [src]="not.actor.image ?not.actor.image : '/assets/image/user.png'" alt="" class="notification-user-avatar">
+              <i *ngIf="not.reaction === 'commente'" class="bx bxs-chat notification-reaction"></i>
+              <i *ngIf="not.reaction === 'like'" class="bx bxs-like notification-reaction"></i>
+              <i *ngIf="not.reaction === 'dislike'" class="bx bxs-dislike notification-reaction"></i>
+              <i *ngIf="not.reaction === 'suivre'" class="bx bxs-user-plus notification-reaction"></i>
+      <div class="notification-status">
+     <i class='bx bxs-circle' [ngClass]="{'connected':not.actor.status === 'CONNECTE', 'disconnected':not.actor.status === 'DECONNECTE'}" ></i>
+                  
+    </div>
+      </div>
+     
+      <div class="notification-content">
+        <p class="notification-text">
+      
+        {{not.message}}
+          </p>
+              <span class="notification-timer" >{{ formatDateTime(not) }}</span>
+      </div>
+     
+    </div>
+  </div>
+
+ 
+        
+   <div   class="popupDelete" #popupDelete>
+    <div class="cardDelete">
+      <p>Voulez-vous vraiment supprimer ?</p>
+      <button  (click)="confirmDelete()">
+        <div class="svg-valider">
+
+          <i class='bx bxs-user-check'></i>
+        </div>
+
+        <span >Valider</span>
+      </button>
+    </div>
+  </div>
+  <div   class="popupInform">
+    <div class="cardInform">
+      <p>C'est déjà supprimer !</p>
+      <button (click)="validerInform()">
+        <div class="svg-valider">
+  
+          <i class='bx bxs-user-check'></i>
+        </div>
+  
+        <span >Valider</span>
+      </button>
+    </div>
+    </div>
+   <div class="overlay" #overlay></div>
+        
+      
+</body>
+</html>
+     

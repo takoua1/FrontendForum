@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link  href='/src/app/shared/message-card/chat-card.component.css'>
+    <link href=' https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/css/bootstrap.min.css'>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
+</head>
+<body>
+
+    <div class="receiver" *ngIf="userProfile && !groupe" >
+        <img class="profile" [src]="userProfile.image ? userProfile.image : '/assets/image/user.png'" alt="User Image" (click)="navProfile(userProfile)">
+    <p>   {{userProfile.nom}} {{userProfile.prenom}}</p>
+    <div class="edit-delette">
+      <i class='bx bx-dots-vertical-rounded'></i>
+      
+
+      <div  class="tooltip" >
+        <ul *ngIf="chat">
+          <li (click)="popupValiderChat(chat.id)" >
+          <i class='bx bx-trash' ></i>
+          <span >Supprimer</span>
+        </li>   <li   class="return-option" (click)="loadPage()"> 
+
+          <i class='bx bxs-left-arrow-square'></i>
+        <span>Retour</span>
+        </li></ul>
+      
+      
+    </div>
+    </div>
+    
+    </div>
+    <div class="receiver" *ngIf=" groupe && isMemberBlock(groupe) ">
+        <img class="profile" [src]="groupe.groupImage ? groupe.groupImage : '/assets/image/group.png'" alt="User Image" (click)="toggleDetail(groupe)">
+    <p>   {{groupe.groupName}}</p>
+    <div  class="edit-delette">
+        <i class='bx bx-dots-vertical-rounded'></i>
+       <div class="tooltip">  
+      <ul>
+       
+          <li *ngIf="groupe && user.username === groupe. userCreature.username"  (click)="popupValiderGroupe(groupe.id)">
+            
+          <i class='bx bx-trash' ></i>
+          <span >Supprimer</span>
+        
+        </li>
+        <li *ngIf="groupe && isMemberGroup" (click)="popupValiderQuitter(groupe.id,user.id)">
+         
+            <i class='bx bx-exit' ></i>
+        <span >Quitter</span>
+     
+    
+      </li>
+      <li *ngIf="groupe"  class="return-option"  (click)="loadPage()"> 
+
+        <i class='bx bxs-left-arrow-square'></i>
+      <span>Retour</span>
+      </li>
+      </ul>
+       
+    </div>
+    
+    </div>
+    </div>
+    <div class="container" *ngIf="userProfile && !groupe">
+      
+        <div class="chat-container"   >
+        
+       
+            
+          
+        <ul  #messageContainer id="messageContainer" class="chat"  >
+         <div class="message" *ngFor="let message of messages "[ngClass]="{'left': message.sender.id !== user.id, 'right': message.sender.id === user.id}"  >
+            <li  (click)="onMessageClick($event, message)"  >
+                <div class="message-content">
+              
+                    <img class="logo" [src]="message.sender.image ? message.sender.image : '/assets/image/user.png'" alt="User Image" (click)="navProfile(message.sender)">
+                  
+                    <p *ngIf="message.content" [innerHTML]="parseMessage(message.content)" (click)="handleLinkClick
+($event)"></p>
+                   
+                  
+                     
+                      
+                    </div>
+                
+                    <img *ngIf="message.image" [src]="message.image" class="uploaded_image">
+                    <video *ngIf="message.video" controls>
+                        <source  [src]="message.video" type="video/mp4" >
+            
+                      </video>
+                      <audio *ngIf="message.audio" [src]="message.audio" controls></audio>
+                      <p class="timestamp">{{ formatTimestamp(message.time) }}</p>
+                      <span  *ngIf="message.sender.username===user.username"class="view-status" 
+                      [ngClass]="{'viewed-blue': message.read, 'viewed-gray': !message.read}">
+                  Vu
+                </span>
+                
+                      <button  class="delete-btn" *ngIf="message.sender.id === user.id" (click)="popupValider(message.id)"><i class='bx bx-trash' ></i> </button>
+            </li>
+          
+        </div>
+        
+        
+      
+        <ng-container *ngFor="let item of  messagePrivieList">
+            <div (click)="onMessageClick($event, item)"  *ngIf="(userProfile.username === item.senderUsername && user.username === item.recipientUsername ) || 
+               (user.username === item.senderUsername && (userProfile.username === item.recipientUsername || user.username === item.recipientUsername ))"
+       class="message"  
+       [ngClass]="{'left': item.senderUsername !== user.username, 'right': item.senderUsername === user.username}">
+              <div class="message-content"  >
+                <img class="logo" 
+                     [src]="item.imageProfile ? item.imageProfile : '/assets/image/user.png'" 
+                     alt="User Image"  (click)="navProfileId(item.senderId)">
+                     <p *ngIf="item.content" [innerHTML]="parseMessage(item.content)" (click)="handleLinkClick($event)"></p>
+                
+               
+              </div>
+              <img *ngIf="item.image" [src]="item.image" class="uploaded_image" alt="Uploaded Image">
+              <video *ngIf="item.video"  controls>
+                <source [src]="item.video" type="video/mp4">
+     
+              </video>
+              <audio *ngIf="item.audio" [src]="item.audio" controls></audio>
+              <p class="timestamp" >{{ formatTimestamp(convertToDate(item.times)) }}</p>
+             
+              <span class="view-status" *ngIf="item.senderUsername===user.username"
+            [ngClass]="{'viewed-blue': item.read, 'viewed-gray': !item.read}">
+        Vu
+        </span>
+         <button  class="delete-btn" *ngIf="item.senderUsername === user.username" (click)="popupValider(convertToNumber(item.id))"><i class='bx bx-trash' ></i> </button>
+            </div>
+           
+          </ng-container>
+          <li>
+           
+           
+           
+            <div class="chat-bubble" *ngIf="typing">
+                <img class="logo" 
+                [src]="userProfile.image? userProfile.image : '/assets/image/user.png'" 
+                alt="User Image">
+                <div class="typing">
+                  <div class="dot"></div>
+                  <div class="dot"></div>
+                  <div class="dot"></div>
+                </div>
+           
+            </div>
+        </li>
+        </ul>
+    
+     </div>
+     </div>
+        <div class="footer" *ngIf="userProfile && !groupe">
+           <div class="left">
+            <button class="icone-emoji" (click)="toggleEmojiPicker()">😀</button>
+            
+            <app-emoji-picker *ngIf="showEmojiPicker" (emojiSelect)="addEmoji($event)" class="emoji"></app-emoji-picker>
+            <input type="file" id="fileInput" (change)="onFileSelected($event)">
+            <!-- Icône pour attacher un fichier -->
+            <label for="fileInput">
+                <i class='bx bxs-camera'></i>
+            </label>
+            
+        </div>
+          
+      
+        <div class="input" *ngIf="userProfile">
+         
+           
+            <div *ngIf="isRecording  " class="progress-bar-container">
+                <div class="progress-bar">
+                  <div class="progress" [style.width.%]="progress">
+                  <div class="progress-text">
+                    Durée d'enregistrement : {{ recordingTime }} secondes (Max: {{ maxRecordingTime }} secondes)
+                  </div>
+                </div>
+                  <button class="cancel-button" (click)="cancelRecording()">
+                    <i class='bx bxs-x-square' ></i>
+                  </button>
+                  <button (click)="sendAudio()" class="sendAudio"  *ngIf="showSend">
+                    <i class='bx bxs-send'></i>
+                </button>
+                
+               
+                   
+              </div>
+              </div>
+             
+           
+               
+              <!-- Timer to show during recording -->
+             
+            
+         
+            <input placeholder="Entrez un message..."    [(ngModel)]="messageInput" id="messageInput" (keydown)="onTyping()" (blur)="onStopTyping()"  *ngIf="!isRecording && !audioBlob"  />
+            
+            <button id="btnAdd" type="submit" (click)="sendMessage()" *ngIf="userProfile && !groupe &&!isRecording && !audioBlob && messageInput?.trim().length > 0" class="send"  >
+                <i class='bx bxs-send'></i>
+            </button>
+          </div>
+
+          
+  
+           <div class="right">
+           
+                <button (click)="startRecording()" *ngIf="!isRecording" [disabled]="isRecording">
+                    
+                    <i class='bx bxs-microphone-alt' title="Click to start/stop recording"></i>
+                  </button>
+                  <button (click)="stopRecording()" *ngIf="isRecording">
+                    <i class='bx bx-stop-circle'></i>
+                  </button>
+                  
+           
+               
+        
+            
+           
+        </div>
+     </div>
+     <div class="container"  *ngIf="groupe && !actifDetail && isMemberBlock(groupe)">
+        <div class="chat-container" >
+        
+       
+            
+          
+            <ul  #messageContainer id="messageContainer" class="chat"  >
+                <div class="message" *ngFor="let message of messagesGroupe "[ngClass]="{'left': message.sender.id !== user.id, 'right': message.sender.id === user.id}"  >
+                <li (click)="onMessageClick($event, message)">
+
+                    <div class="message-content" >
+                     
+                        <img class="logo" [src]="message.sender.image ? message.sender.image : '/assets/image/user.png'" alt="User Image" (click)="navProfileId(message.sender.id)">
+                        <p class="sender-username">{{ message.sender.nom}} {{message.sender.prenom}} </p>
+                        <p *ngIf="message.content" [innerHTML]="parseMessage(message.content)" (click)=" handleLinkClick($event)"></p>
+                    </div>
+                        <img *ngIf="message.image" [src]="message.image"  class="uploaded_image">
+                        <video *ngIf="message.video" controls>
+                            <source  [src]="message.video" type="video/mp4" >
+                
+                          </video>
+                          <audio *ngIf="message.audio" [src]="message.audio" controls></audio>
+                          <p class="timestamp" >{{formatTimestamp(message.time)}}</p>
+                          
+                          <button  class="delete-btn" *ngIf="message.sender.id === user.id" (click)="popupValider(message.id)"><i class='bx bx-trash' ></i> </button>
+                          <div  class="edit-member" *ngIf="user.username === groupe.userCreature.username && message.sender.username !== user.username">
+                            <i class='bx bx-dots-vertical-rounded'></i>
+                           
+                            <div  class="tooltip">
+                              <ul>
+                                <li (click)="popupGetAdmin(groupe.id,message.sender.username)">
+                                  <i class='bx bx-crown'></i>
+                                  <span >Admin</span>
+                                </li>
+                                <li (click)="popupValiderBloquer(groupe.id, message.sender.username)" >
+                                  <i class='bx bx-block' ></i>
+                                  <span >Bloquer</span>
+                                </li>
+                                <li (click)="popupDeleteMember(groupe.id,message.sender.username)">
+                                <i class='bx bx-trash' ></i>
+                                <span >Supprimer</span>
+                              </li>
+                             
+                             
+                            </ul>
+                           </div>
+                           </div>
+                        </li>
+            </div>
+               
+          
+          
+            <ng-container *ngFor="let item of  combinedMessages" >
+             
+                <div (click)="onMessageClick($event, item)"
+                *ngIf="item.groupId === groupId" class="message"  
+                  
+                [ngClass]="{'left': item.senderUsername !== user.username, 'right': item.senderUsername === user.username}">
+               
+                <div class="message-content">
+                    <img class="logo" 
+                         [src]="item.imageProfile ? item.imageProfile : '/assets/image/user.png'" 
+                         alt="User Image" (click)="navProfileId(item.senderId)">
+                         <p class="sender-username">{{ item.senderNom}} {{item.senderPrenom}} </p>
+                    <p *ngIf="item.content" [innerHTML]="parseMessage(item.content)" (click)="handleLinkClick
+($event)"></p>
+                </div>
+                    <img *ngIf="item.image" [src]="item.image"   class="uploaded_image">
+                    <video *ngIf="item.video"  controls>
+                <source [src]="item.video" type="video/mp4">
+    
+              </video>
+              <audio *ngIf="item.audio" [src]="item.audio" controls></audio>
+              <p class="timestamp" >{{ formatTimestamp(convertToDate(item.times))  }}</p>
+                  
+                  <button  class="delete-btn" *ngIf="item.senderUsername === user.username" (click)="popupValider(convertToNumber(item.id))"><i class='bx bx-trash' ></i> </button>
+                </div>
+              </ng-container>
+              <li *ngFor="let us of typingUsers">
+           
+                   
+              
+                <div class="chat-bubble" *ngIf="us.username !== user.username">
+                  
+                    <img class="logo" 
+                    [src]="us.image  ? us.image : '/assets/image/user.png'" 
+                    alt="User Image">
+                    <div class="typing">
+                      <div class="dot"></div>
+                      <div class="dot"></div>
+                      <div class="dot"></div>
+                    </div>
+                </div>
+           
+            </li>
+            </ul>
+        </div>
+        </div>
+        
+            <div class="footer"  *ngIf="groupe && !actifDetail   && isMemberBlock(groupe)">
+               <div class="left" *ngIf="groupe && isMember">
+                
+                <button class="icone-emoji" (click)="toggleEmojiPicker()">😀</button>
+            
+                <app-emoji-picker *ngIf="showEmojiPicker" (emojiSelect)="addEmoji($event)" class="emoji"></app-emoji-picker>
+                <input type="file" id="fileInput" (change)="onFileSelectedGroup($event)">
+                <!-- Icône pour attacher un fichier -->
+                <label for="fileInput">
+                    <i class='bx bxs-camera'></i>
+                </label>
+
+               </div >
+               <div class="joindre" *ngIf="groupe && !isMember  && isMemberBlock(groupe)">
+               
+               <button (click)=" addMemberToGroup(groupe)">
+                <span>Joindre</span>
+                <div class="svg-valider">
+    
+                <i class='bx bx-log-in-circle'></i>
+                </div>
+            </button>
+            </div>
+            <div class="input"  *ngIf="groupe && isMember   && isMemberBlock(groupe)">
+
+                <div *ngIf="isRecording  " class="progress-bar-container">
+                    <div class="progress-bar">
+                      <div class="progress" [style.width.%]="progress">
+                      <div class="progress-text">
+                        Durée d'enregistrement : {{ recordingTime }} secondes (Max: {{ maxRecordingTime }} secondes)
+                      </div>
+                    </div>
+                      <button class="cancel-button" (click)="cancelRecording()">
+                        <i class='bx bxs-x-square' ></i>
+                      </button>
+                      <button (click)="sendAudioGroup()" class="sendAudio"  *ngIf="showSend" >
+                        <i class='bx bxs-send'></i>
+                    </button>
+                    
+                   
+                       
+                  </div>
+                  </div>
+                
+                <input placeholder="Entrez un message..."  [(ngModel)]="messageInput" id="messageInput" (keydown)="onTypingGroup()" (blur)="onStopTypingGroup()" *ngIf="!isRecording && !audioBlob"/>
+               
+                <button id="btnAdd" type="submit" (click)="sendGroup()"  *ngIf=" groupe &&!isRecording && !audioBlob && messageInput?.trim().length > 0" class="send">
+                    <i class='bx bxs-send'></i>
+                </button>
+            </div>
+            <div class="right"  *ngIf="groupe && isMember">
+            
+                    <button (click)="startRecording()" *ngIf="!isRecording" [disabled]="isRecording">
+                       
+                        <i class='bx bxs-microphone-alt' title="Click to start/stop recording"></i>
+                      </button>
+                      <button (click)="stopRecording()" *ngIf="isRecording">
+                        <i class='bx bx-stop-circle'></i>
+                      </button>
+                 
+                   
+            
+                
+               
+            </div>
+         </div>
+           
+         
+           <div class="detailGroup" *ngIf="actifDetail  && groupe && isMemberBlock(groupe) "> 
+                <div class="detail">
+               
+                <div class="info">
+               <p>Nom de Groupe: {{groupe.groupName}}</p>
+               <p>Catégorie: {{groupe.category}}</p>
+                </div>
+               <div class="info">
+               <p>Admin: {{groupe. userCreature. nom}} {{groupe. userCreature. prenom}}</p>
+               <i class='bx bx-link' (click)="copyGroupLink()">Copier Lien</i>
+                </div>
+                <div class="modifer" *ngIf="user.username=== groupe.userCreature.username">
+                <button (click)="popupModifier(groupe,$event)" >
+                <div class="svg-valider">
+          
+                  <i class='bx bxs-user-check'></i>
+                </div>
+        
+                <span >Modifier</span>
+              </button>
+            </div>  
+               </div>
+                <div class="list">
+                 <ul>
+                <li [class.active]="activeTab === 'membres'" (click)="showMembres()">Membres</li>
+                <li [class.active]="activeTab === 'images'" (click)="showImages()">Images</li>
+                <li [class.active]="activeTab === 'videos'" (click)="showVideos()">Vidéos</li>
+                <li [class.active]="activeTab === 'vocales'" (click)="showVocales()">Vocales</li>
+                <li  *ngIf="user.username === groupe.userCreature.username" [class.active]="activeTab === 'bloques'" (click)="showBloques()">Liste membres Bloqués</li>
+               </ul>
+               </div>
+            
+                <div class="grid-container"  [class.show]="displayMembres">
+                  <div class="searchBx">
+                
+                    <input type ="texte"  placeholder="Recherche..." [(ngModel)]="searchTerm" (input)="filterMembers()" >
+                    <i class='bx bx-search' ></i> 
+                </div>
+                    <div class="grid-item" *ngFor="let member of filteredMembers">
+                        <img [src]="member.image ? member.image : '/assets/image/user.png'" class="imgMember" (click)="navProfileMemeber(member)">
+                        <p class="name">{{member.nom}} {{member.prenom}} </p>
+                        <p class="date">{{ groupe.userJoinDates[member.id] | date:'medium' }}</p>
+                        <div class="edit"   *ngIf="user.username === groupe.userCreature.username && user.username !== member.username"  > 
+                          <i class='bx bx-dots-vertical-rounded'></i>
+                        <div  class="tooltip">
+                          <ul>
+                            <li (click)="popupGetAdmin(groupe.id,member.username)">
+                              <i class='bx bx-crown'></i>
+                              <span >Admin</span>
+                            </li>
+                            <li (click)="popupValiderBloquer(groupe.id, member.username)" >
+                              <i class='bx bx-block' ></i>
+                              <span >Bloquer</span>
+                            </li>
+                            <li (click)="popupDeleteMember(groupe.id,member.username)">
+                            <i class='bx bx-trash' ></i>
+                            <span >Supprimer</span>
+                          </li>
+                         
+                        </ul>
+                      </div>
+                        </div>
+                         
+                        <div class="contact" *ngIf="user.username !== member.username && !member.isBlocked">
+                          <i class='bx bxl-messenger'></i>
+                          <button class="profile-card__button button--blue " (click)="openChat(member.id)">Message</button>
+                         
+                        </div>
+                         </div>
+                      </div>
+                       <div class="grid-container"  [class.show]="displayImages">
+                          <div class="searchBx">
+                
+                            <input type ="texte"  placeholder="Recherche..." [(ngModel)]="searchTerm"   (input)="filterMessages()" >
+                          <i class='bx bx-search' ></i> 
+                         </div>
+                         <div class="item-images">
+                               <item-images *ngFor="let message of filteredMessages" >
+                            <img *ngIf="message.image" [src]="message.image"  class="uploaded_image">
+                          <p class="date" *ngIf="message.image"> {{ message.time| date:'medium':'fr-FR' }} par: {{message.sender.nom}} {{message.sender.prenom}}</p>
+                                   </item-images>
+                             </div>
+                         </div>
+                        <div class="grid-container"  [class.show]="displayVideos">
+                          <div class="searchBx">
+                
+                            <input type ="texte"  placeholder="Recherche..." [(ngModel)]="searchTerm"  (input)="filterMessages()" >
+                            <i class='bx bx-search' ></i> 
+                             </div>
+                      <div class="item-videos">
+                         <item-videos *ngFor="let message of filteredMessages" >
+                          <video *ngIf="message.video" controls>
+                        <source  [src]="message.video" type="video/mp4" >
+            
+                          </video>
+                      <p class="date" *ngIf="message.video"> {{ message.time| date:'medium':'fr-FR'}} par: {{message.sender.nom}} {{message.sender.prenom}}</p>
+                    </item-videos>
+                    </div>
+                  </div>
+             
+                  <div class="grid-container"  [class.show]="displayVocales">
+                    <div class="searchBx">
+                
+                      <input type ="texte"  placeholder="Recherche..." [(ngModel)]="searchTerm"   (input)="filterMessages()">
+                      <i class='bx bx-search' ></i> 
+                  </div>
+                  <div class="item-vocales">
+                    <item-vocales *ngFor="let message of filteredMessages" >
+                      <audio *ngIf="message.audio" [src]="message.audio" controls></audio>
+                      <p class="date" *ngIf="message.audio"> {{ message.time| date:'medium' }} par: {{message.sender.nom}} {{message.sender.prenom}}</p>
+                    </item-vocales>
+                  </div>
+            </div>
+                 <div class="grid-container"  [class.show]="displayBloques" *ngIf="groupe.blockedMembers!==null">
+                  <div class="searchBx">
+                
+                    <input type ="texte"  placeholder="Recherche..." [(ngModel)]="searchTerm" (input)="filterBlockedMembers()" >
+                    <i class='bx bx-search' ></i> 
+                </div>
+                  
+                  <div class="grid-item" *ngFor="let member of filteredBlockedMembers">
+                <img [src]="member.image ? member.image : '/assets/image/user.png'" class="imgMember" (click)="navProfileMemeber(member)">
+                <p class="name">{{member.nom}}  {{member.prenom}}</p>
+                <div class="edit"   *ngIf="user.username === groupe.userCreature.username"  > 
+                  <i class='bx bx-dots-vertical-rounded'></i>
+                <div  class="tooltip">
+                  <ul>
+                   
+                    <li (click)="popupValiderDeblouqer(groupe.id, member.username)" >
+                      <i class='bx bx-lock-open-alt' ></i>
+                      <span >Débloquer</span>
+                    </li>
+                   
+                 
+                 
+                </ul>
+                
+                
+              </div>
+                </div>
+                <div class="contact"  *ngIf="user.username != member.username  && !member.isBlocked" >
+                  <i class='bx bxl-messenger'></i>
+                  <button class="profile-card__button button--blue " (click)="openChat(member.id)">Message</button>
+                  
+                </div>
+                 </div>
+                
+            </div>
+                
+                
+          </div>
+            <div class="popupValider" #popupVal>
+              <div class="cardValider">
+                <p *ngIf="adminGroupId ===null && BlouqeId===null && membGroupId===null && username ===null && userId=== null">Vous êtes sûr de supprimer !</p>
+                <p *ngIf="userId!==null && BlouqeId ===null">Vous êtes sûr de quitter le groupe !</p>
+                <p *ngIf="username !==null && BlouqeId !==null ">Vous êtes sûr de bloquer !</p>
+                <p *ngIf="username !==null && BlouqeId===null && debloqueMember !==null && membGroupId === null && adminGroupId ===null">Vous êtes sûr de débloquer !</p>
+                <p *ngIf="username !==null && membGroupId !==null && adminGroupId ===null">Vous êtes sûr de supprimer cette membre !</p>
+                <p *ngIf="username !==null && adminGroupId !==null ">Vous êtes sûr de donner l'adminitration !</p>
+                <button (click)="action()">
+                  <div class="svg-valider">
+            
+                    <i class='bx bxs-user-check'></i>
+                  </div>
+            
+                  <span >Confirmer</span>
+                </button>
+              </div>
+            </div>
+
+
+
+            <div class="popupModifierGroupe" >
+              <div class="cardGroupe">
+                  <div class="img-area">
+                      <div class="inner-area">
+                        <label class="-label" for="file" accept="image/*">
+                          <span class="icon-camera"><i class='bx bx-camera'></i></span>
+                          <span class="profilepic__text">Change Image</span>
+                        </label>
+                        <input  id="file" type="file" (change)="onFile($event)" />
+                        <img [src]="imageGroupe ? imageGroupe:'/assets/image/group.png'">
+                       
+                       
+                      </div>
+                    </div>
+                    <div *ngIf="errorMessage"  class="alert-poste" >
+                      {{errorMessage}}
+                    </div>
+                    <div *ngIf="!categorySelected && errorMesCateg"  class="alert-poste">
+                      {{errorMesCateg}}
+          
+                    </div>
+                  <div class="input-box">
+              <i class='bx bx-edit'></i>
+              <input type="text" required class="input-field"  placeholder="Nom De Groupe" [(ngModel)]="nameGroupe" (input)="onInputChange()">
+              </div>
+              <div class="select-menu" #dropdownElement (click)="clickMenu()">
+                  <button   class="btn">
+                    <div class="sbtn-btn">
+                      <span class="select-text" type="checkbox">{{ selectedCategory }}</span>
+                      <i class='bx bxs-chevron-down'></i>
+                    </div>
+                  </button>
+          
+                  <ul class="categs">
+          
+                    <li class="categ" *ngFor="let categorie of categories" (change)="onCategorySelected($event.target.value)"
+                      (click)="selectCategory(categorie)">
+          
+          
+                      <i class="bx" [class]="categorie.icon"></i>
+                      <span class="categ-text">{{ categorie.name }}</span>
+          
+                    </li>
+          
+                  </ul>
+          
+          
+                </div>
+              <div class="valider" (click)="updateGroup()">
+                <button>
+                  <div class="svg-valider">
+          
+                    <i class='bx bxs-user-check'></i>
+                  </div>
+          
+                  <span >Modifier</span>
+                </button>
+              </div>  
+          </div>
+          </div>
+        <div class="overlay" #overlay></div>
+       </body>
+  
+
+    </html>

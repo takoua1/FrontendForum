@@ -1,0 +1,10 @@
+{
+  "/api/*": {
+    "target": "https://backendforum-8dpz.onrender.com",
+    "secure": false,
+    "changeOrigin": true,  
+    "pathRewrite": {
+      "^/api": ""  
+  }
+}}
+

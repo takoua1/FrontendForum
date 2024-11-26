@@ -1,0 +1,40 @@
+.emoji-picker {
+    font-size: 16px; /* Ajustez la taille des emojis selon vos besoins */
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .emoji-list {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  span
+  {
+    font-size: 15px;
+  }
+
+  input{
+    position: relative;
+    outline: none;
+    border: none;
+    top:10px;
+   background: linear-gradient(to bottom, #dadbde92 0%, #bdc9e492 100%);
+  width: 85%;
+   color: #fff;
+   padding-left: 50px ;
+   border-radius: 10px;
+  }
+  .emoji {
+    margin: 5px;
+    cursor: pointer;
+    user-select: none;
+   font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', 'Emoji', sans-serif;
+  }
+  
+  input[type="text"] {
+    width: 93%;
+    padding: 8px;
+    margin-bottom: 10px;
+    font-size: 16px;
+  }
+  

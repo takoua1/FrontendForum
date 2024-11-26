@@ -1,0 +1,276 @@
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+ <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins" />
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+<link  href='/src/app/detail-poste/detail-poste.component.css'  >
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <div   class="detail-Poste"  *ngIf="selectedPost">
+        <div   class="card-list">
+          <div  class="user-profile">
+            <div *ngIf="selectedPost">
+             
+              <p>{{selectedPost.user.nom}} {{selectedPost.user.prenom}}</p>
+              <span> {{selectedPost.dateCreate | date:'dd-MM-yy HH:mm'}}</span>
+              <img [src]="selectedPost.user.image ? selectedPost.user.image : '/assets/image/user.png'" class="profile-img"   class="profile-img">
+             
+            </div>
+          </div>
+          
+          <div class="containerPoste">
+          
+         
+            <p  class="post-text" *ngIf="selectedPost">
+              {{ selectedPost.expanded ? selectedPost.message : (selectedPost.message | slice: 0:textLimit) }}{{selectedPost.message.length > textLimit && !selectedPost.expanded ? '...' : '' }}
+            </p>
+            
+            <!-- Bouton Voir plus/moins : uniquement visible si le texte est tronqué et non encore entièrement affiché -->
+            <button 
+              class="toggle-button" 
+              *ngIf="selectedPost && selectedPost.message.length > textLimit && !selectedPost.expanded" 
+              (click)="toggleExpand(selectedPost)">
+              Voir plus
+            </button>
+      
+            <!-- Bouton Voir moins : uniquement visible si le texte est entièrement affiché -->
+            <button 
+              class="toggle-button" 
+              *ngIf="selectedPost && selectedPost.expanded" 
+              (click)="toggleExpand(selectedPost)">
+              Voir moins
+            </button>
+            <!-- Bouton Voir plus/moins -->
+            
+            
+            
+          
+          <img [src]="selectedPost.image" class="post-image" *ngIf="selectedPost">
+        </div>
+          <div class="btnIte"   *ngIf="selectedPost">
+            <button (click)=" toggleLike(selectedPost)">
+              <i class='bx bxs-like' [ngClass]="{ 'liked': isLike[selectedPost.id.toString()] }"></i>
+              <span *ngIf="totalLikesMap[selectedPost.id] > 0">  {{ totalLikesMap[selectedPost.id] }}</span>
+            </button>
+            <button  (click)="toggleDislike(selectedPost)">
+              <i class='bx bxs-dislike'   [ngClass]="{ 'disLiked': isDislike[selectedPost.id.toString()] }"></i>
+              <span *ngIf="totalDislikesMap[selectedPost.id] > 0">  {{totalDislikesMap[selectedPost.id]}}</span>
+            </button>
+            <button (click)="toggleTextarea(selectedPost)" >
+              <i class='bx bx-chat'></i>
+            </button>
+          </div>
+         
+      
+        
+         
+          <div class="edit-delette" (click)="togglePopup($event)"  ><i class='bx bx-dots-horizontal-rounded'></i>
+          </div>
+          <div class="popup-content">
+      
+            <ul>
+              <li *ngIf="selectedPost.user.id == user.id">
+                <i class='bx bxs-edit-alt'></i>
+                <span *ngIf="isModifierVisible" class="modifier" (click)="togglePopupModifier(selectedPost,'modifier')">Modifier</span>
+              </li>
+      
+              <li *ngIf="selectedPost.user.id == user.id">
+                <i class='bx bx-trash'></i>
+                <span  (click)="callTogglePopupDelete(selectedPost)">Supprimer</span>
+              </li>
+              <li *ngIf="selectedPost.user.id != user.id" (click)="openPopupSignale(selectedPost)" >
+                <i class='bx bx-error-alt'></i>
+              <span >Signaler</span></li>
+              <li (click)="copyPosteLink(selectedPost)"> <i class='bx bx-link'></i>
+                <span>Copier</span>
+              </li>
+            </ul>
+      
+          </div>
+         
+          <!-------------------------Comment----------------------------------------------------------->
+        <div class="comment">
+            <div  *ngIf="getActiveComments(selectedPost).length > 0" class="commentLenght"   (click)="toggleCommentsPart(selectedPost.id, selectedPost,$event)">
+                <div *ngIf="getActiveComments(selectedPost).length ===1"><p>{{getActiveComments(selectedPost).length }} commentaire</p></div>
+                <div *ngIf="getActiveComments(selectedPost).length >1" > <p  class="lenght" >{{ getActiveComments(selectedPost).length}} commentaires</p></div>
+               
+              </div>
+            <div  *ngIf="isTextareaVisible(selectedPost)" [formGroup]="commentForm"  class="commentText">
+              <textarea id="textComm" rows="2" placeholder="" (click)="selectedPost.showButton = true" [ngModel]="messageComment" (input)="adjustTextareaSize($event)" (keydown.enter)="addNewLine()" [formControl]="commentForm.get('messageComment')"></textarea>
+           
+              <button *ngIf="selectedPost.showButton" (click)="addCommentToPost(selectedPost)">  <i class='bx bxs-send' ></i></button>
+              
+          </div>
+           
+          
+            <div  *ngFor="let comment of  filteredComments; let i = index" >
+                        <div *ngIf="i < commentsToShow[selectedPost.id]">   
+                  <app-comment  [comment]="comment"  [isUserAuthenticated]="isUserAuthenticated" [user]="user" (deleteCommentWithInfo)="onResirve($event)" (deleteComment)="onCommentDelete($event)" (signaleCommentWithInfo)="onResirveSignale($event)" (connectCommentWithInfo)="onResirveConnect($event)" (signaleComment)="onCommentsignale($event)"(connectComment)="onCommentConnect()" [comments]="filteredComments"></app-comment>
+                </div>
+            </div>
+             <div *ngIf="commentsToShow[selectedPost.id] > 0  && getActiveComments(selectedPost).length > 10 " (click)="toggleComments(selectedPost.id, selectedPost.comments)" class="commentInfo">
+              <p>{{ commentsToShow[selectedPost.id] }} / {{getActiveComments(selectedPost).length }} commentaires affichés</p> </div>
+              
+        
+            
+        </div>
+        
+      
+      
+            <i class="psteIcon" [class]="matchingIcon.icon"></i>
+         
+      
+        </div>            
+      </div>
+
+      <div class="popupSignale" #popupSignale>
+        <div class="cardSignale">
+          <div *ngIf="currentStep === 1">
+            <div *ngIf="errorMessageSignale" class="error-message">
+              {{ errorMessageSignale }}
+            </div>
+            <span>Signaler le Post</span>
+            <div class="signale-options">
+              <div *ngFor="let type of reportTypes">
+                <input 
+                  type="radio" 
+                  [id]="type" 
+                  name="signale" 
+                  [value]="type" 
+                  (change)="onTypeChange($event)">
+                <label [for]="type">{{ type }}</label>
+              </div>
+            </div>
+            <button (click)="goToNextStep()">
+              
+      
+              <span >Suivant</span>
+              <div class="svg-valider">
+      
+                <i class='bx bx-chevron-right'></i>
+              </div>
+            </button>
+          
+          </div>
+      
+          <!-- Étape 2 : Description du problème -->
+          <div *ngIf="currentStep === 2">
+            <span>Décrivez le problème</span>
+            <textarea 
+              [(ngModel)]="reportDescription" 
+              rows="5" 
+              placeholder="Décrivez le problème...">
+            </textarea>
+            <div> <button (click)="sendSignale()">
+              
+              <div class="svg-valider">
+      
+                <i class='bx bx-check'></i>
+              </div>
+              <span >Signaler</span>
+              
+            </button>
+            <button (click)="closeSignale()">
+              
+              <div class="svg-valider">
+      
+                <i class='bx bx-x-circle' ></i>
+              </div>
+              <span >Annuler</span>
+              
+            </button>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="popupCardUser" id="popup" *ngIf="isPopupVisible" (click)="$event.stopPropagation()">
+
+        <div  class="card-user">
+    
+          <form (ngSubmit)="performAction()" [formGroup]="posteForm">
+            <div *ngIf="submissionAttempted && posteForm?.get('messagePoste')?.errors?.required && errorMessage"  class="alert-poste" >
+              {{errorMessage}}
+            </div>
+            <div *ngIf="submissionAttempted && !categorySelected && errorMesCateg"  class="alert-poste">
+              {{errorMesCateg}}
+    
+            </div>
+    
+            <img [src]="user.image  ? user.image : '/assets/image/user.png'"  class="profile-img">
+    
+            <textarea id="popupTextarea" rows="4" placeholder="Quoi de neuf ?"
+              formControlName="messagePoste" [ngModel]="selectedPost.message"></textarea>
+            <div class="drop-area" id="dropArea" (drop)="onFileDropped($event)" (dragover)="prevent($event)">
+              <span class="drag-text"  [class.active]="hasImage">Glissez et déposez votre image ici ou </span>
+              <input type="file" id="fileInput" (change)="onFileSelected($event)" [class.active]="hasImage">
+              <label for="fileInput" class="upload-button" [class.active]="hasImage">Importer</label>
+              <div class="delete-icon" id="deleteIcon" (click)="removeImage()" [class.active]="hasImage" >
+                <i class='bx bx-trash'></i>
+              </div>
+              <div *ngIf="imageUrl" class="image-preview">
+                <img [src]="imageUrl" alt="Image preview">
+              </div>
+            </div>
+            <button id="btnAdd" type="submit">
+              <div class="svg-wrapper-1">
+                <div class="svg-wrapper">
+    
+                  <i class='bx bxs-send'></i>
+                </div>
+              </div>
+              <span>Partager</span>
+            </button>
+          </form>
+          <!--div *ngIf="submissionAttempted && !categorySelected" class="alert-poste">
+            {{errorMesCateg}}
+          </div-->
+    
+          <div class="select-menu-popup" #dropdownElement>
+            <button (click)="clickMenuPopup()" class="btn-popup">
+              <div class="sbtn-btn">
+                <span class="select-text" type="checkbox">{{ selectedCategory }}</span>
+                <i class='bx bxs-chevron-down'></i>
+              </div>
+            </button>
+    
+            <ul class="categs">
+    
+              <li class="categ" *ngFor="let categorie of categories" (change)="onCategorySelected($event.target.value)"
+                (click)="selectCategory(categorie)">
+    
+    
+                <i class="bx" [class]="categorie.icon"></i>
+                <span class="categ-text">{{ categorie.name }}</span>
+    
+              </li>
+    
+            </ul>
+    
+    
+          </div>
+    
+    
+        </div>
+      </div>
+      <div   class="popupDelete">
+        <div class="cardDelete">
+          <p>Voulez-vous vraiment supprimer ?</p>
+          <button (click)="deleteObject()">
+            <div class="svg-valider">
+    
+              <i class='bx bxs-user-check'></i>
+            </div>
+    
+            <span >Valider</span>
+          </button>
+        </div>
+      </div>
+      <div class="overlay" #overlay  *ngIf="isOverlayVisible" ></div>
+</body>
+</html>

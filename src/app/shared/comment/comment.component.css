@@ -1,0 +1,699 @@
+
+.commentContainer{
+ margin:-0.5rem;
+  display:flex;
+  flex-direction: column;
+}
+
+.commentContainer .commentUser{
+position: relative;
+ top:60px;
+ left: 20px;
+ width: 120px;
+  float: left;
+
+
+}
+  
+ .commentContainer .commentUser .profile-img {
+ 
+ position: relative;
+    width: 40px;
+  
+   left: 70px;
+   float: left;
+    border-radius: 50%;
+    display: flex;
+  }
+  .commentContainer  .commentUser .img{
+    position: relative;
+    left: 5px;
+    width: 40px;
+   float: left;
+  
+    border-radius: 50%;
+  }
+  .commentContainer .commentUser p{
+   position: relative;
+ top:-65px;    
+   
+    font-size: 14px;
+   left: 115px;
+   float: left;
+ 
+   
+  
+  }
+ /* .commentContainer  .container{
+position: relative;
+
+  float: left;
+  margin-left: 138px;
+    border: 1px solid white;
+    align-items: center; 
+   display: grid;
+    width:71%;
+  padding: 0 6px;
+    background-color: rgba(245, 242, 242, 0.822);
+    border-radius: 10px;
+  margin-bottom: 50px;
+  }*/
+
+  .commentContainer .container {
+    display: flex;
+    border: 1px solid white;
+    width:71%;  padding: 0 6px;
+  padding: 0 6px;
+    background-color: rgba(245, 242, 242, 0.822);
+    border-radius: 10px;
+    margin-left: 138px;
+    flex-direction: column;
+    align-items:  flex-start; /* Ou center si besoin */
+  }
+  .commentContainer  .container span {
+  position: relative;
+    color: black;
+    white-space: pre-wrap;
+    margin-bottom: 20px;
+    font-size: 25px;
+    font: 1em sans-serif;
+   display: inline-flex;
+    font-family: 'Times New Roman', Times, serif;
+   cursor: text;
+   word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  }
+ 
+  .commentContainer .container   .bx-trash {
+    position: absolute;
+    right:10%;
+    margin-top: -2rem;
+  color: red;
+    font-size: 20px;
+    opacity: 0;
+  display: flex;
+    transition: all 0.5s ease;
+
+  }
+  .commentContainer .container   .bx-trash:hover{
+  opacity: 1;
+
+  }
+ 
+.commentContainer .container   .bx-error-alt{
+  
+
+  position: absolute;
+  right:10%;
+  margin-top: -2rem;
+  color: red;
+    font-size: 20px;
+  display: flex;
+  opacity: 0;
+    transition: all 0.5s ease;
+}
+
+.commentContainer .container   .bx-error-alt:hover{
+  opacity: 1;
+}
+/*
+.commentContainer .btnCommIte  {
+
+margin-top:-75px;
+        width: 100%;
+         float: left;
+    padding: 10px;
+       bottom: 10px;
+      
+  }*/
+  .bx.bxs-like {
+   
+    color: white;
+  }
+  
+  .bx.bxs-like.liked {
+    color:blue;}
+    .bx.bxs-dislike
+    {
+      color: white;
+    }
+    .bx.bxs-dislike.disLiked{
+      color:blue;
+    }
+    button span{
+
+      
+      position: relative;
+    
+
+    }
+  .btnCommIte button:nth-child(3) {
+    background-color: #007bff; /* Change la couleur de fond du bouton en bleu */
+    color: white; /* Change la couleur du texte en blanc */
+}
+   .btnCommIte   button {
+   position: relative;
+   width: 50px;
+    font-size: 12px;
+    height: 20px;
+    margin-right: 5%;
+    background: linear-gradient(to bottom, #aab7d392 0%, #95a1ba92 100%);
+    color: white;
+   
+
+    border: none;
+    border-radius: 25px;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s;
+   
+  }
+  
+ .commentContainer  .btnCommIte  button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0px 8px 15px white;
+  }
+  
+ .commentContainer  .btnCommIte button:active {
+    transform: scale(0.95);
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  }
+ .commentContainer .repText #textRep
+  { 
+    position: relative;
+ 
+ top:28px;
+  
+    border-radius: 10px;
+    outline: none;
+    transition: .2s ease;
+    width: 70%;
+    padding-left: 5px;
+    padding-right:  75px;
+    display: flex;
+    left: 145px;
+   
+    resize: none;
+    border: none;
+  
+  }
+  
+  .commentContainer .repText button{
+    position:relative;
+    width: 40px;
+   
+    top:-4px;
+   display: flex;
+  right: -81%;
+ 
+    height: 25px;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 10px;
+
+  }
+  .commentContainer .repText .bxs-send {
+    color: #66a6ff;
+  }
+
+  
+   .repond-taille p
+  { position: relative;
+ 
+   margin-top: -20px;
+    right: 150px;
+  float:right;
+   color: #545353;
+   font-size: 12px;
+   
+  }
+  .childContainer {
+    margin-left: 20px;
+   
+
+}
+
+.childComments {
+    display: flex;
+    flex-direction: column;
+   
+}
+
+.childContainer .childContainer {
+    margin-left: 0; /* Annuler le décalage pour les sous-commentaires à chaque niveau */
+}
+
+ .commentlenght {
+  position: relative;
+  top: 35px;
+  left:37%;
+  margin-bottom: 2rem;
+  cursor: pointer;
+  color: #007bff; 
+  font-size: 15px;
+  align-self: flex-start; /* S'assure que l'élément commence à gauche */
+ 
+}
+
+
+.popupInform {
+  position: fixed;
+  top: 50%;
+  left: 40%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  display: none;
+  z-index: 10000;
+}
+
+.popupInform .cardInform {
+  position: absolute;
+  box-sizing: border-box;
+
+  display: flex;
+  width: 300px;
+  height: 130px;
+  background: rgba(255, 253, 253, 0.829);
+  border: 1px solid white;
+  box-shadow: 12px 17px 51px rgba(0, 0, 0, 0.22);
+  backdrop-filter: blur(6px);
+  border-radius: 17px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.5s;
+
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  font-weight: bolder;
+  color: black;
+  top: 10px;
+
+}
+
+.popupInform .cardInform:hover {
+
+  transform: scale(1.05);
+}
+
+.popupInform .cardInform p {
+  position: absolute;
+  top: 10px;
+  font-size: 15px;
+  color: #97b7e3;
+}
+
+.popupInform .cardInform button {
+  position: absolute;
+  font-size: 12px;
+
+  top: 80px;
+  right: 30%;
+  background: linear-gradient(to bottom, #4dc7d9 0%, #66a6ff 100%);
+  color: white;
+  padding: 0.5em 1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 25px;
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s;
+}
+
+.popupInform .cardInform button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0px 8px 15px white;
+}
+
+.popupInform .cardInform button:active {
+  transform: scale(0.95);
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.popupInform .cardInform button span {
+  display: block;
+  margin-left: 0.4em;
+  transition: all 0.3s;
+}
+
+.popupInform .cardInform button i {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  fill: white;
+  transition: all 0.3s;
+}
+
+.popupInform .cardInform .svg-valider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.2);
+  margin-right: 0.5em;
+  transition: all 0.3s;
+}
+
+.popupInform .cardInform button:hover .valider {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.popupInform .cardInform button:hover i {
+  transform: rotate(45deg);
+}
+.popupConnect {
+  position: fixed;
+  top: 50%;
+  left: 40%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+ 
+  z-index: 10000;
+}
+
+.popupConnect .cardConnect {
+  position: absolute;
+  box-sizing: border-box;
+
+  display: flex;
+  width: 300px;
+  height: 130px;
+  background: rgba(255, 253, 253, 0.829);
+  border: 1px solid white;
+  box-shadow: 12px 17px 51px rgba(0, 0, 0, 0.22);
+  backdrop-filter: blur(6px);
+  border-radius: 17px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.5s;
+
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  font-weight: bolder;
+  color: black;
+  top: 10px;
+
+}
+
+.popupConnect .cardConnect:hover {
+
+  transform: scale(1.05);
+}
+
+.popupConnect .cardConnect p {
+  position: absolute;
+  top: 10px;
+  font-size: 15px;
+  color: #97b7e3;
+}
+
+.popupConnect .cardConnect button {
+  position: absolute;
+  font-size: 12px;
+
+  top: 80px;
+ 
+  background: linear-gradient(to bottom, #4dc7d9 0%, #66a6ff 100%);
+  color: white;
+  padding: 0.5em 1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 25px;
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s;
+}
+
+.popupConnect .cardConnect button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0px 8px 15px white;
+}
+
+.popupIConnect .cardConnect button:active {
+  transform: scale(0.95);
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.popupConnect .cardConnect button span {
+  display: block;
+  margin-left: 0.4em;
+  transition: all 0.3s;
+}
+
+.popupConnect .cardConnect button i {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  fill: white;
+  transition: all 0.3s;
+}
+
+.popupConnect.cardConnect .svg-valider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.2);
+  margin-right: 0.5em;
+  transition: all 0.3s;
+}
+
+.popupConnect .cardConnect button:hover .valider {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.popupConnect.cardConnect button:hover i {
+  transform: rotate(45deg);
+}
+.popupSignale{
+  position: fixed;
+ top:2%;
+     left:30%;
+   width: 95%;
+ display: none;
+ 
+     z-index: 9999;
+
+}
+.popupSignale .cardSignale{
+  box-sizing: border-box;
+  width: 40%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+   padding: 30px;
+  background: rgba(217, 217, 217, 0.58);
+  border: 1px solid white;
+  box-shadow: 12px 17px 51px rgba(0, 0, 0, 0.22);
+  backdrop-filter: blur(20px);
+  border-radius: 17px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.5s;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  font-weight: bolder;
+  color: black;
+  margin-bottom: 15px;
+  bottom: 20px;
+  overflow-y: auto;
+
+  
+}
+.error-message {
+  color: #ff4d4f;
+  background-color: #ffe6e6;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  text-align: center;
+  font-weight: bold;
+}
+.popupSignale .cardSignale span {
+  margin-bottom: 1rem;
+  font-size: 18px;
+  margin-left: -6rem;
+}
+
+.popupSignale .cardSignale .signale-options {
+  display: flex;
+flex-direction: column; /* Affiche les boutons radio verticalement */
+align-items: flex-start; /* Aligne les éléments à gauche */
+width: 100%; /* Prend toute la largeur disponible */
+margin-bottom: 1rem;
+}
+
+.popupSignale .cardSignale .signale-options div {
+  display: flex;
+  align-items: center;
+  margin: 0.5rem; /* Espacement entre les éléments */
+}
+
+.popupSignale .cardSignale input[type="radio"] {
+  margin-right: 0.5rem;
+}
+
+.popupSignale .cardSignale .signale-options div label {
+  color: #4189e0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  font-size:13px ;
+  padding: 0.5rem; /* Ajoute du padding autour du texte */
+  border-radius: 5px; /* Arrondir les coins du label */
+  background: rgba(255, 255, 255, 0.3);  /* Ajoute un fond léger pour le label */
+}
+
+.popupSignale .cardSignale textarea {
+  width: 280px;
+
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  position: relative;
+  height: 50%;
+  border-radius: 10px;
+  outline: none;
+  transition: .2s ease;
+ 
+  display: flex;
+ 
+
+  resize: none;
+  border: none;
+
+}
+
+/*  button {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}*/
+
+
+.popupSignale .cardSignale div button {
+
+  font-size: 12px;
+
+  
+float: right;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(to bottom, #4dc7d9 0%, #66a6ff 100%);
+  color: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 25px;
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s;
+}
+
+.popupSignale .cardSignale div button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0px 8px 15px white;
+}
+
+.popupSignale .cardSignale div button:active {
+  transform: scale(0.95);
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.popupSignale .cardSignale div button span {
+  display: block;
+
+  margin-bottom: 0.3rem;
+  margin-left: 0.4em;
+  transition: all 0.3s;
+  align-items: center;
+  font-size: 12px;
+}
+
+.popupSignale .cardSignale div button i {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  fill: white;
+  transition: all 0.3s;
+}
+
+.popupSignale .cardSignale  div button.svg-valider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.2);
+  margin-right: 0.5em;
+  transition: all 0.3s;
+}
+
+.popupSignale .cardSignale div button:hover .valider {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.popupSignale .cardSignale div button:hover i {
+  transform: rotate(45deg);
+}
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+
+  display: none;
+  z-index: 9998;
+}
+ 
+.overlay.active{
+  display: block;
+}
+/*
+.childContainer .commentContainer  .commentUser .profile-img {
+
+ 
+    width: 30px;
+}
+.childContainer .commentContainer  .commentUser .img{
+  
+ left: 20px;
+
+     width: 30px;
+}
+.childContainer .commentContainer  .commentUser p{
+  
+  left:30px; 
+  font-size: 12px;
+ }
+
+
+ .childContainer .commentContainer .btnCommIte {
+  position: relative;
+ display: flex;
+top:-5px;
+left: 60px;
+ }*/
+ 
+ 

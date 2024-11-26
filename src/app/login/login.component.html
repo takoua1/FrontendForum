@@ -1,0 +1,194 @@
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  
+    
+ 
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins" />
+  <link  href="/app/login/login.component.css">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  
+  <title> Tunisia Forum</title>
+ 
+ 
+</head>
+<body>
+ <div class="wrapper">
+   
+        
+<!----------------------------- Form box ----------------------------------->    
+    <div   class="form-box">
+        
+        <!------------------- login form -------------------------->
+        
+        <div  class="login-container" id="login">
+            <form [formGroup]="loginForm">
+            <div class="top">
+                <span>Vous n'avez pas de compte ?
+                  Vous n'avez pas de compte ?
+                  <a   (click)="linkRegister()">S'inscrire</a></span>
+                <header>Se connecter</header>
+            </div>
+            <div class="input-box">
+                <input type="text" class="input-field" placeholder="Nom d'utilisateur" formControlName="username">
+                <i class="bx bx-user"></i>
+                <mat-error *ngIf="loginForm.controls.username.touched  && loginForm.controls.username.invalid">
+                    <span *ngIf="loginForm.controls.username.errors.required">Remplir Username!</span>
+                </mat-error>
+            </div>
+            <div class="input-box">
+                <input type="password" class="input-field" placeholder="Mot de passe" formControlName="password" >
+                <i class="bx bx-lock-alt"></i>
+                <mat-error *ngIf="loginForm.controls.password.touched && loginForm.controls.password.invalid">
+                    <span *ngIf="loginForm.controls.password.errors.required">Remplir Passsword!</span>
+                  
+                </mat-error>
+            </div>
+            <div class="input-box">
+                <input type="submit" class="submit" value="Se connecter"  (click)="login()" >
+                <span *ngIf="messageError">{{messageError}}</span>
+            </div>
+            <div class="two-col">
+               
+                
+            
+                <div class="two">
+                    <label><a (click)="linkforget()">Mot de passe oublié?</a></label>
+                </div>
+            </div>
+        </form>
+        </div>
+    
+        <!------------------- registration form -------------------------->
+       
+        <div  class="register-container" id="register" >
+            <form [formGroup]="registerForm" >
+            <div class="top">
+                <span>Avoir un compte? <a  (click)="linkLogin()">Se connecter</a></span>
+                <header> S'inscrire</header>
+            </div>
+            <div class="two-forms">
+                <div class="input-box">
+                  
+
+                    <input type="text" class="input-field" placeholder="Prénom" formControlName="prenom">
+                    <i class="bx bx-user"></i>
+                      <mat-error *ngIf="(registerForm.controls.prenom.touched || registerForm.controls.prenom.dirty ) && registerForm.controls.prenom.invalid">
+                        <span *ngIf="registerForm.controls.prenom.errors.required">Remplir Prénom!</span>
+                        <span *ngIf="registerForm.controls.prenom.errors.pattern">Saisir Seulement Lettre!</span>
+                    </mat-error>
+                </div>
+                
+                <div class="input-box">
+                    <input type="text" class="input-field" placeholder="Nom de la famille" formControlName="nom">
+                    <i class="bx bx-user"></i>
+                    
+                    <mat-error *ngIf="(registerForm.controls.nom.touched || registerForm.controls.nom.dirty ) && registerForm.controls.nom.invalid">
+                        <span *ngIf="registerForm.controls.nom.errors.required">Remplir Nom!</span>
+                        <span *ngIf="registerForm.controls.nom.errors.pattern">Saisir Seulement Lettre!</span>
+                    </mat-error>
+                </div>
+            </div>
+            <div class="input-box">
+                <input type="text" class="input-field"  [(ngModel)]="searchUsername" (input)="filterUser()"    placeholder="Username" formControlName="username" >
+                <i class="bx bx-user"></i>
+                <mat-error *ngIf="(registerForm.controls.username.touched || registerForm.controls.username.dirty ) && registerForm.controls.username.invalid">
+                    <span *ngIf="registerForm.controls.username.errors.required">Remplir Username!</span>
+                    <span *ngIf="registerForm.controls.username.errors.pattern">Commencer Par Une Lettre!</span>
+                    <span *ngIf="searchUsername && checkUserExists()">Nom d'Utilisateur existe.</span>
+                </mat-error>
+              
+            </div>
+            <div class="input-box">
+                <input type="text" class="input-field" placeholder="E-mail" [(ngModel)]="searchEmail" (input)="filterUser()" formControlName="email">
+                <i class="bx bx-envelope"></i>
+                <mat-error *ngIf="(registerForm.controls.email.touched || registerForm.controls.email.dirty ) && registerForm.controls.email.invalid">
+                    <span *ngIf="registerForm.controls.email.errors.required">Remplir E-mail!</span>
+                    <span *ngIf="registerForm.controls.email.errors.pattern">Saisir E-mail Non Valide!</span>
+                </mat-error>
+                <span *ngIf="searchEmail && checkUserExists()">E-mail existe.</span>
+           
+            </div>
+            <div class="input-box">
+                <input type="password" class="input-field" placeholder="Mot de passe" formControlName="password">
+                <i class="bx bx-lock-alt"></i>
+                <mat-error *ngIf="(registerForm.controls.password.touched || registerForm.controls.password.dirty) && registerForm.controls.password.invalid">
+                    <!-- Affichez uniquement l'erreur 'required' si elle existe -->
+                    <span *ngIf="registerForm.controls.password.errors?.required; else otherErrors">
+                        Remplir Mot de Passe!
+                    </span>
+                
+                    <!-- Autres erreurs ne s'afficheront que si l'erreur 'required' n'est pas présente -->
+                    <ng-template #otherErrors>
+                        <!-- Erreur de longueur minimale -->
+                        <span *ngIf="registerForm.controls.password.errors?.minlength; else customError">
+                            Saisir Au Minimum 8 Caractères!
+                        </span>
+                
+                        <!-- Erreur de validation personnalisée (affichée seulement si aucune autre erreur n'est présente) -->
+                        <ng-template #customError>
+                            <span *ngIf="registerForm.controls.password.errors?.passwordInvalid">
+                                Le mot de passe doit contenir au moins une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial!
+                            </span>
+                        </ng-template>
+                    </ng-template>
+                </mat-error>
+                
+            </div>
+            <div class="input-box">
+                <input type="password" class="input-field" placeholder="Confirmer le mot de passe" formControlName="confirmPassword">
+                <i class="bx bx-lock-alt"></i>
+                <mat-error *ngIf="registerForm.controls.confirmPassword.touched && registerForm.controls.confirmPassword.errors?.required">
+                    <span>Remplir Confirmation Mot de Passe!</span>
+                  </mat-error>
+                  <mat-error *ngIf="registerForm.controls.confirmPassword.touched && !registerForm.controls.confirmPassword.errors?.required && registerForm.hasError('passwordMismatch')">
+                    <span>Les mots de passe ne correspondent pas!</span>
+                </mat-error>
+                </div>
+                  <!-- Erreur de confirmation de mot de passe incorrecte -->
+                  
+          
+            <div class="input-box">
+                <input type="submit" class="submit" value="S'inscrire"  (click)="regisetr()">
+                <span *ngIf="isLoginFailed">"Une erreur s'est produite lors de la création de votre compte. Merci de réessayer."</span>
+            </div>
+           
+            </form>
+        </div>
+        <!------------------- forgotPassword form -------------------------->
+        <div [formGroup]="forgotPasswordForm" class="forgot-password-container" id="forgotPassword" (ngSubmit)="onSubmit()">
+              <div class="top">
+                <span> Retour au page de connexion
+                  <a (click)="linkLogin()">Se connecter</a></span>
+                <header>Mot de passe oublié</header>
+               </div>
+            
+          
+                <div class="input-box">
+               
+                <input formControlName="email" type="email" id="email"  class="input-field" placeholder="Entrez votre e-mail">
+                <i class="bx bx-envelope"></i>
+                <mat-error *ngIf="(forgotPasswordForm.controls.email.touched ||forgotPasswordForm.controls.email.dirty ) && forgotPasswordForm.controls.email.invalid">
+                    <span *ngIf="forgotPasswordForm.controls.email.errors.required">Remplir E-mail!</span>
+                    <span *ngIf="forgotPasswordForm.controls.email.errors.pattern">Saisir E-mail Non Valide!</span>
+                </mat-error>
+              </div>
+              <div class="input-box">
+                <input type="submit" class="submit" value="Envoyer le lien de réinitialisation"  (click)="onSubmit()">
+             <span>{{ errorMessage}}</span>
+            </div>
+             
+           
+            <div  class="succees"*ngIf="message">{{ message }}</div>
+          </div>
+       
+    </div>
+</div>   
+
+</body>
+</html>
+
+
