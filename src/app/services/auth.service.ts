@@ -7,12 +7,13 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { User } from '../model/user';
 import { UserService } from './user.service';
 import { NavigationEnd, NavigationStart, Router } from '@angular/router';
+import { environment } from 'src/environments/environment.prod';
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService implements OnDestroy{
   private isAuthenticated = false; 
-
+  private apiUrl = environment.apiUrl;
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.isUserAuthenticated());
   
   private heartbeatInterval: Subscription | undefined;
@@ -38,7 +39,8 @@ export class AuthService implements OnDestroy{
   }
   login(username:string,password:string):Observable<any>
   {
-  return this.http.post<any>(`/api/auth/signin`,
+   
+  return this.http.post<any>(`${this.apiUrl}/api/auth/signin`,
  {username,password}).pipe(map(response=>{
  if(response.message_Error!=null)
  {
