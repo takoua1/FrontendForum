@@ -19,13 +19,11 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-builders/custom-webpack:browser",
+           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "main": "src/main.ts",
             "outputPath": "dist/ForumSocialX",
-            "customWebpackConfig": {
-             "path": "./webpack.config.js"
-            },
+            
             
             "index": "src/index.html",
             "polyfills": [
