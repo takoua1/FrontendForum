@@ -18,7 +18,7 @@ export class GroupService {
 
 
   addGroupe(groupe:Groupe, file:File | null): Observable<any> {
-    let url = `/api/groupe/addGroupe/${groupe.userCreature.id}`;
+    let url = `/groupe/addGroupe/${groupe.userCreature.id}`;
 
     const formData: FormData = new FormData();
  
@@ -43,7 +43,7 @@ export class GroupService {
   }
 
   listerGroupe(userId:number ):Observable<any>
-  { let url=`/api/groupe/my-groups/${userId}`;
+  { let url=`/groupe/my-groups/${userId}`;
  
      return this.http.get<any>(url);
   }
@@ -53,19 +53,19 @@ export class GroupService {
   }
   chatByGroup(groupId:number):Observable<Chat>
   {
-    let url=`/api/groupe/getChat/${groupId}`;
+    let url=`/groupe/getChat/${groupId}`;
     return this.http.get<Chat>(url);
   }
   findAll():Observable<Groupe[]>
   
   {
-    let url =`/api/groupe/findAll`;
+    let url =`/groupe/findAll`;
     return this.http.get<Groupe[]>(url);
   }
 
   addMember(groupeId:number,userId:number):Observable<Groupe>
   {
-    let url=`/api/groupe/addMember/${groupeId}/${userId}`;
+    let url=`/groupe/addMember/${groupeId}/${userId}`;
     return this.http.put<Groupe>(url, {});
   }
 

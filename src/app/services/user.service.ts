@@ -16,7 +16,7 @@ export class UserService {
   { 
     let headers = new HttpHeaders({'Content-Type': 'application/json', Authorization:'Bearer '+ this.tokenStorage.getToken() })
     console.log(this.tokenStorage.getToken());
-    var url=`/api/user/findByUsername/${username}`;
+    var url=`/user/findByUsername/${username}`;
      console.log("//////////");
     
     return this.http.get<User>(url ,{headers:headers});
@@ -25,18 +25,18 @@ export class UserService {
   { 
     let headers = new HttpHeaders({'Content-Type': 'application/json', Authorization:'Bearer '+ this.tokenStorage.getToken() })
     console.log(this.tokenStorage.getToken());
-    var url=`/api/user/findById/${id}`;
+    var url=`/user/findById/${id}`;
      console.log("//////////");
     
     return this.http.get<User>(url ,{headers:headers});
   }
   updateUser(id: number, user: User): Observable<any> {
-    const url = `/api/user/update/${id}`;
+    const url = `/user/update/${id}`;
     return this.http.patch<any>(url, user);
 }
   updateUserImage(file: File, id: number): Observable<any> {
     let headers = new HttpHeaders({ 'Authorization': 'Bearer ' + this.tokenStorage.getToken() });
-    var url = `/api/user/uploadImage/${id}`;
+    var url = `/user/uploadImage/${id}`;
     const formData: FormData = new FormData();
     formData.append('file', file, file.name);
     return this.http.put<string>(url, formData).pipe(
@@ -47,7 +47,7 @@ export class UserService {
     );
    }
    findAll(): Observable<any[]> {
-    const url = `/api/user/findAll`;
+    const url = `/user/findAll`;
     return this.http.get<any[]>(url);
  }
 
@@ -72,17 +72,17 @@ checkUserExists(filteredUsers: any[], searchUsername: string, searchEmail: strin
 
 
  connectUser(user: any): Observable<any> {
-  const url=`/api/user/connect`
+  const url=`/user/connect`
   return this.http.put(url, user);
 }
 getOfflineDuration(username:string):Observable<string>
  {
-   const url =`/api/user/offline-duration/${username}`;
+   const url =`/user/offline-duration/${username}`;
    return this.http.get(url, {responseType: 'text' });
  }
 
  changePassword(passwordData: ChangePasswordRequest): Observable<any> {
-  const url=`/api/user/change-password`;
+  const url=`/user/change-password`;
   return this.http.put(url, passwordData, { responseType: 'text' }).pipe(
     catchError(error=> {
       console.error("error upadte paswword",error);

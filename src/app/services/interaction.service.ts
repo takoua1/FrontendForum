@@ -13,26 +13,26 @@ export class InteractionService {
 
   onInteractionPoste(interaction:Interaction)
 {
-  return this.http.post<any>(`/api/interaction/poste`,interaction);
+  return this.http.post<any>(`/interaction/poste`,interaction);
 
 
    }
 
    onInteractionComment(interaction:Interaction)
 {
-  return this.http.post<any>(`/api/interaction/comment`,interaction);
+  return this.http.post<any>(`/interaction/comment`,interaction);
 
 
    }
 getInteractionByUserIdAndPosteIdType(userId: number, posteId: number,type:string): Observable<any> {
-  return this.http.get(`/api/interaction/find/poste/${userId}/${posteId}/${type}`);
+  return this.http.get(`/interaction/find/poste/${userId}/${posteId}/${type}`);
 }
 getInteractionByUserIdAndCommentIdType(userId: number, commentId: number,type:string): Observable<any> {
-  return this.http.get(`/api/interaction/find/comment/${userId}/${commentId}/${type}`);
+  return this.http.get(`/interaction/find/comment/${userId}/${commentId}/${type}`);
 }
 removeInteraction(id:number) :Observable<any> {
   
-  const url = `/api/interaction/delete/${id}`;
+  const url = `/interaction/delete/${id}`;
 
   return this.http.delete(url,{responseType: 'text'}).pipe(response=>{
     return response;

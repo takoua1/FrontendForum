@@ -17,18 +17,18 @@ export class FollowService {
 
   followUser(followerId: number, followedId: number): Observable<string> {
    
-    let url=`/api/follow/${followerId}/${followedId}`
+    let url=`/follow/${followerId}/${followedId}`
     return this.http.post<string>(url, {});
   }
 
   unfollowUser(followerId: number, followedId: number): Observable<any> {
-    let url=`/api/follow/${followerId}/${followedId}`;
+    let url=`/follow/${followerId}/${followedId}`;
     return this.http.delete<string>(url,{});
   }
 
   isFollowing(currentUserId: number, followedId: number): Observable<boolean> {
     console.log(`Vérification du suivi de ${currentUserId} vers ${followedId}`);
-    return this.http.get<boolean>(`/api/follow/isFollowing/${currentUserId}/${followedId}`);
+    return this.http.get<boolean>(`/follow/isFollowing/${currentUserId}/${followedId}`);
   }
 
   updateFollowStatus(isFollowing: boolean): void {
@@ -36,13 +36,13 @@ export class FollowService {
   }
 
   getFollowedUsers(userId: number): Observable<User[]> {
-    let url=`/api/follow/followed/${userId}`
+    let url=`/follow/followed/${userId}`
     return this.http.get<User[]>(url);
   }
 
   // Liste des utilisateurs qui suivent
   getFollowers(userId: number): Observable<User[]> {
-    let url=`/api/follow/followers/${userId}`
+    let url=`/follow/followers/${userId}`
     return this.http.get<User[]>(url);
   }
 }

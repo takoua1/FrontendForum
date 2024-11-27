@@ -14,7 +14,7 @@ export class SignaleService {
 
 
   private initializeWebSocketConnection(): void {
-    const socket = new SockJS('/api/ws-signale');
+    const socket = new SockJS('/ws-signale');
     this.stompClient = Stomp.over(socket);
 
     this.stompClient.connect({}, (frame:any) => {

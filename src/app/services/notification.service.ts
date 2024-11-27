@@ -22,7 +22,7 @@ export class NotificationService {
   }
 
   private initializeWebSocketConnection() {
-    const socket = new SockJS('/api/chat-socket'); // Remplacez par votre endpoint WebSocket
+    const socket = new SockJS('/chat-socket'); // Remplacez par votre endpoint WebSocket
     this.stompClient = Stomp.over(socket);
 
     this.connectedPromise = new Promise((resolve, reject) => {
@@ -71,11 +71,11 @@ export class NotificationService {
   }
   getUnreadCount(username: string): Observable<number> {
 
-    let url =`/api/notification/unread-count/${username}`;
+    let url =`/notification/unread-count/${username}`;
     return this.http.get<number>(url);
   }
   getNotificationsForUser(username:any){
-    const url = `/api/notification/user/${username}`;
+    const url = `/notification/user/${username}`;
   return this.http.get<any[]>(url).pipe(
     tap((data) => 
         this.notificationsSubject.next(data),
@@ -85,12 +85,12 @@ export class NotificationService {
 }
 
   public markNotificationsAsRead(username: string): Observable<any> {
-    let url =`/api/notification/markAsRead/${username}`;
+    let url =`/notification/markAsRead/${username}`;
     return this.http.put(url, {});
   }
 
   deleteNotification(id: number): Observable<void> {
-     let url =`/api/notification/delete/${id}`;
+     let url =`/notification/delete/${id}`;
      return this.http.delete<void>(url).pipe(
       tap(() => {
         const currentNotifications = this.notificationsSubject.value;
@@ -101,17 +101,17 @@ export class NotificationService {
   }
 
   disableNotification(notificationId: number): Observable<any> {
-    return this.http.put(`/api/notification/disable/${notificationId}`, {});
+    return this.http.put(`/notification/disable/${notificationId}`, {});
   }
 
 
   updateNotification(id: number, notification: Notification): Observable<Notification> {
-    const url = `/api/notification/update/${id}`;
+    const url = `/notification/update/${id}`;
     return this.http.put<Notification>(url, notification);
   }
 
   findByIdNotification(id:number):Observable<any>{
-    const url = `/api/notification/findById/${id}`;
+    const url = `/notification/findById/${id}`;
     return this.http.get<any>(url);
 
   }

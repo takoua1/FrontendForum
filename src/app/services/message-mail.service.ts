@@ -22,7 +22,7 @@ export class MessageMailService {
 
 
    private initializeWebSocketConnection(): void {
-    const socket = new SockJS('/api/ws-mail');
+    const socket = new SockJS('/ws-mail');
     this.stompClient = Stomp.over(socket);
 
     this.stompClient.connect({}, (frame: any) => {
@@ -79,7 +79,7 @@ updateUnTraitesCount(mailes: any[]): void {
     return this.mailSubject.asObservable();
   }
   markMessageAsRead(messageId: number): Observable<void> {
-    const url = `/api/mail/markAsRead/${messageId}`;
+    const url = `/mail/markAsRead/${messageId}`;
     
       return this.http.patch<void>(url, {});
     }
@@ -95,12 +95,12 @@ updateUnTraitesCount(mailes: any[]): void {
 
   getMails(username:string): Observable<any[]> {
     
-    return this.http.get<any[]>(`/api/mail/user/${username}`, {});
+    return this.http.get<any[]>(`/mail/user/${username}`, {});
   }
 
   disableMail(id: number): Observable<any> {
    
-    let url=`/api/mail/disable/${id}`
+    let url=`/mail/disable/${id}`
   
     return this.http.patch<any>(url, {});
   }

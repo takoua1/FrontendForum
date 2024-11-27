@@ -58,7 +58,7 @@ export class AuthService implements OnDestroy{
   }));
   }
   register(user:any):Observable<any>{
-    return this.http.post<any>(`/api/auth/signup`,user)
+    return this.http.post<any>(`/auth/signup`,user)
     .pipe(map(response=>{
     
       return response;
@@ -75,7 +75,7 @@ export class AuthService implements OnDestroy{
     const username = this.tokenStorage.getUser().username;
   
     console.log('username',username);
-    return this.http.post(`/api/auth/logout`,{username},{ responseType: 'text' }) .pipe(map(response=>{
+    return this.http.post(`/auth/logout`,{username},{ responseType: 'text' }) .pipe(map(response=>{
      
       console.log("stop");
       return response;
@@ -95,10 +95,10 @@ export class AuthService implements OnDestroy{
   private startHeartbeat() {
     const user = this.tokenStorage.getUser();
     if (user) {
-      this.http.post(`/api/auth/heartbeat`, { username: user.username }).subscribe();
+      this.http.post(`/auth/heartbeat`, { username: user.username }).subscribe();
       console.log("heartbeat");
       this.heartbeatInterval = interval(60000).subscribe(() => {
-        this.http.post(`/api/auth/heartbeat`, { username: user.username }).subscribe();
+        this.http.post(`/auth/heartbeat`, { username: user.username }).subscribe();
         console.log("heartbeat");
       });
     }
@@ -110,7 +110,7 @@ export class AuthService implements OnDestroy{
     const user = this.tokenStorage.getUser();
     this.activityTimer = setTimeout(() => {
       // Utilisateur inactif, effectuer une action (comme la déconnexion)
-      this.http.post(`/api/auth/disconnect`, { username: user.username }).subscribe();
+      this.http.post(`/auth/disconnect`, { username: user.username }).subscribe();
     }, 30000); // 30 secondes
   }
   
@@ -129,7 +129,7 @@ export class AuthService implements OnDestroy{
     if (this.heartbeatInterval) {
       this.heartbeatInterval.unsubscribe();
       if (user) {
-        this.http.post(`/api/auth/disconnect`, { username: user.username }).subscribe();
+        this.http.post(`/auth/disconnect`, { username: user.username }).subscribe();
       }
       console.log('stop');
     }
@@ -160,13 +160,13 @@ export class AuthService implements OnDestroy{
   }
   forgotPassword(email: string): Observable<any> {
     
-    return this.http.post(`/api/auth/forgot-password`,{email:email} )
+    return this.http.post(`/auth/forgot-password`,{email:email} )
     
   }
   
 
   resetPassword(token: string, newPassword: string): Observable<any> {
-    return this.http.post(`/api/auth/reset-password`, { token:token, password: newPassword });
+    return this.http.post(`/auth/reset-password`, { token:token, password: newPassword });
   }
  
 }

@@ -7,7 +7,7 @@ import { User } from '../model/user';
   providedIn: 'root'
 })
 export class BlockService {
-  private apiUrl = '/api/blocks';
+  private apiUrl = '/blocks';
   constructor(private http: HttpClient) { }
 
 

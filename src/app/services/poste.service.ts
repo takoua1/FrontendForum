@@ -26,7 +26,7 @@ export class PosteService {
  }
 
  /*fetchPosts(page: number, pageSize: number): Observable<any> {
-  const url = `/api/poste/findAll?page=${page}&size=${pageSize}`;
+  const url = `/poste/findAll?page=${page}&size=${pageSize}`;
   return this.http.get<any>(url).pipe(
      tap(posts => {
        this.postsSubject.next(posts);
@@ -38,7 +38,7 @@ export class PosteService {
  fetchPosts(): Observable<any> {
 
   const headers = new HttpHeaders().set('Content-Type', 'application/json');
-  const url = `/api/poste/findAll`;
+  const url = `/poste/findAll`;
   return this.http.get<any[]>(url).pipe(
      tap(posts => {
        this.allPostes = posts; // Mettez à jour la liste complète des "postes"
@@ -80,15 +80,15 @@ listePoste(): Observable<any[]> {
  addPoste(poste: any): Observable<any> {
     // Ici, vous devez implémenter la logique pour ajouter le poste à votre backend
     // Après avoir ajouté le poste avec succès, mettez à jour le BehaviorSubject
-    return this.http.post<any>(`/api/poste/add`, poste).pipe(
+    return this.http.post<any>(`/poste/add`, poste).pipe(
       tap(() => this.fetchPosts()) // Recharge la liste des postes après l'ajout
     );
  }
  addcommentToPoste(comment:Comment)
-{return this.http.post<Comment>(`/api/poste/addComment`,comment).pipe( tap(() => this.fetchPosts()));}
+{return this.http.post<Comment>(`/poste/addComment`,comment).pipe( tap(() => this.fetchPosts()));}
  
 addPosteWithImage(message: string, category: string, file:File | null, id: number): Observable<any> {
-  let url = `/api/poste/addPostWithImage/${id}`;
+  let url = `/poste/addPostWithImage/${id}`;
   const formData: FormData = new FormData();
  
   // Ajout des données au FormData
@@ -118,7 +118,7 @@ addPosteWithImage(message: string, category: string, file:File | null, id: numbe
  }
 updatePoste(message: string, category: string, file: File | null, deleteImage: boolean ,id: number): Observable<Poste> {{
 
-  var url = `/api/poste/updatePoste/${id}`;
+  var url = `/poste/updatePoste/${id}`;
  
   const formData: FormData = new FormData();
  
@@ -145,19 +145,19 @@ updatePoste(message: string, category: string, file: File | null, deleteImage: b
   );
     }}
     getTotalLikes(postId: number): Observable<number> {
-      return this.http.get<number>(`/api/poste/${postId}/likes`);
+      return this.http.get<number>(`/poste/${postId}/likes`);
       
     }
     
   
     getTotalDislikes(postId: number): Observable<number> {
-      return this.http.get<number>(`/api/poste/${postId}/dislikes`);
+      return this.http.get<number>(`/poste/${postId}/dislikes`);
       
     }
   
   
     deletePoste(id: number): Observable<any> {
-      const url = `/api/poste/delete/${id}`;
+      const url = `/poste/delete/${id}`;
   
       return this.http.delete(url,{ responseType: 'text' }).pipe(
         tap(() => this.fetchPosts()),
@@ -170,24 +170,24 @@ updatePoste(message: string, category: string, file: File | null, deleteImage: b
 
     disablePost(posteId: number): Observable<void> {
 
-      let url=`/api/poste/disable/${posteId}`
+      let url=`/poste/disable/${posteId}`
       return this.http.patch<void>(url, {});
     }
   
     // Activer un post
     enablePost(posteId: number): Observable<void> {
-        let url=`/api/poste/enable/${posteId}`
+        let url=`/poste/enable/${posteId}`
       return this.http.patch<void>(url, {});
     }
     getPosteById(id: number): Observable<any> {
 
-      let url=`/api/poste/${id}`;
+      let url=`/poste/${id}`;
       return this.http.get<any>(url);
     }
 
 
     getPostCountByUser(userId: number): Observable<number> {
-      let url=`/api/poste/count/${userId}`
+      let url=`/poste/count/${userId}`
       return this.http.get<number>(url);
     }
 }
