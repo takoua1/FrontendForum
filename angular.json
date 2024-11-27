@@ -4,7 +4,6 @@
     "analytics": "6be72486-f953-489a-9ef1-f297d05260e9"
   },
   "version": 1,
-  
   "newProjectRoot": "projects",
   "projects": {
     "ForumSocialX": {
@@ -19,29 +18,14 @@
       "prefix": "app",
       "architect": {
         "build": {
-<<<<<<< HEAD
-           "builder": "@angular-devkit/build-angular:browser",
-          "options": {
-            "main": "src/main.ts",
-            "outputPath": "dist/ForumSocialX",
-            
-=======
           "builder": "@angular-builders/custom-webpack:browser",
           "options": {
             "main": "src/main.ts",
             "outputPath": "dist/ForumSocialX",
-            "customWebpackConfig": {
-             "path": "./webpack.config.js"
-            },
->>>>>>> 100e78c9c057e781cdce0bb7aa6ac0c0de93b17b
-            
             "index": "src/index.html",
             "polyfills": [
               "src/polyfills.ts"
             ],
-            "allowedCommonJsDependencies": [
-      "sockjs-client"
-    ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
@@ -51,8 +35,13 @@
               "@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.css"
             ],
-            "scripts": []
-           
+            "scripts": [],
+            "customWebpackConfig": {
+              "path": "./webpack.config.js"
+            },
+            "allowedCommonJsDependencies": [
+              "sockjs-client"
+            ]
           },
           "configurations": {
             "production": {
@@ -88,10 +77,9 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "proxyConfig": "proxy.config.json",  
+            "proxyConfig": "proxy.config.json",
             "host": "localhost",
             "port": 4200
-           
           },
           "configurations": {
             "production": {
