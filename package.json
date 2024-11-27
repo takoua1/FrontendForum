@@ -26,7 +26,8 @@
     "@capacitor/core": "^6.1.2",
     "@capacitor/ios": "^6.1.2",
     "@ctrl/ngx-emoji-mart": "^9.2.0",
-    "@rollup/rollup-win32-x64-msvc": "^4.27.4",
+    "rollup": "^3.0.0",
+
     "@stomp/ng2-stompjs": "^8.0.0",
     "@stomp/stompjs": "^7.0.0",
     "@types/sockjs-client": "^1.5.4",
