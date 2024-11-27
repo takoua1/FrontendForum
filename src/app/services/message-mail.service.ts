@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import SockJS from 'sockjs-client';
 import { TokenStorageService } from './token-storage.service';
 import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment.prod';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,7 @@ export class MessageMailService {
   private mailSubject:  BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
   private connectedPromise: Promise<void>;
   private isConnected = false;
+  private apiUrl = environment.apiUrl;
   private unTraitesCount = new BehaviorSubject<number>(0);
   constructor(private token :TokenStorageService,private http :HttpClient) {
     this.loadMailInitial();
@@ -22,7 +24,7 @@ export class MessageMailService {
 
 
    private initializeWebSocketConnection(): void {
-    const socket = new SockJS('/ws-mail');
+    const socket = new SockJS(`${this.apiUrl}/ws-mail`);
     this.stompClient = Stomp.over(socket);
 
     this.stompClient.connect({}, (frame: any) => {
@@ -79,7 +81,7 @@ updateUnTraitesCount(mailes: any[]): void {
     return this.mailSubject.asObservable();
   }
   markMessageAsRead(messageId: number): Observable<void> {
-    const url = `/mail/markAsRead/${messageId}`;
+    const url = `${this.apiUrl}/mail/markAsRead/${messageId}`;
     
       return this.http.patch<void>(url, {});
     }
@@ -95,12 +97,12 @@ updateUnTraitesCount(mailes: any[]): void {
 
   getMails(username:string): Observable<any[]> {
     
-    return this.http.get<any[]>(`/mail/user/${username}`, {});
+    return this.http.get<any[]>(`${this.apiUrl}/mail/user/${username}`, {});
   }
 
   disableMail(id: number): Observable<any> {
    
-    let url=`/mail/disable/${id}`
+    let url=`${this.apiUrl}/mail/disable/${id}`
   
     return this.http.patch<any>(url, {});
   }

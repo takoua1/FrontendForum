@@ -3,34 +3,34 @@ import { Injectable } from '@angular/core';
 import { TokenStorageService } from './token-storage.service';
 import { Comment } from '../model/comment';
 import { Observable, Subject, catchError, map, throwError } from 'rxjs';
-
+import { environment } from 'src/environments/environment.prod';
 @Injectable({
   providedIn: 'root'
 })
 export class CommentService {
   private listUpdatedSource = new Subject<void>();
-  
+  private apiUrl = environment.apiUrl;
   
   listUpdated$ = this.listUpdatedSource.asObservable();
   constructor(private http: HttpClient,private tokenStorage:TokenStorageService) { }
 
   addCommentToPost(comment:Comment):Observable<any>{
     let headers = new HttpHeaders({'Content-Type': 'application/json', Authorization:'Bearer '+ this.tokenStorage.getToken() })
-    return this.http.post(`/comment/addComment`, comment, { headers })
+    return this.http.post(`${this.apiUrl}/comment/addComment`, comment, { headers })
     .pipe(map(response => {
       return response;
     }));}
   addCommentToComment(commentchild:Comment):Observable<any>{
     let headers = new HttpHeaders({'Content-Type': 'application/json', Authorization:'Bearer '+ this.tokenStorage.getToken() })
-    return this.http.post<any>(`/comment/addReponse`,commentchild, { headers })
+    return this.http.post<any>(`${this.apiUrl}/comment/addReponse`,commentchild, { headers })
     .pipe(map(response=>{
       return response;
     }));}
     getPosteByCommentId(commentId: number): Observable<any> {
-      return this.http.get<any>(`/comment/poste/${commentId}`);
+      return this.http.get<any>(`${this.apiUrl}/comment/poste/${commentId}`);
     }
     addCommentToPostWithImage (text: string, category: string, file:File | null, idUser: number,idPoste:number): Observable<any> {
-  let url = `/comment/addCommentToPosteWithImage/${idUser}/${idPoste}`;
+  let url = `${this.apiUrl}/comment/addCommentToPosteWithImage/${idUser}/${idPoste}`;
   const formData: FormData = new FormData();
  
   // Ajout des données au FormData
@@ -56,7 +56,7 @@ export class CommentService {
           
 }
 deleteComment(id: number): Observable<any> {
-  const url = `/comment/delete/${id}`;
+  const url = `${this.apiUrl}/comment/delete/${id}`;
 
   return this.http.delete(url,{ responseType: 'text' }).pipe(map(response=>{
     return response;
@@ -68,49 +68,49 @@ deleteComment(id: number): Observable<any> {
   
 }
 getTotalLikes(commentId: number): Observable<number> {
-  return this.http.get<number>(`/comment/${commentId}/likes`);
+  return this.http.get<number>(`${this.apiUrl}/comment/${commentId}/likes`);
   
 }
 
 
 getTotalDislikes(commentId: number): Observable<number> {
   
-  return this.http.get<number>(`/comment/${commentId}/dislikes`);
+  return this.http.get<number>(`${this.apiUrl}/comment/${commentId}/dislikes`);
   
 }
 disableComment(commentId: number): Observable<void> {
 
-  let url =`/comment/disable/${commentId}`;
+  let url =`${this.apiUrl}/comment/disable/${commentId}`;
   return this.http.patch<void>(url, {});
 }
 
 // Activer un commentaire
 enableComment(commentId: number): Observable<void> {
-  let url =`/comment/enable/${commentId}`;
+  let url =`${this.apiUrl}/comment/enable/${commentId}`;
   return this.http.patch<void>(url, {});
 }
 
 
 getCommentById(id: number): Observable<any> {
 
-  let url=`/comment/${id}`;
+  let url=`${this.apiUrl}/comment/${id}`;
   return this.http.get<any>(url);
 }
 
 getCommentsByPostId(postId: number): Observable<Comment[]> {
-  return this.http.get<Comment[]>(`/comment/poste/comments/${postId}`);
+  return this.http.get<Comment[]>(`${this.apiUrl}/comment/poste${this.apiUrl}/comments/${postId}`);
 }
 
 getChildById(commentId: number): Observable<Comment[]> {
-  return this.http.get<Comment[]>(`/comment/child/${commentId}`);
+  return this.http.get<Comment[]>(`${this.apiUrl}/comment/child/${commentId}`);
 }
 getCommentWithParent(commentId: number): Observable<Comment> 
 {
-  return this.http.get<Comment>(`/comment/with-parent/${commentId}`);
+  return this.http.get<Comment>(`${this.apiUrl}/comment/with-parent/${commentId}`);
 }
 
 getCommentHierarchy(commentId: number): Observable<Comment[]> {
-  return this.http.get<Comment[]>(`/comment/hierarchy/${commentId}`);
+  return this.http.get<Comment[]>(`${this.apiUrl}/comment/hierarchy/${commentId}`);
 }
 triggerListUpdated(): void {
   this.listUpdatedSource.next();

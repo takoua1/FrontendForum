@@ -7,6 +7,7 @@ import { BehaviorSubject, Observable, Subject, catchError, map, observable, tap,
 import { Poste } from '../model/poste';
 import { TokenStorageService } from './token-storage.service';
 import { Comment } from '../model/comment';
+import { environment } from 'src/environments/environment.prod';
 @Injectable({
   providedIn: 'root'
 })
@@ -15,7 +16,7 @@ export class PosteService {
   private postesSource = new BehaviorSubject<any[]>([]);
   private filteredPostesSource = new BehaviorSubject<any[]>([]);
   currentPostes = this.filteredPostesSource.asObservable();
-  
+  private apiUrl = environment.apiUrl;
   postes$ = this.postesSource.asObservable();
   private totalLikesSubject: Subject<{ postId: number, totalLikes: number }> = new Subject<{ postId: number, totalLikes: number }>();
   private allPostes: any[] = []; 
@@ -26,7 +27,7 @@ export class PosteService {
  }
 
  /*fetchPosts(page: number, pageSize: number): Observable<any> {
-  const url = `/poste/findAll?page=${page}&size=${pageSize}`;
+  const url = `${this.apiUrl}/poste/findAll?page=${page}&size=${pageSize}`;
   return this.http.get<any>(url).pipe(
      tap(posts => {
        this.postsSubject.next(posts);
@@ -38,7 +39,7 @@ export class PosteService {
  fetchPosts(): Observable<any> {
 
   const headers = new HttpHeaders().set('Content-Type', 'application/json');
-  const url = `/poste/findAll`;
+  const url = `${this.apiUrl}/poste/findAll`;
   return this.http.get<any[]>(url).pipe(
      tap(posts => {
        this.allPostes = posts; // Mettez à jour la liste complète des "postes"
@@ -80,15 +81,15 @@ listePoste(): Observable<any[]> {
  addPoste(poste: any): Observable<any> {
     // Ici, vous devez implémenter la logique pour ajouter le poste à votre backend
     // Après avoir ajouté le poste avec succès, mettez à jour le BehaviorSubject
-    return this.http.post<any>(`/poste/add`, poste).pipe(
+    return this.http.post<any>(`${this.apiUrl}/poste/add`, poste).pipe(
       tap(() => this.fetchPosts()) // Recharge la liste des postes après l'ajout
     );
  }
  addcommentToPoste(comment:Comment)
-{return this.http.post<Comment>(`/poste/addComment`,comment).pipe( tap(() => this.fetchPosts()));}
+{return this.http.post<Comment>(`${this.apiUrl}/poste/addComment`,comment).pipe( tap(() => this.fetchPosts()));}
  
 addPosteWithImage(message: string, category: string, file:File | null, id: number): Observable<any> {
-  let url = `/poste/addPostWithImage/${id}`;
+  let url = `${this.apiUrl}/poste/addPostWithImage/${id}`;
   const formData: FormData = new FormData();
  
   // Ajout des données au FormData
@@ -118,7 +119,7 @@ addPosteWithImage(message: string, category: string, file:File | null, id: numbe
  }
 updatePoste(message: string, category: string, file: File | null, deleteImage: boolean ,id: number): Observable<Poste> {{
 
-  var url = `/poste/updatePoste/${id}`;
+  var url = `${this.apiUrl}/poste/updatePoste/${id}`;
  
   const formData: FormData = new FormData();
  
@@ -145,19 +146,19 @@ updatePoste(message: string, category: string, file: File | null, deleteImage: b
   );
     }}
     getTotalLikes(postId: number): Observable<number> {
-      return this.http.get<number>(`/poste/${postId}/likes`);
+      return this.http.get<number>(`${this.apiUrl}/poste/${postId}/likes`);
       
     }
     
   
     getTotalDislikes(postId: number): Observable<number> {
-      return this.http.get<number>(`/poste/${postId}/dislikes`);
+      return this.http.get<number>(`${this.apiUrl}/poste/${postId}/dislikes`);
       
     }
   
   
     deletePoste(id: number): Observable<any> {
-      const url = `/poste/delete/${id}`;
+      const url = `${this.apiUrl}/poste/delete/${id}`;
   
       return this.http.delete(url,{ responseType: 'text' }).pipe(
         tap(() => this.fetchPosts()),
@@ -170,24 +171,24 @@ updatePoste(message: string, category: string, file: File | null, deleteImage: b
 
     disablePost(posteId: number): Observable<void> {
 
-      let url=`/poste/disable/${posteId}`
+      let url=`${this.apiUrl}/poste/disable/${posteId}`
       return this.http.patch<void>(url, {});
     }
   
     // Activer un post
     enablePost(posteId: number): Observable<void> {
-        let url=`/poste/enable/${posteId}`
+        let url=`${this.apiUrl}/poste/enable/${posteId}`
       return this.http.patch<void>(url, {});
     }
     getPosteById(id: number): Observable<any> {
 
-      let url=`/poste/${id}`;
+      let url=`${this.apiUrl}/poste/${id}`;
       return this.http.get<any>(url);
     }
 
 
     getPostCountByUser(userId: number): Observable<number> {
-      let url=`/poste/count/${userId}`
+      let url=`${this.apiUrl}/poste/count/${userId}`
       return this.http.get<number>(url);
     }
 }

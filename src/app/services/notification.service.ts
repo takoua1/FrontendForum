@@ -5,6 +5,7 @@ import SockJS from 'sockjs-client';
 import { Notification } from '../model/notification';
 import { BehaviorSubject, Observable, Subject, catchError, tap, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment.prod';
 @Injectable({
   providedIn: 'root'
 })
@@ -15,14 +16,14 @@ export class NotificationService {
   private notificationsSubject: BehaviorSubject<Notification[]> = new BehaviorSubject<Notification[]>([]);
   public notifications$: Observable<Notification[]> = this.notificationsSubject.asObservable();
  
-
+  private apiUrl = environment.apiUrl;
   constructor(private token :TokenStorageService,private http: HttpClient) { 
     this.initializeWebSocketConnection();
     this.connect();
   }
 
   private initializeWebSocketConnection() {
-    const socket = new SockJS('/chat-socket'); // Remplacez par votre endpoint WebSocket
+    const socket = new SockJS(`${this.apiUrl}/chat-socket`); // Remplacez par votre endpoint WebSocket
     this.stompClient = Stomp.over(socket);
 
     this.connectedPromise = new Promise((resolve, reject) => {
@@ -71,11 +72,11 @@ export class NotificationService {
   }
   getUnreadCount(username: string): Observable<number> {
 
-    let url =`/notification/unread-count/${username}`;
+    let url =`${this.apiUrl}/notification/unread-count/${username}`;
     return this.http.get<number>(url);
   }
   getNotificationsForUser(username:any){
-    const url = `/notification/user/${username}`;
+    const url = `${this.apiUrl}/notification/user/${username}`;
   return this.http.get<any[]>(url).pipe(
     tap((data) => 
         this.notificationsSubject.next(data),
@@ -85,12 +86,12 @@ export class NotificationService {
 }
 
   public markNotificationsAsRead(username: string): Observable<any> {
-    let url =`/notification/markAsRead/${username}`;
+    let url =`${this.apiUrl}/notification/markAsRead/${username}`;
     return this.http.put(url, {});
   }
 
   deleteNotification(id: number): Observable<void> {
-     let url =`/notification/delete/${id}`;
+     let url =`${this.apiUrl}/notification/delete/${id}`;
      return this.http.delete<void>(url).pipe(
       tap(() => {
         const currentNotifications = this.notificationsSubject.value;
@@ -101,17 +102,17 @@ export class NotificationService {
   }
 
   disableNotification(notificationId: number): Observable<any> {
-    return this.http.put(`/notification/disable/${notificationId}`, {});
+    return this.http.put(`${this.apiUrl}/notification/disable/${notificationId}`, {});
   }
 
 
   updateNotification(id: number, notification: Notification): Observable<Notification> {
-    const url = `/notification/update/${id}`;
+    const url = `${this.apiUrl}/notification/update/${id}`;
     return this.http.put<Notification>(url, notification);
   }
 
   findByIdNotification(id:number):Observable<any>{
-    const url = `/notification/findById/${id}`;
+    const url = `${this.apiUrl}/notification/findById/${id}`;
     return this.http.get<any>(url);
 
   }

@@ -11,14 +11,14 @@ import { ChatNotification } from '../model/chat-notification';
 import { Groupe } from '../model/groupe';
 import { GroupService } from './group.service';
 import { UserService } from './user.service';
-
+import { environment } from 'src/environments/environment.prod';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatService {
  private stompClient: any;
-  
+ private apiUrl = environment.apiUrl;
   private socket: any;
   private activeChatUserId = new BehaviorSubject<number | null>(null);
   activeChatUserId$ = this.activeChatUserId.asObservable();
@@ -80,7 +80,7 @@ private unreadCountSubject = new Subject<number>();
       return; // Empêche la réinitialisation d'une connexion existante
     }
     
-    const socket = new SockJS('/chat-socket');
+    const socket = new SockJS(`${this.apiUrl}/chat-socket`);
     this.stompClient = Stomp.over(socket);
   
     this.connectedPromise = new Promise((resolve, reject) => {
@@ -500,7 +500,7 @@ getGroupTypingStatus(groupId: number): Observable<any> {
           const formData = new FormData();
           formData.append('file', file, file.name);
   
-          fetch('/chat/upload', {
+          fetch(`${this.apiUrl}/chat/upload`, {
               method: 'POST',
               body: formData
           })
@@ -528,7 +528,7 @@ getGroupTypingStatus(groupId: number): Observable<any> {
         
 
         // Envoie le fichier séparément via HTTP
-        fetch('/chat/upload', {
+        fetch(`${this.apiUrl}/chat/upload`, {
             method: 'POST',
             body: formData
         })
@@ -555,7 +555,7 @@ getGroupTypingStatus(groupId: number): Observable<any> {
       formData.append('file', audioBlob, 'audio.ogg');
      
 
-      fetch('/chat/upload', {
+      fetch(`${this.apiUrl}/chat/upload`, {
           method: 'POST',
           body: formData
       })
@@ -612,7 +612,7 @@ sendGroup(message: Message, groupe:Groupe ,msg: any, file: File | null, audioBlo
       
 
       // Envoie le fichier séparément via HTTP
-      fetch('/chat/upload', {
+      fetch(`${this.apiUrl}/chat/upload`, {
           method: 'POST',
           body: formData
       })
@@ -638,7 +638,7 @@ sendGroup(message: Message, groupe:Groupe ,msg: any, file: File | null, audioBlo
     console.log('audio url', audioUrl,'audioBob',audioBlob);
     formData.append('file', audioBlob, 'audio.ogg');
 
-    fetch('/chat/upload', {
+    fetch(`${this.apiUrl}/chat/upload`, {
         method: 'POST',
         body: formData
     })
@@ -680,7 +680,7 @@ sendGroup(message: Message, groupe:Groupe ,msg: any, file: File | null, audioBlo
  
   findAllChat(): Observable<any> {
   {
-   const url=`/chat/chats`;
+   const url=`${this.apiUrl}/chat/chats`;
    return this.http.get<any[]>(url);
 
   }
@@ -688,21 +688,21 @@ sendGroup(message: Message, groupe:Groupe ,msg: any, file: File | null, audioBlo
 }
 getChatsForMember(userId:number):Observable<any[]>{
   let headers = new HttpHeaders({'Content-Type': 'application/json', Authorization:'Bearer '+ this.token.getToken() })
-  const url=`/chat/member/${userId}`;
+  const url=`${this.apiUrl}/chat/member/${userId}`;
   return this.http.get<any[]>(url, { headers });
 }
 getChatMembers(chatId:number):Observable<any>
 {
-  const url =`/chat/members/${chatId}`;
+  const url =`${this.apiUrl}/chat/members/${chatId}`;
   return this.http.get<any[]>(url);
 }
 getChatMessages(chatId:number):Observable<any>{
-  const url =`/chat/messages/${chatId}`;
+  const url =`${this.apiUrl}/chat/messages/${chatId}`;
   return this.http.get<any[]>(url);
 }
 
 getCommonChats(memberId1: number, memberId2: number): Observable<any> {
-  const url =`/chat/common-chats/${memberId1}/${memberId2}`;
+  const url =`${this.apiUrl}/chat/common-chats/${memberId1}/${memberId2}`;
   return this.http.get<any>(url);
 }
 setCurrentGroupId(groupId: number) {
@@ -713,18 +713,18 @@ getCurrentGroupId(): Observable<number | null> {
   return this.currentGroupId.asObservable();
 }
 markAllChatMessagesRead(chatId: number): Observable<void> {
- const url =`/chat/chats/mark-all-read/${chatId}`;
+ const url =`${this.apiUrl}/chat/chats/mark-all-read/${chatId}`;
   return this.http.patch<void>(url, {});
 }
 
 getUnreadMessageCount(chatId: number, username: string): Observable<number> {
 
-  const url =`/chat/unread-count/${chatId}/${username}`;
+  const url =`${this.apiUrl}/chat/unread-count/${chatId}/${username}`;
   return this.http.get<number>(url);
 }
 getUnreadTotal(username: string): Observable<number> {
 
-  const url =`/chat/unread-total/${username}`;
+  const url =`${this.apiUrl}/chat/unread-total/${username}`;
   return this.http.get<number>(url);
 }
 
@@ -737,7 +737,7 @@ getUnreadCountUpdates(): Observable<number> {
   return this.unreadCountSubject.asObservable();
 }
 markMessagesAsRead(chatId: number, username: string): Observable<void> {
-  const url =`/chat/messages/mark-read/${chatId}/${username}`;
+  const url =`${this.apiUrl}/chat/messages/mark-read/${chatId}/${username}`;
   return this.http.patch<void>(url, {});
 }
 
@@ -760,7 +760,7 @@ send(destination: string, body: any) {
 }
 
 deleteMessage(messageId: number): void {
-  this.http.delete(`/message/${messageId}`).subscribe({
+  this.http.delete(`${this.apiUrl}/message/${messageId}`).subscribe({
     next: () => {
       console.log(`Message avec ID ${messageId} supprimé avec succès`);
       this.stompClient.send("/app/delete-message", {}, JSON.stringify({ id: messageId }));
@@ -775,7 +775,7 @@ deleteMessage(messageId: number): void {
   });
 }
 deleteChat(chatId: number): void {
- const url =`/chat/${chatId}`;
+ const url =`${this.apiUrl}/chat/${chatId}`;
 
    this.http.delete<void>(url).subscribe({
     next: () => {
@@ -793,7 +793,7 @@ deleteChat(chatId: number): void {
 }
 
 deleteGroup(groupId: number): void {
-  const url =`/groupe/${groupId}`;
+  const url =`${this.apiUrl}/groupe/${groupId}`;
  
     this.http.delete<void>(url).subscribe({
      next: () => {
@@ -811,7 +811,7 @@ deleteGroup(groupId: number): void {
  }
  
  quitterGroup(groupId: number, userId: number): void {
-  const url = `/groupe/quitter/${groupId}/${userId}`;
+  const url = `${this.apiUrl}/groupe/quitter/${groupId}/${userId}`;
 
   this.http.patch<void>(url, {}).subscribe({
     next: () => {
@@ -828,7 +828,7 @@ deleteGroup(groupId: number): void {
   });
 }
 blockMember(groupId: number, username: string): void {
-  const url = `/groupe/${groupId}/block/${username}`;
+  const url = `${this.apiUrl}/groupe/${groupId}/block/${username}`;
   this.http.patch<void>(url, {}).subscribe({
     next: () => {
       console.log('Membre bloqué avec succès');
@@ -842,7 +842,7 @@ blockMember(groupId: number, username: string): void {
 
 
 unblockMember(groupId: number, username: string): void {
-  const url = `/groupe/${groupId}/unblock/${username}`;
+  const url = `${this.apiUrl}/groupe/${groupId}/unblock/${username}`;
   this.http.patch<void>(url, {}).subscribe({
     next: () => {console.log('Membre débloqué avec succès')
 
@@ -852,7 +852,7 @@ unblockMember(groupId: number, username: string): void {
   });
 }
 deleteMember(groupId: number, username: string): void {
-  const url = `/groupe/${groupId}/deleteMember/${username}`;
+  const url = `${this.apiUrl}/groupe/${groupId}/deleteMember/${username}`;
   this.http.patch<void>(url, {}).subscribe({
     next: () => {console.log('Membre supprimé avec succès')
 
@@ -862,7 +862,7 @@ deleteMember(groupId: number, username: string): void {
   });
 }
 getAdmin(groupId: number, username: string): void {
-  const url = `/groupe/${groupId}/getAdmin/${username}`;
+  const url = `${this.apiUrl}/groupe/${groupId}/getAdmin/${username}`;
   this.http.patch<void>(url, {}).subscribe({
     next: () => {console.log('Membre soit avec succès')
 
@@ -887,7 +887,7 @@ updateGroupe(groupeId: number, name:string,category:string, file: File | null): 
     formData.append('file', new Blob([]) ,''); // Ajoute une chaîne vide
   }
  
-    return this.http.patch(`/groupe/update/${groupeId}`, formData).pipe(
+    return this.http.patch(`${this.apiUrl}/groupe/update/${groupeId}`, formData).pipe(
     tap((response: any) => {
       this.stompClient.send("/app/topic/group-update", {}, JSON.stringify({ id: groupeId }));
       console.log("Groupe modifié avec succès", response);

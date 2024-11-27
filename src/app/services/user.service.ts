@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable, catchError, map, switchMap, tap, throwErro
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { User } from '../model/user';
+import { environment } from 'src/environments/environment.prod';
 @Injectable({
   providedIn: 'root'
 })
@@ -12,11 +13,12 @@ export class UserService {
   private usersSource = new BehaviorSubject<any[]>([]);
   private filteredUsersSource = new BehaviorSubject<any[]>([]);
   currentUsers = this.filteredUsersSource.asObservable();
+  private apiUrl = environment.apiUrl;
   findByUsername(username:string)
   { 
     let headers = new HttpHeaders({'Content-Type': 'application/json', Authorization:'Bearer '+ this.tokenStorage.getToken() })
     console.log(this.tokenStorage.getToken());
-    var url=`/user/findByUsername/${username}`;
+    var url=`${this.apiUrl}/user/findByUsername/${username}`;
      console.log("//////////");
     
     return this.http.get<User>(url ,{headers:headers});
@@ -25,18 +27,18 @@ export class UserService {
   { 
     let headers = new HttpHeaders({'Content-Type': 'application/json', Authorization:'Bearer '+ this.tokenStorage.getToken() })
     console.log(this.tokenStorage.getToken());
-    var url=`/user/findById/${id}`;
+    var url=`${this.apiUrl}/user/findById/${id}`;
      console.log("//////////");
     
     return this.http.get<User>(url ,{headers:headers});
   }
   updateUser(id: number, user: User): Observable<any> {
-    const url = `/user/update/${id}`;
+    const url = `${this.apiUrl}/user/update/${id}`;
     return this.http.patch<any>(url, user);
 }
   updateUserImage(file: File, id: number): Observable<any> {
     let headers = new HttpHeaders({ 'Authorization': 'Bearer ' + this.tokenStorage.getToken() });
-    var url = `/user/uploadImage/${id}`;
+    var url = `${this.apiUrl}/user/uploadImage/${id}`;
     const formData: FormData = new FormData();
     formData.append('file', file, file.name);
     return this.http.put<string>(url, formData).pipe(
@@ -47,7 +49,7 @@ export class UserService {
     );
    }
    findAll(): Observable<any[]> {
-    const url = `/user/findAll`;
+    const url = `${this.apiUrl}/user/findAll`;
     return this.http.get<any[]>(url);
  }
 
@@ -72,17 +74,17 @@ checkUserExists(filteredUsers: any[], searchUsername: string, searchEmail: strin
 
 
  connectUser(user: any): Observable<any> {
-  const url=`/user/connect`
+  const url=`${this.apiUrl}/user/connect`
   return this.http.put(url, user);
 }
 getOfflineDuration(username:string):Observable<string>
  {
-   const url =`/user/offline-duration/${username}`;
+   const url =`${this.apiUrl}/user/offline-duration/${username}`;
    return this.http.get(url, {responseType: 'text' });
  }
 
  changePassword(passwordData: ChangePasswordRequest): Observable<any> {
-  const url=`/user/change-password`;
+  const url=`${this.apiUrl}/user/change-password`;
   return this.http.put(url, passwordData, { responseType: 'text' }).pipe(
     catchError(error=> {
       console.error("error upadte paswword",error);

@@ -4,6 +4,7 @@ import { Observable, Subject } from 'rxjs';
 import { TokenStorageService } from './token-storage.service';
 import { Chat } from '../model/chat';
 import { Groupe } from '../model/groupe';
+import { environment } from 'src/environments/environment.prod';
 
 @Injectable({
   providedIn: 'root'
@@ -12,13 +13,13 @@ import { Groupe } from '../model/groupe';
 
 export class GroupService {
   private groupeListUpdatedSource = new Subject<void>();
-  
+  private apiUrl = environment .apiUrl;
    groupeListUpdated$ = this.groupeListUpdatedSource.asObservable();
   constructor(private http: HttpClient, private token:TokenStorageService) {}
 
 
   addGroupe(groupe:Groupe, file:File | null): Observable<any> {
-    let url = `/groupe/addGroupe/${groupe.userCreature.id}`;
+    let url = `${this.apiUrl}/groupe/addGroupe/${groupe.userCreature.id}`;
 
     const formData: FormData = new FormData();
  
@@ -43,7 +44,7 @@ export class GroupService {
   }
 
   listerGroupe(userId:number ):Observable<any>
-  { let url=`/groupe/my-groups/${userId}`;
+  { let url=`${this.apiUrl}/groupe/my-groups/${userId}`;
  
      return this.http.get<any>(url);
   }
@@ -53,19 +54,19 @@ export class GroupService {
   }
   chatByGroup(groupId:number):Observable<Chat>
   {
-    let url=`/groupe/getChat/${groupId}`;
+    let url=`${this.apiUrl}/groupe/getChat/${groupId}`;
     return this.http.get<Chat>(url);
   }
   findAll():Observable<Groupe[]>
   
   {
-    let url =`/groupe/findAll`;
+    let url =`${this.apiUrl}/groupe/findAll`;
     return this.http.get<Groupe[]>(url);
   }
 
   addMember(groupeId:number,userId:number):Observable<Groupe>
   {
-    let url=`/groupe/addMember/${groupeId}/${userId}`;
+    let url=`${this.apiUrl}/groupe/addMember/${groupeId}/${userId}`;
     return this.http.put<Groupe>(url, {});
   }
 
