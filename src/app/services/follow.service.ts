@@ -36,13 +36,13 @@ export class FollowService {
   }
 
   getFollowedUsers(userId: number): Observable<User[]> {
-    let url=`${this.apiUrl}/follow${this.apiUrl}/followed/${userId}`
+    let url=`${this.apiUrl}/follow/followed/${userId}`
     return this.http.get<User[]>(url);
   }
 
   // Liste des utilisateurs qui suivent
   getFollowers(userId: number): Observable<User[]> {
-    let url=`${this.apiUrl}/follow${this.apiUrl}/followers/${userId}`
+    let url=`${this.apiUrl}/follow/followers/${userId}`
     return this.http.get<User[]>(url);
   }
 }
