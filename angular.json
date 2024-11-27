@@ -23,6 +23,7 @@
             "main": "src/main.ts",
             "outputPath": "dist/ForumSocialX",
             "index": "src/index.html",
+            "baseHref": "/",
             "polyfills": [
               "src/polyfills.ts"
             ],
