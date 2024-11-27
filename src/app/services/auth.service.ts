@@ -40,7 +40,7 @@ export class AuthService implements OnDestroy{
   login(username:string,password:string):Observable<any>
   {
    
-  return this.http.post<any>(`${this.apiUrl}/api/auth/signin`,
+  return this.http.post<any>(`/api/auth/signin`,
  {username,password}).pipe(map(response=>{
  if(response.message_Error!=null)
  {
