@@ -8,6 +8,7 @@ import { Poste } from '../model/poste';
 import { TokenStorageService } from './token-storage.service';
 import { Comment } from '../model/comment';
 import { environment } from 'src/environments/environment.prod';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -16,7 +17,7 @@ export class PosteService {
   private postesSource = new BehaviorSubject<any[]>([]);
   private filteredPostesSource = new BehaviorSubject<any[]>([]);
   currentPostes = this.filteredPostesSource.asObservable();
-  private apiUrl = environment.apiUrl;
+  private apiUrl = environment .apiUrl;
   postes$ = this.postesSource.asObservable();
   private totalLikesSubject: Subject<{ postId: number, totalLikes: number }> = new Subject<{ postId: number, totalLikes: number }>();
   private allPostes: any[] = []; 
@@ -38,7 +39,7 @@ export class PosteService {
  }*/
  fetchPosts(): Observable<any> {
 
-  const headers = new HttpHeaders().set('Content-Type', 'application/json');
+
   const url = `${this.apiUrl}/poste/findAll`;
   return this.http.get<any[]>(url).pipe(
      tap(posts => {
