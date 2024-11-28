@@ -174,7 +174,7 @@ export class AuthService implements OnDestroy{
       return from([]); // Retourner un observable vide si le refresh_token est introuvable
     }
 
-    return this.http.post<any>(`/api/auth/refresh-token`, {}, {
+    return this.http.post<any>(`${this.apiUrl}/auth/refresh-token`, {}, {
       headers: new HttpHeaders({
         Authorization: `Bearer ${refreshToken}`,
       }),
