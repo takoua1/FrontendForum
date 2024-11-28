@@ -1,7 +1,7 @@
 import { Injectable, NgZone, OnDestroy } from '@angular/core';
 
 import { TokenStorageService } from './token-storage.service';
-import { BehaviorSubject, Observable, Subscription, fromEvent, interval, map, merge, tap, timer } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription, catchError, from, fromEvent, interval, map, merge, tap, timer } from 'rxjs';
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { User } from '../model/user';
@@ -168,6 +168,29 @@ export class AuthService implements OnDestroy{
   resetPassword(token: string, newPassword: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/auth/reset-password`, { token:token, password: newPassword });
   }
- 
+  public refreshToken(): Observable<any> {
+    const refreshToken = this.tokenStorage.getRefreshToken();
+    if (!refreshToken) {
+      return from([]); // Retourner un observable vide si le refresh_token est introuvable
+    }
+
+    return this.http.post<any>(`/api/auth/refresh-token`, {}, {
+      headers: new HttpHeaders({
+        Authorization: `Bearer ${refreshToken}`,
+      }),
+    }).pipe(
+      tap((response) => {
+        // Sauvegarder les nouveaux jetons dans le service de stockage
+        this.tokenStorage.saveToken(response.access_token);
+        this.tokenStorage.saveRefreshToken(response.refresh_token);
+      }),
+      catchError((error) => {
+        console.error('Token refresh failed', error);
+        this.logout(); // Déconnecter l'utilisateur
+        // Vous pouvez aussi afficher un message d'erreur à l'utilisateur ici
+        return from([]); // ou renvoyer un observable d'erreur
+      })
+    );
+  }
 }
 
