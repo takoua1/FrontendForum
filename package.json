@@ -26,13 +26,15 @@
     "@capacitor/core": "^6.1.2",
     "@capacitor/ios": "^6.1.2",
     "@ctrl/ngx-emoji-mart": "^9.2.0",
+    "@peculiar/webcrypto": "^1.5.0",
     "@stomp/ng2-stompjs": "^8.0.0",
     "@stomp/stompjs": "^7.0.0",
     "@types/sockjs-client": "^1.5.4",
     "@types/stompjs": "^2.3.9",
     "boxicons": "^2.1.4",
+    
     "cors": "^2.8.5",
-    "crypto-js": "^4.2.0",
+  
     "emoji-button": "@joeattardi/emoji-button",
     "emoji-mart": "^5.6.0",
     "emoji-picker-element": "^1.22.4",
@@ -42,16 +44,19 @@
     "moment": "^2.30.1",
     "ngx-pagination": "^6.0.3",
     "ngx-socket-io": "^4.6.1",
-    "popper.js": "@popperjs/core",
+   
+ 
+    
     "rimraf": "^4.0.0",
     "rollup": "^3.0.0",
     "rxjs": "^7.8.0",
     "socket.io-client": "^4.7.5",
     "sockjs-client": "^1.6.1",
     "stream": "^0.0.2",
-    "stream-browserify": "^3.0.0",
+ 
     "tslib": "^2.3.0",
     "twemoji": "^14.0.2",
+    "vm-browserify": "^1.1.2",
     "zone.js": "~0.15.0"
   },
   "devDependencies": {
@@ -65,6 +70,7 @@
     "karma-coverage": "~2.0.3",
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "~1.7.0",
+    "ngx-build-plus": "^18.0.0",
     "typescript": "^5.6.3",
     "webpack": "^5.96.1",
     "webpack-cli": "^4.10.0"

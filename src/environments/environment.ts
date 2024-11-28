@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'https://backendforum-8dpz.onrender.com/api'
+  apiUrl: 'https://backendforum-8dpz.onrender.com'
 };
 
 /*
