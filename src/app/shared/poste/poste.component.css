@@ -5,6 +5,8 @@
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
   }
+/* Rendre ce conteneur responsive */
+
 
   .raw {
     top: 0;
@@ -26,11 +28,13 @@
   
     width: calc(100% - 250px);
   }*/
+
+ 
   .contenu {
     position: absolute;
     border-radius: 6px;
     top:22rem;
-  
+    width: 80vw;
     left: 3%;
     padding: 20px;
     color: #626262;
@@ -1997,7 +2001,19 @@
     cursor: pointer;
     color: #007bff;
 }
-  
+@media (max-width: 768px) {
+  .contenu {
+    left: 5%;
+    width: 90%;
+  }
+}
+
+@media (max-width: 480px) {
+  .contenu {
+    left: 10%;
+    width: 80%;
+  }
+}
  /* .comment .commentContainer .commentUser{
     position: relative;
     margin-left: 100px;
