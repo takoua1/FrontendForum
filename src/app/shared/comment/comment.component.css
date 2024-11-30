@@ -76,13 +76,19 @@ position: relative;
     white-space: pre-wrap;
     margin-bottom: 20px;
     font-size: 25px;
-    font: 1em sans-serif;
-   display: inline-flex;
+    
+  
     font-family: 'Times New Roman', Times, serif;
    cursor: text;
-   word-wrap: break-word;
+   text-align: left;
+  /* word-wrap: break-word;
   overflow-wrap: break-word;
-  word-break: break-word;
+  word-break: break-word;*/
+  white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 25px;
+    font: 1em sans-serif;
+   width:80%;
   }
  
   .commentContainer .container   .bx-trash {
@@ -192,7 +198,7 @@ margin-top:-75px;
     padding-right:  75px;
     display: flex;
     left: 145px;
-   
+   margin-bottom: 1rem;
     resize: none;
     border: none;
   
@@ -202,7 +208,7 @@ margin-top:-75px;
     position:relative;
     width: 40px;
    
-    top:-4px;
+    top:-20px;
    display: flex;
   right: -81%;
  
@@ -669,6 +675,31 @@ float: right;
  
 .overlay.active{
   display: block;
+}
+
+@media (max-width:768px) {
+  .commentContainer .repText button{
+    right: -86%;
+  }
+  
+}
+@media (max-width: 480px) {
+
+  .commentContainer .commentUser {
+  left: -83px;
+  
+  }
+  .commentContainer .container{
+margin-left:31px ;
+width:94%;
+  }
+  .commentContainer .repText #textRep{
+left: 56px;
+width: 85%;
+  }
+  .repond-taille p{
+    right: 42px;
+  }
 }
 /*
 .childContainer .commentContainer  .commentUser .profile-img {

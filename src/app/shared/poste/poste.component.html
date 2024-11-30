@@ -199,8 +199,8 @@
         </div>
 
         <img [src]="user.image  ? user.image : '/assets/image/user.png'"  class="profile-img">
-
-        <textarea id="popupTextarea" rows="4" placeholder="Quoi de neuf ?"
+      
+        <textarea id="textPoste" rows="4" placeholder="Quoi de neuf ?"
           formControlName="messagePoste" [ngModel]="post.message"></textarea>
         <div class="drop-area" id="dropArea" (drop)="onFileDropped($event)" (dragover)="prevent($event)">
           <span class="drag-text"  [class.active]="hasImage">Glissez et déposez votre image ici ou </span>

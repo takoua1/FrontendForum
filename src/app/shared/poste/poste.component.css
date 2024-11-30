@@ -590,7 +590,7 @@
   width: 74%;
   top: -3em;
   display: flex;
-  left: 16%;
+  left: 4rem;
   margin-top: 10px;
 }
 
@@ -879,7 +879,7 @@ align-items: center;
 .popupCardUser .drop-area .image-preview {
   position: absolute;
   top: 0px;
-  left: 10px;
+  left: 24%;
   width: 300px;
 
   height: 200px;
@@ -1367,12 +1367,20 @@ body.no-scroll {
   text-decoration: none;
 }
 
-
+.popupPoste  .card-list .btnIte {
+  position: relative;
+    width: 74%;
+    top: 0em;
+    display: flex;
+    left: 9rem;
+    margin-top: 10px;
+}
 
 .popupPoste .card-list {
 
   box-sizing: border-box;
-  width: 900px;
+  max-width: 900px;
+  width: 100%;
   max-height: 600px;
 
   overflow-y: auto;
@@ -1505,7 +1513,7 @@ body.no-scroll {
 }
 
 .comment {
-
+  width: 100%;
   display: flex;
   flex-direction: column;
 }
@@ -1985,21 +1993,18 @@ app-comment {
 /*-----------------------css commentaitre--------------------------------*/
 .card-list .comment .commentText #textComm {
   position: relative;
-
-  top: 40px;
-
+  
+  top: -21px;
   border-radius: 10px;
   outline: none;
   transition: .2s ease;
-  width: 71%;
+  width: 75%;
   padding-left: 5px;
   padding-right: 75px;
   display: flex;
-  left: 136px;
-
+  left: 113px;
   resize: none;
   border: none;
-  margin-bottom: 60px;
 
 }
 
@@ -2014,7 +2019,7 @@ a {
 
   height: 25px;
 
-  left: 31%;
+  left: 34%;
   align-items: center;
   justify-content: center;
   border: none;
@@ -2083,7 +2088,7 @@ justify-content: center;
   color: #7e7e7e;
   float: right;
   font-size: 12px;
-  /* right: 0em; */
+   right: 3rem; 
 }
 
 
@@ -2150,8 +2155,18 @@ height: 40px;
   width: 90%;
 
   }
-  
+  .popupPoste {
+    margin-left: 6%;
+  }
+  .popupPoste .card-list{
 
+    width: 90%;
+  }
+
+  .comment .commentTaille {
+
+    margin-left: 28rem;
+  }
   }
 
 @media (max-width:768px) {
@@ -2208,12 +2223,9 @@ left: 10em;
 top: 12em;
   }
 
-  .card-list .comment .commentText #textComm {
-width: 100%;
-  }
 
   .card-list .comment .commentText button {
- left: 20%;
+ left: 33%;
   }
 
   .card-list .comment .commentText .image-preview {
@@ -2242,7 +2254,33 @@ top: 5px;
   cursor: pointer;
 visibility: hidden;
   }
-  
+  .popupCardUser .card-user {
+
+    height:436px ;
+  }
+
+  .popupCardUser .drop-area{
+    height: 48%;
+    top: 176px;
+    left: 47px;
+  }
+
+  .popupCardUser .select-menu-popup button{
+
+    top:388px;
+  }
+  .popupCardUser .card-user button{
+
+    top:388px; 
+  }
+  .card-user .select-menu-popup .categs{
+
+    top:420px;
+  }
+
+  .card-list .comment .commentText #textComm {
+    left: 70px;
+  }
 }
 
 
@@ -2281,6 +2319,13 @@ height: 40px;
 font-size: 12px;
   }
 
+  .popupPoste .card-list .btnIte {
+    left: 3rem;
+  }
+  .comment .commentTaille {
+    margin-left: 11rem;
+    font-size: 8px;
+}
   .card-user .select-menu .categs {
 width: 200px;
 height: 120px;
@@ -2296,12 +2341,9 @@ top: -9em;
   }
 
  
-  .card-list .comment .commentText #textComm {
-  width: 100%;
-  }
-
+ 
   .card-list .comment .commentText button {  
-  left: 20%;
+  left: 38%;
   }
   
 
@@ -2315,7 +2357,7 @@ top: -9em;
   }
 
   .card-list .comment .commentLenght p {
-  right: -5rem;
+  right: 0rem;
   font-size: 10px;}
 
   .card-list .comment .commentInfo p {
@@ -2378,5 +2420,17 @@ top: -9em;
  .alert-poste{
   margin-left: -2rem;
 }
+.card-list .user-profile p {
+  left: 2.3rem;
+}
+.popupCardUser .drop-area .image-preview {
 
+  left: 4%;
+}
+.card-list .comment .commentText #textComm {
+
+  top:-23px;
+  width: 90%;
+  left: 17px;
+}
 }
