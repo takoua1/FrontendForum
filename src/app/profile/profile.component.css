@@ -437,6 +437,8 @@ visibility: hidden;
 opacity: 0; 
 transition: opacity 0.5s ease-in-out, visibility 0s 0.5s;
 display: none;
+min-width :850px;
+width: 100%;
 
 }
 

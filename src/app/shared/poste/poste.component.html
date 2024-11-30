@@ -78,11 +78,11 @@
 
     <div *ngFor="let poste of filteredPostes" class="card-list" >
       <div class="user-profile" >
-        <div>
+        
           <p >{{poste.user.nom}} {{poste.user.prenom}}</p>
           <span> {{poste.dateCreate | date:'dd-MM-yy HH:mm'}}</span>
           <img [src]="poste.user.image ? poste.user.image : '/assets/image/user.png'" class="profile-img" (click)="navProfile(poste.user)" />
-        </div>
+        
       </div>
       <div class="containerPoste">
         <p class="post-text">

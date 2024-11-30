@@ -1,4 +1,5 @@
 * {
+  
     margin: 0;
   
     padding: 0;
@@ -352,7 +353,7 @@
     width: 250px;
     overflow-y: scroll;
     height: 150px;
-    left: 17rem;
+    left: 13em;
     border: 1px solid black;
     padding: 20px;
     margin-top: 10px;
@@ -429,12 +430,13 @@
   
    position: absolute;
     border-radius: 6px;
-  width: 100%;
-  max-width: 1000px;
 
+  border-radius: 6px;
+  width: 95%;
+    max-width: 1500px;
     justify-content: center;
     align-items: center;
-  left: 22%;
+   left: 3%;
     padding: 20px;
     color: #626262;
     display: flex;
@@ -480,10 +482,14 @@
   }
   
   .card-container .card-list .user-profile span {
+    position: absolute;
+    top: 2rem;
+    left: 40%;
     font-size: 13px;
     color: #9a9a9a;
+}
   
-  }
+  
   
   .card-container .card-list  .profile-img {
     position: absolute;
@@ -498,7 +504,7 @@
     position: absolute;
     top: 5px;
     left: 1rem;
-    /* display: flex; */
+    display: flex; 
     margin-left: 7%;
 }
   .card-list .containerPoste{
@@ -506,7 +512,7 @@
   position: relative;
     border-radius: 10px;
    width :80%;
-     margin: 39px;
+     margin: 51px;
     display: inline-block;
     border: 1px solid white;
     
@@ -2037,7 +2043,7 @@
 }
 @media (max-width: 768px) {
 .card-container {
-  width: 80%;
+  width: 100%;
 }
 
 .card-user {
@@ -2052,6 +2058,7 @@
   {
     width: 100px;
     height: 35px;
+    left: 27em;
     font-size: 12px;
   }
   .card-user .select-menu button {
@@ -2073,12 +2080,6 @@
     margin-left: 50px;
   }
   
-  
-  
-  .alert-poste {
-    font-size: 10px;
-    margin-left: 50px;
-  }
   
   .categs {
     width: 200px;
@@ -2118,7 +2119,9 @@
     cursor: pointer;
     visibility: hidden;
   }
-
+  .card-container .card-list{
+    left: 1rem;
+  }
 }
 
 
@@ -2126,278 +2129,68 @@
 
 @media (max-width: 480px) {
   .card-container {
-    width: 90%;
+    width: 100%;
   }
-}
-
- /* .comment .commentContainer .commentUser{
-    position: relative;
-    margin-left: 100px;
-  margin-bottom: 60px;
-  bottom: 25px;
-  }
-  
-  .comment .commentContainer .commentUser .profile-img {
-   
-  
-    width: 30px;
-  
-    border-radius: 50%;
-   
-  }
-  .comment .commentContainer .commentUser p{
-   position: absolute;
-    font-size: 14px;
-   margin-left: 50px;
-  
-  }
-  .comment .commentContainer .commentUser span {
-  position: relative;
-  top: 35px;
-  display: flex;
-  
-    color: black;
-    white-space:pre-line;
-    font-size: 25px;
-    font: 1em sans-serif;
-    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-   margin-left: 50px;
-  
-    bottom: 10px;
-    margin-right: 10%;
-   
-    cursor: text;
-  }
-  .comment .commentContainer  .btnCommIte {
-   position: relative;
-   width: 30%;
-   margin-top: 15px;
-   margin-left: 14%;
-   align-items: center;
-   justify-content: center;
-   left: 0;
-  
-  top: -40px;
-  }
-  .comment .commentContainer  .btnCommIte  button {
-    font-size: 12px;
-    width: 12%;
-    margin-top: 0;
-    background: linear-gradient(to bottom, #aab7d392 0%, #95a1ba92 100%);
-    color: white;
-    margin-left: 10%;
-  
-    align-items: center;
-    justify-content: center;
-    border: none;
-    border-radius: 25px;
-    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s;
-  }
-  .comment .commentContainer  .btnCommIte  button:hover {
-    transform: translateY(-3px);
-    box-shadow: 0px 8px 15px white;
-  }
-  
-  .comment .commentContainer  .btnCommIte button:active {
-    transform: scale(0.95);
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
-  }
-  
-  .card-list .comment .commentContainer .repText {
-  
-  
-    margin-top:15px;
-  }
-  
-  .card-list .comment .commentContainer .repText #textRep
-  {  position: absolute;
-  
-    margin-left: 17.5%;
-    margin-right: 17.5%;
-    
-    border-radius: 10px;
-    outline: none;
-    transition: .2s ease;
-    width: 65%;
-    padding-left: 5px;
-    padding-right:  75px;
-    display: flex;
-    left: 50px;
-  
-    resize: none;
-    border: none;
-  }
-  .comment .commentContainer .repText button{
-  position: relative;
-  float: right;
-    width: 40px;
-    height: 25px;
-    bottom:70px;
-    right: 167px;
-    align-items: center;
-    justify-content: center;
-    border: none;
-    border-radius: 10px;
-   
-  }
-  .comment .commentContainer .repText .bxs-send {
-    color: #66a6ff;
-  }
-  .comment .commentContainer .repText .bx-camera{
-    position: relative;
-    float: right;
-   font-size: 20px;
-    bottom:68px;
-    color:#69738b92 ;
-    right: 170px;
-  }
-
-/*
-  @media (max-width: 1370px){
-
-    .card-container {
-
-
-     width: 80%;
-    }
-
-  }
-  @media (max-width: 1220px){
-
-    .card-container {
-
-
-    
-    }
-
-  }
-  @media (max-width: 1105px){
-
-    .card-container {
-
-
-  
-    }
-
-  }
-
- /* @media (max-width: 1452px) {
-    .card-user {
-        width: 650px;
-        
-        top: 8rem;
-    }
-
-    .card-user button{
-
-      right:0.5rem;
-    }
-    .card-user .select-menu button{
-      width: 150px;
-      left:12rem;
-    }
-    .card-user .select-menu button,
-    .card-user .upload-image button {
-       
-        font-size: 10px;
-    }
-  
-    .card-container .card-list{
-    
-      width:850px;
-    }
-}
-@media (max-width: 1240px) {
   .card-user {
- 
-    left: 34%;
-   
-}
-
-.card-container .card-list{
-  left:30%;
-   
+    width: 84%;
+    left: 2.5%;
+    top: 5rem;
+  }
+  .card-user textarea {
+    height: 6rem;
+  }
+  .card-user button {
+    width: 100px;
+    height: 35px;
+    left: 27em;
+    font-size: 12px;
+  }
+  .card-user .select-menu button {
+    width: 120px;
+    top: -5em;
+    left: 11em;
+    height: 44px;
+    font-size: 12px;
+  }
+  .card-user .upload-image button {
+    width: 39px;
+    top: -8em;
+    height: 40px;
+  }
+  .alert-poste {
+    font-size: 10px;
+    margin-left: 50px;
+  }
+  .categs {
+    width: 200px;
+    height: 120px;
+  }
+  .card-list .comment .commentText #textComm {
+    width: 100%;
+  }
+  .card-list .comment .commentText button {
+    left: 20%;
+  }
+  .card-list .comment .commentText .image-preview {
+    width: 200px;
+    height: 150px;
+  }
+  .card-list .comment .commentText .bx-camera {
+    right: 100px;
+  }
+  .card-list .comment .commentLenght p {
+    margin-right: 4rem;
+  }
+  .card-list .comment .commentInfo p {
+    margin-left: -3px;
+    margin-bottom: 40px;
+    cursor: pointer;
+    color: #007bff;
+  }
+  .delete-icon {
+    top: 5px;
+    right: 5px;
+    cursor: pointer;
+    visibility: hidden;
   }
 }
-
-
-@media (max-width: 768px) {
-  .card-container .card-list{
-   
-    width:600px;
-  }
-
-}
-
-@media (max-width: 768px) {
-  .card-container .card-list{
-   
-    width:550px;
-  }
-
-}
-@media (max-width: 553px) {
-  .card-container .card-list{
-   
-    width:500px;
-  }
-
-}
-/*
-
-@media (max-width: 871px) {
-    .card-user {
-        width: 50%;
-        left: 2.5%;
-        top: 5rem;
-    }
-
-    .card-user textarea {
-        height: 6rem;
-    }
-
-    .card-user button, 
-    .card-user .select-menu button,
-    .card-user .upload-image button {
-        width: 80px;
-        height: 30px;
-        font-size: 9px;
-    }
-    
-    .alert-poste {
-        font-size: 10px;
-        margin-left: 50px;
-    }
-
-    .categs {
-        width: 200px;
-        height: 120px;
-    }
-}
-
-
-@media (max-width: 480px) {
-    .card-user {
-        width: 100%;
-        left: 0;
-        top: 4rem;
-    }
-
-    .card-user textarea {
-        height: 5rem;
-    }
-
-    .card-user button, 
-    .card-user .select-menu button,
-    .card-user .upload-image button {
-        width: 60px;
-        height: 25px;
-        font-size: 8px;
-    }
-
-    .categs {
-        width: 180px;
-        height: 100px;
-    }
-}*/
