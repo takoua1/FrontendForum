@@ -933,7 +933,7 @@ else{
     this.isOverlayVisible = false;
     this.isPopupVisible = false;
     this.isPopupPosteVisible=false;
-
+  this.isPopupConnectVisible=false;
     this.disableOverlay=false;
     const popupDelete = document.querySelector('.popupDelete') as HTMLElement;
     const overlay = document.querySelector('.overlay') as HTMLElement;
