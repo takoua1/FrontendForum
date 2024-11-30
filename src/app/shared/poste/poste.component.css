@@ -1,7 +1,8 @@
 * {
     margin: 0;
+  
     padding: 0;
-   
+      
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
   }
@@ -29,7 +30,7 @@
     width: calc(100% - 250px);
   }*/
 
- 
+
   .contenu {
     position: absolute;
     border-radius: 6px;
@@ -43,16 +44,39 @@
     transition: all 0.5s;
     
   }
-  
-  
-  
+@media (max-width: 768px) {
+  .contenu {
+    width: 100%;
+    padding: 10px;
+    left: 0;
+  }
+}
+
+/*rendre tous les cards respnsive*/
+.card-container .card-list li {
+  margin-top: 0;
+  text-decoration: none;
+}
+/*rendre tous les cards respnsive*/
+.card-container .card-list {
+  position: relative;
+  box-sizing: border-box;
+  max-width: 1000px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
   .card-user {
     position: relative; 
     top: 8rem; 
-   width: 700px;
-  
+   width: 90%;
+  max-width: 700px;
    
-    height: 13rem;
+    height: 15rem;
     background: rgba(217, 217, 217, 0.58);
     border: 1px solid white;
     box-shadow: 12px 17px 51px rgba(0, 0, 0, 0.22);
@@ -89,14 +113,14 @@
   }
   
   .card-user textarea {
-    position: absolute;
-    top: 0.5rem;
-    left: 1rem;
-    
+    position: relative;
+    margin-top: 0.5rem;
+  
+    width: calc(98% - 2rem);
     border-radius: 10px;
     outline: none;
     transition: .2s ease;
-    width: 90%;
+  
     display: flex;
    margin: 2rem;
     height: 8rem;
@@ -106,10 +130,11 @@
   }
   
   .card-user button {
-    position: fixed;
+    position: relative;
     font-size: 12px;
-    bottom: 0rem;
-    right: 4rem;
+    top: -2em;
+    padding: 0.5em 2em;
+    left: 45em;
     background: linear-gradient(to bottom, #4dc7d9 0%, #66a6ff 100%);
     color: white;
     padding: 0.5em 1em;
@@ -184,11 +209,13 @@
   
   
   .select-menu button {
-    position: fixed;
+    position: relative;
     font-size: 12px;
-    bottom: 0rem;
-    left: 20rem;
-  
+    top: -5.5em;
+    left: 20em;
+    height: 3.5em;
+  padding: 10px;
+  width: 90%;
   max-width: 135px;
     background: linear-gradient(to bottom, #aab7d392 0%, #95a1ba92 100%);
     color: white;
@@ -263,10 +290,11 @@
   }
   
   .card-user .upload-image button {
-    position: fixed;
+    position: relative;
     font-size: 12px;
-    bottom: 0rem;
-    left: 5rem;
+  top: -9em;
+  padding: 10px;
+    left: 3rem;
     width: 40px;
     height: 40px;
     background: linear-gradient(to bottom, #13d209 0%, #11ba08 100%);
@@ -395,12 +423,15 @@
   
   }
   
+/*rendre tous les cards respnsive*/
 
   .card-container {
   
    position: absolute;
     border-radius: 6px;
-  
+  width: 100%;
+  max-width: 1000px;
+
     justify-content: center;
     align-items: center;
   left: 22%;
@@ -412,16 +443,17 @@
     
  
   }
-  
+  /*rendre tous les cards respnsive*/
   .card-container .card-list li {
     margin-top: 0;
     text-decoration: none;
   }
-  
+  /*rendre tous les cards respnsive*/
   .card-container .card-list {
   position: relative;
     box-sizing: border-box;
-    width: 900px;
+    max-width: 1000px;
+    width: 90%;
     top:10rem;
    padding: 19px;
     background: rgba(217, 217, 217, 0.58);
@@ -465,14 +497,16 @@
   .card-list .user-profile p {
     position: absolute;
     top: 5px;
-    margin-left:7%;
-  }
+    left: 1rem;
+    /* display: flex; */
+    margin-left: 7%;
+}
   .card-list .containerPoste{
   
   position: relative;
     border-radius: 10px;
    width :80%;
-     margin: 10px;
+     margin: 39px;
     display: inline-block;
     border: 1px solid white;
     
@@ -2002,18 +2036,100 @@
     color: #007bff;
 }
 @media (max-width: 768px) {
-  .contenu {
-    left: 5%;
+.card-container {
+  width: 80%;
+}
+
+.card-user {
+  width: 84%;
+  left: 2.5%;
+  top: 5rem;
+}
+
+.card-user textarea {
+  height: 6rem;}
+  .card-user button
+  {
+    width: 100px;
+    height: 35px;
+    font-size: 12px;
+  }
+  .card-user .select-menu button {
+    width: 120px;
+    top: -5em;
+    left: 11em;
+    height: 44px;
+    font-size: 12px;
+}
+  .card-user .upload-image button {
+    width: 39px;
+    top: -8em;
+    height: 40px;
+}
+
+
+  .alert-poste {
+    font-size: 10px;
+    margin-left: 50px;
+  }
+  
+  
+  
+  .alert-poste {
+    font-size: 10px;
+    margin-left: 50px;
+  }
+  
+  .categs {
+    width: 200px;
+    height: 120px;
+  }
+
+  .card-list .comment .commentText #textComm {
+    width: 100%;
+  }
+
+  .card-list .comment .commentText button {
+    left: 20%;
+  }
+
+  .card-list .comment .commentText .image-preview {
+    width: 200px;
+    height: 150px;
+  }
+
+  .card-list .comment .commentText .bx-camera {
+    right: 100px;
+  }
+
+  .card-list .comment .commentLenght p {
+    margin-right: 4rem;
+  }
+  .card-list .comment .commentInfo p {
+    margin-left: -3px;
+    margin-bottom: 40px;
+    cursor: pointer;
+    color: #007bff;
+  }
+
+  .delete-icon {
+    top: 5px;
+    right: 5px;
+    cursor: pointer;
+    visibility: hidden;
+  }
+
+}
+
+
+
+
+@media (max-width: 480px) {
+  .card-container {
     width: 90%;
   }
 }
 
-@media (max-width: 480px) {
-  .contenu {
-    left: 10%;
-    width: 80%;
-  }
-}
  /* .comment .commentContainer .commentUser{
     position: relative;
     margin-left: 100px;

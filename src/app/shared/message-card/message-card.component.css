@@ -1219,7 +1219,7 @@ justify-content: center;
 	position: absolute;
 	bottom: 100px;
 	max-width: 300px;
-	
+	left: 5px;
 	height: 200px;  
 	overflow-y: auto;   
 	width: 320px;       
