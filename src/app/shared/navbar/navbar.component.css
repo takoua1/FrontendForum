@@ -1402,3 +1402,12 @@ margin-top: 10px;
   .overlay.active{
     display: block;
   }
+
+  @media (max-width: 768px) {
+
+    .main-content{
+
+      left:49px;
+      width: calc(100% - 49px);
+    }
+  }

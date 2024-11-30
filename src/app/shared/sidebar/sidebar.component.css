@@ -200,3 +200,69 @@ opacity: 0;
 .sidebar.active ul li .tooltip{
    display: none;
 }
+
+/* Base styles for the sidebar */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 88px;
+    height: 100%;
+    border-right: 1px solid #fff;
+    background-color: rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 0.4rem 0.8rem;
+    border-bottom-right-radius: 15px;
+    z-index: 1000;
+    transition: all 0.5s ease;
+  }
+  
+  .sidebar.active {
+    width: 220px;
+  }
+  
+  /* Adjustments for smaller screens */
+  @media (max-width: 768px) {
+    @media (max-width: 768px) {
+        /* Réduction de la largeur de la sidebar pour les petits écrans */
+        .sidebar {
+          width: 50px;
+        }
+      
+        /* Masquer les éléments sauf l'icône bx-menu */
+        .sidebar .profile,
+        .sidebar .nom,
+        .sidebar ul,
+        .sidebar .top .logo span {
+          display: none;
+        }
+      
+        /* Afficher les éléments dans l'état actif */
+        .sidebar.active .profile,
+        .sidebar.active .nom,
+        .sidebar.active ul,
+        .sidebar.active .top .logo span {
+          display: block;
+        }
+      
+        /* Toujours afficher l'icône bx-menu */
+        #btn {
+          display: block;
+          position: absolute;
+          top: 1rem;
+          left: 50%;
+          transform: translateX(-50%);
+          font-size: 25px;
+          color: #b1c0fa;
+          cursor: pointer;
+        }
+      
+        /* Ajuster le positionnement de l'icône dans l'état actif */
+        .sidebar.active #btn {
+          left: 90%;
+        }
+      }
+      
+    }
+ 
+ 
