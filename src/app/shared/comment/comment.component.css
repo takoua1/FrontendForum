@@ -691,15 +691,19 @@ float: right;
   }
   .commentContainer .container{
 margin-left:31px ;
-width:94%;
+width:92%;
   }
   .commentContainer .repText #textRep{
-left: 56px;
-width: 85%;
+left: 22px;
+width: 94%;
   }
   .repond-taille p{
     right: 42px;
   }
+  .commentContainer .commentUser p{
+  font-size: 14px;
+  }
+  
 }
 /*
 .childContainer .commentContainer  .commentUser .profile-img {

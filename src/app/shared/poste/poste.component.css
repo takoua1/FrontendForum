@@ -742,7 +742,7 @@
   pointer-events: auto;
   padding: 20px;
 
-  z-index: 9999;
+  z-index: 10000;
 }
 
 .popupCardUser .card-user {
@@ -2381,7 +2381,9 @@ top: -9em;
 
     left: 17%;
   }
-
+  .popupDelete {
+    left: 18%;
+  }
 
   .popupCardUser .card-user textarea{
 
@@ -2432,5 +2434,19 @@ top: -9em;
   top:-23px;
   width: 90%;
   left: 17px;
+}
+.card-list .user-profile p {
+  left: 2.3rem;
+  width: 227px;
+  font-size: 12px;
+}
+
+   .popupPoste .card-list .user-profile span {
+position: fixed;
+top: 10px;
+margin-left: 39%;
+width: 29%;
+font-size: 13px;
+color: #676767;
 }
 }
