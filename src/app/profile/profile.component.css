@@ -1794,6 +1794,8 @@ top:2rem;
 left: -3rem;
 }
 .action-follow  ,.action-block{
+  position: relative;
+  left: -1rem;
   min-width: 107px;
         line-height: 34px;
         font-size: 13px;
