@@ -1763,9 +1763,12 @@ font-size: 23px;
 		font-size: 23px;
 	}
 	.footer input{
-		width: 73%;
-		left: -1rem;
+		width: 75%;
+		left: -1.2rem;
 		position: relative;
+	}
+	footer.right{
+		right: 0rem;
 	}
   }
 
