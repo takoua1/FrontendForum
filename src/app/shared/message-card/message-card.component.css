@@ -1747,6 +1747,27 @@ transform: rotate(45deg);
 		width: 78%;
 	}
   }
+  @media (max-width:480px) {
+	.footer .joindre button{
+
+		width: 120px;
+	}
+	.footer .left i{
+left:0.2rem;
+font-size: 23px;
+	}
+	footer.right button
+	{
+		position: relative;
+		left: 1.5rem;
+		font-size: 23px;
+	}
+	.footer input{
+		width: 73%;
+		left: -1rem;
+		position: relative;
+	}
+  }
 
   @media (max-width: 955px) {
 
@@ -1775,10 +1796,10 @@ transform: rotate(45deg);
   }
   @media (max-width: 458px) {
 
-	.footer input
+	/*.footer input
 	{
 		width: 60%;
-	}
+	}*/
 	.progress-bar-container{
 
 		width: 60%;
