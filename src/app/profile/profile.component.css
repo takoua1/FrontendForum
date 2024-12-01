@@ -255,7 +255,7 @@ top:1.4rem;
   border: 1px solid white;
   box-shadow: 0 1rem 1.5rem rgba(0, 0, 0, 0.2);
 display: none;
-z-index: 20;
+z-index: 125;
 }
 
  .popup-content::before {
@@ -1716,6 +1716,9 @@ min-width: 380px;
     height: 50%;
     width: 50%;
   }
+  .sidebar{
+    height: 212px;
+  }
   .profilepic__text {
     font-size: 9px;
   }
@@ -1757,14 +1760,14 @@ min-width: 380px;
 }
 
 .profile-card__button {
-  min-width: 102px;
+  min-width: 99px;
   font-size:13px;
   min-height: 39px;
 }
 
 .profile-card-ctr {
-  top: 159px;
-  right: 20px;
+  top: 176px;
+  right: 6px;
   z-index: 10;
 }
 .profile-card-ctr .bxl-messenger {
@@ -1801,8 +1804,11 @@ left: -3rem;
         font-size: 13px;
 }
 .user-row .bxl-messenger
-{position: relative;
-  right:117px;
+{
+  position: relative;
+  right: 14px;
+  z-index: 10;
+
 }
 
 .header-friend .search input{
