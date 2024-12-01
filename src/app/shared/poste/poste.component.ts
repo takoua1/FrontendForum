@@ -144,6 +144,7 @@ export class PosteComponent implements OnInit {
     { name: 'Politique', icon: 'bx bxs-user-voice', selected: false },
     { name: 'Sport', icon: 'bx bx-football', selected: false },
   ] 
+  @Input() isProfile: boolean = false;
   reportTypes = [
     'Contenu à caractère sexuel',
     'Contenu violent ou abject',

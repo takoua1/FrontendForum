@@ -390,7 +390,7 @@
    
      
        
-  <app-poste id="posts"   #posteComponent class="section poste" [category]="'Catégorie'"  [profile]="user.id"   ></app-poste>
+  <app-poste id="posts"  #posteComponent class="section poste" [category]="'Catégorie'"  [profile]="user.id"   ></app-poste>
           
      
       <div class="section followers-list"  id="followers">
@@ -405,8 +405,8 @@
                 <div class="user-row">
                 <div class="user-info" (click)="navProfile(follower)">
                   <img [src]= "follower.image ?   follower.image : '/assets/image/user.png'"  alt="user"/>
-                  <span>{{follower.nom}} {{follower.prenom}}</span>
-                   <span class="email">{{follower.email}}</span>
+                  <span classe="name">{{follower.nom}} {{follower.prenom}}</span>
+                   <!--span class="email">{{follower.email}}</span-->
                 </div>
                 <i class='bx bxl-messenger'></i>
                 <button (click)="openChatFriend(follower.id)" class="action-follow">Message</button>
@@ -427,8 +427,8 @@
                <div class="user-row">
                <div class="user-info" (click)="navProfile(followedUser)">
                  <img [src]= "followedUser.image ?   followedUser.image : '/assets/image/user.png'" alt="user"/>
-                 <span>{{followedUser.nom}} {{followedUser.prenom}}</span>
-                 <span class="email">{{followedUser.email}}</span>
+                 <span class="name">{{followedUser.nom}} {{followedUser.prenom}}</span>
+                 <!--span class="email">{{followedUser.email}}</span-->
                </div>
                <i class='bx bxl-messenger'></i>
                <button (click)="openChatFriend(followedUser.id)" class="action-follow">Message</button>
@@ -758,8 +758,8 @@
               <div class="user-row">
                 <div class="user-info">
                   <img [src]= "user.image ? user.image : '/assets/image/user.png'"  alt="user"/>
-                  <span>{{user.nom}} {{user.prenom}}</span>
-                   <span class="email">{{user.email}}</span>
+                  <span class="name">{{user.nom}} {{user.prenom}}</span>
+                   <!--span class="email">{{user.email}}</span-->
                 </div>
                 <i class='bx bx-lock-open-alt' ></i>
                   <button (click)="unblockUser(user.id)" class="action-block">Débloquer</button>

@@ -2308,7 +2308,7 @@ visibility: hidden;
 
 @media (max-width: 480px) {
   .card-container {
-width: 100%;
+width: 97%;
   }
 
   .card-user {
@@ -2333,8 +2333,8 @@ font-size: 10px;
 
   .card-user .select-menu button {
 width: 41%;
-top: -5em;
-left: 6em;
+top: -5.2em;
+left: 6.3em;
 height: 37px;
 font-size: 10px;
   }
@@ -2496,5 +2496,11 @@ color: #676767;
 .popupSignale .cardSignale textarea {
   width: 173%;
   left: -5rem;
+}
+.nav-tabs .nav-link{
+  width: 5rem;
+}
+.info {
+  width: 100%;
 }
 }
