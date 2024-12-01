@@ -1760,18 +1760,19 @@ min-width: 380px;
 }
 
 .profile-card__button {
-  min-width: 99px;
-  font-size:13px;
+  min-width: 88px;
+  font-size:10px;
   min-height: 39px;
 }
 
 .profile-card-ctr {
-  top: 181px;
+  top: 159px;
   right: 6px;
   z-index: 10;
 }
 .profile-card-ctr .bxl-messenger {
   left: 6px;
+  font-size: 11px;
   
 }
 .followeds-list , .followers-list, .block-list{
