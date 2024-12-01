@@ -1756,7 +1756,7 @@ transform: rotate(45deg);
 left:0.2rem;
 font-size: 23px;
 	}
-	footer.right button
+	footer .right button
 	{
 		position: relative;
 		left: 1.5rem;
@@ -1767,9 +1767,16 @@ font-size: 23px;
 		left: -1.2rem;
 		position: relative;
 	}
-	footer.right{
+	footer .right{
 		right: 0rem;
 	}
+	.popupModifierGroupe  .cardGroupe {
+        
+		margin-left: -14rem;
+	
+	  width: 380px;
+	
+	  }
   }
 
   @media (max-width: 955px) {
@@ -1788,14 +1795,14 @@ font-size: 23px;
   }
   @media (max-width: 600px) {
 
-	.footer input
+/*	.footer input
 	{
 		width: 70%;
 	}
 	.progress-bar-container{
 
 		width: 70%;
-	}
+	}*/
   }
   @media (max-width: 458px) {
 

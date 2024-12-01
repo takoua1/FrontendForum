@@ -374,13 +374,13 @@ justify-content: center;
       }
       .popupGroupe  .cardGroupe  .input-field{
         position: relative;
-        font-size: 15px;
+        font-size: 14px;
         background: rgba(255, 255, 255, 0.2);
         color: #80929e;
         height: 50px;
        top:-40px;
        left: 40px;
-        width: 120%;
+        width: 116%;
         padding: 0 50px;
         border: none;
         border-radius: 30px;
@@ -418,8 +418,8 @@ justify-content: center;
        .img-area .inner-area{
          position: relative;
        
-         height: 90% ;
-         width: 90% ;
+         height: 100% ;
+         width: 100% ;
          border-radius: 50%;
          color: transparent;
            input {
@@ -968,7 +968,9 @@ justify-content: center;
       
       
       
-        }}
+        }
+      
+      }
         @media (max-width: 480px) {
 
           .popupGroupe  .cardGroupe {
@@ -983,11 +985,13 @@ justify-content: center;
 
             .popupGroupe  .cardGroupe {
           
-              margin-left: -14rem;
+              margin-left: -13rem;
           
-            width: 350px;
+            width: 440px;
           
-            }}
+            }
+          
+          }
 
             @media (max-width: 780px) {
 
