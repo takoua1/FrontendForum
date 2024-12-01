@@ -1799,7 +1799,7 @@ font-size: 23px;
 	/*.footer input
 	{
 		width: 60%;
-	}*/
+	}
 	.progress-bar-container{
 
 		width: 60%;
@@ -1807,12 +1807,12 @@ font-size: 23px;
 	.footer .right{
 
 		margin-right:15px;
-	}
+	}*/
   }
 
   @media (max-width: 458px) {
 
-	.footer input
+/*	.footer input
 	{
 		width: 55%;
 	}
@@ -1823,7 +1823,7 @@ font-size: 23px;
 	.footer .right{
 
 		margin-right:10px;
-	}
+	}*/
   }
   @media (max-width: 1325px) {
 
