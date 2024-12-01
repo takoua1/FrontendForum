@@ -408,11 +408,13 @@
 }
 
 .card-user .select-menu .categs {
-  visibility: hidden;
+  
+  display: none;
 }
 
 .card-user .select-menu.active .categs {
-  visibility: visible;
+
+  display: block;
 }
 
 .card-user .select-menu .categs .categ:hover {
@@ -1483,7 +1485,7 @@ body.no-scroll {
 .popupPoste .comment .commentText button {
   position: relative;
   width: 40px;
-  top: -55px;
+  top: -27px;
 
   height: 25px;
 
@@ -1644,21 +1646,26 @@ app-comment {
   transition: all 1s ease;
 }
 
-.popupPoste .card-list .commentPopup .commentText #textComm {
+.popupPoste .card-list .comment .commentText #textComm {
 
+  left: 114px;
+  width: 74%;
+  position: relative;
+  top: 23px;
   border-radius: 10px;
-
-  display: flex;
-  margin-top: 80px;
   outline: none;
-  transition: .2s ease;
-  width: 95%;
-  margin-right: 90px;
-
-
+  width: 56%;
+  width: 72%;
+  padding-left: 5px;
+  left: 119px;
+  display: flex
+;
+  left: 128px;
   resize: none;
   border: none;
+  margin-bottom: 1rem;
 }
+
 
 .popupPoste .card-list .commentPopup .commentText button {
   position: relative;
@@ -1994,7 +2001,7 @@ app-comment {
 .card-list .comment .commentText #textComm {
   position: relative;
   
-  top: -21px;
+  top: -13px;
   border-radius: 10px;
   outline: none;
   transition: .2s ease;
@@ -2005,7 +2012,7 @@ app-comment {
   left: 113px;
   resize: none;
   border: none;
-
+margin-top: 1rem;
 }
 
 a {
@@ -2015,7 +2022,7 @@ a {
 .comment .commentText button {
   position: relative;
   width: 40px;
-  top: -54px;
+  top: -46px;
 
   height: 25px;
 
@@ -2225,7 +2232,7 @@ top: 12em;
 
 
   .card-list .comment .commentText button {
- left: 33%;
+ left: 37%;
   }
 
   .card-list .comment .commentText .image-preview {
@@ -2278,9 +2285,22 @@ visibility: hidden;
     top:420px;
   }
 
-  .card-list .comment .commentText #textComm {
-    left: 70px;
-  }
+  .popupPoste .card-list .comment .commentText #textComm {
+    left: 125px;
+    top: 33px;
+}
+.card-list .comment .commentText #textComm {
+  left: 108px;
+  top: -11px;
+}
+  .popupPoste .card-list .comment .commentText button {
+  left: 38%;
+  top: -15px;
+}
+.popupSignale {
+
+  left: 11%;
+}
 }
 
 
@@ -2342,10 +2362,14 @@ top: -9em;
 
  
  
-  .card-list .comment .commentText button {  
-  left: 38%;
-  }
-  
+  .card-list .comment .commentText button {
+    left: 38%;
+    top: -28px;
+}
+.popupPoste .card-list .comment .commentText button {
+  left: 40%;
+  top: -25px;
+}
 
   .card-list .comment .commentText .image-preview {
    width: 200px;
@@ -2429,12 +2453,7 @@ top: -9em;
 
   left: 4%;
 }
-.card-list .comment .commentText #textComm {
 
-  top:-23px;
-  width: 90%;
-  left: 17px;
-}
 .card-list .user-profile p {
   left: 2.3rem;
   width: 227px;
@@ -2448,5 +2467,29 @@ margin-left: 39%;
 width: 29%;
 font-size: 13px;
 color: #676767;
+}
+.card-list .comment .commentText #textComm {
+  top: -49px;
+  width: 90%;
+  left: 17px;
+  padding-right: 51px;
+  font-size: 10px;
+  margin-bottom: -3rem;
+}
+.popupPoste .card-list .comment .commentText #textComm {
+  left: 35px;
+  top: 18px;
+  width: 88%;
+}
+.popupSignale {
+
+  left: 1%;
+}
+.popupSignale .cardSignale{
+  width: 104%;
+}
+.popupSignale .cardSignale textarea {
+  width: 173%;
+  left: -5rem;
 }
 }
