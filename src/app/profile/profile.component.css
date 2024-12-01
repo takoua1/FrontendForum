@@ -1692,15 +1692,15 @@ right:30px;
 }
 @media (max-width: 480px){
   .profile-container {
-    width: 91%;
+    width: 87%;
     left: 3em;
     top: -2rem;}
 .poste{
 
-min-width: 380px;
+min-width: 379px;
 
   width:100% ;
- left: -27rem;
+ left: -28rem;
 }
 .img-area{
   top:1rem;
@@ -1751,7 +1751,7 @@ min-width: 380px;
 .name {
   position: relative;
   top:1rem;
-   left: 2rem; 
+   left: 1rem; 
   font-size: 15px;
   font-weight: 500;
   color: #fff;
