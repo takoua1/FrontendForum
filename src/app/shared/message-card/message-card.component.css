@@ -719,7 +719,7 @@ audio{
 	color: #fff; /* Rouge pour annuler */
 	font-size: 24px;
 	position: absolute;
-	top: 1px;
+	top: -2px;
 	right: 50px;
 	cursor: pointer;
 	transition: transform 0.2s ease;
@@ -736,7 +736,7 @@ audio{
 	color: #007bff; /* Bleu pour envoyer */
 	font-size: 24px;
 	position: absolute;
-	top: 1px;
+	top: -2px;
 	right: 10px;
 	cursor: pointer;
 	transition: transform 0.2s ease;
@@ -1411,13 +1411,13 @@ top: 10px;
   }
   .popupModifierGroupe  .cardGroupe  .input-field{
 	position: relative;
-	font-size: 15px;
+	font-size: 14px;
 	background: rgba(255, 255, 255, 0.2);
 	color: #80929e;
 	height: 50px;
    top:-40px;
    left: 40px;
-	width: 120%;
+	width: 116%;
 	padding: 0 50px;
 	border: none;
 	border-radius: 30px;
@@ -1753,7 +1753,7 @@ transform: rotate(45deg);
 		width: 120px;
 	}
 	.footer .left i{
-left:0.2rem;
+left:-0.3rem;
 font-size: 23px;
 	}
 	footer .right button
@@ -1764,18 +1764,16 @@ font-size: 23px;
 	}
 	.footer input{
 		width: 75%;
-		left: -1.2rem;
+		left: -1.5rem;
 		position: relative;
 	}
-	footer .right{
-		right: 0rem;
+	.footer .right{
+		right: 2rem;
 	}
 	.popupModifierGroupe  .cardGroupe {
         
-		margin-left: -14rem;
-	
-	  width: 380px;
-	
+		margin-left: -13rem;
+        width: 442px;
 	  }
   }
 
@@ -1790,7 +1788,7 @@ font-size: 23px;
 
 	.footer input
 	{
-		width: 73%;
+		width: 83%;
 	}
   }
   @media (max-width: 600px) {
@@ -2029,14 +2027,18 @@ audio{
 	width: 90%;
 }
 .uploaded_image{
-	width: 90%;
+	width: 82%;
+        height: 80%;
+        padding: 10px;
+        margin-left: 2rem;
 }
 video{
-	width: 100px;
+	width: 100%;
+	margin-left: 2rem;
 }
 
 .chat-container .chat .message.left{
-	left: 0px;
+	left: -0.3rem;
 }
 }
 @media (max-width: 1350px) {

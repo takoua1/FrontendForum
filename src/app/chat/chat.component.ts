@@ -922,7 +922,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         // Afficher le panneau gauche et masquer le panneau droit
         if (leftPanel) {
           leftPanel.style.transition = 'width 0.5s ease, opacity 0.5s ease';
-          leftPanel.style.width = '88%';
+          leftPanel.style.width = '84%';
           leftPanel.style.display = 'block'; // Corrigez 'blok' en 'block'
         }
         if (rightPanel) {
@@ -935,7 +935,7 @@ export class ChatComponent implements OnInit, OnDestroy {
           }, 500);
         }
         if (rightMessage) {
-          rightMessage.style.width = '88%';
+          rightMessage.style.width = '84%';
           rightMessage.style.transition = 'width 0.5s ease';
         }
       }
