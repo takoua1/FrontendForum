@@ -2402,6 +2402,7 @@ top: -8.5em;
   .card-container .card-list {
 
     width: 95%;
+    left: 0.5rem;
   }
   .delete-icon {
   top: 5px;
