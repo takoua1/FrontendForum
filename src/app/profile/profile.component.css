@@ -1741,6 +1741,7 @@ min-width: 380px;
   height: 30px;
 }
 .social-icons{
+  top:1rem;
   left: -2rem;
 }
 .social-icons a i {
@@ -1748,7 +1749,7 @@ min-width: 380px;
 }
 .name {
   position: relative;
-   left: 0rem; 
+   left: 1rem; 
   font-size: 15px;
   font-weight: 500;
   color: #fff;
