@@ -1750,7 +1750,7 @@ min-width: 380px;
 }
 .name {
   position: relative;
-  top:1.5rem;
+  top:1rem;
    left: 2rem; 
   font-size: 15px;
   font-weight: 500;
@@ -1769,7 +1769,7 @@ min-width: 380px;
 }
 
 .profile-card-ctr {
-  top: 159px;
+  top: 171px;
   right: 6px;
   z-index: 10;
 }
