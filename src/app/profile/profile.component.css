@@ -1772,7 +1772,7 @@ min-width: 380px;
 }
 .profile-card-ctr .bxl-messenger {
   left: 6px;
-  font-size: 11px;
+  font-size: 18px;
   
 }
 .followeds-list , .followers-list, .block-list{
@@ -1784,8 +1784,9 @@ min-width: 380px;
 padding: 0.5rem;
 min-height: 39px;
 }*/
-.bxs-plus-circle{
-  left: 119px;
+.bxs-plus-circle {
+  left: 108px;
+  font-size: 16px;
 }
 .user-info .name {
   width: 8rem;
