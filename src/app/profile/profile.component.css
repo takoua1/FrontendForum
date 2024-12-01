@@ -1692,7 +1692,7 @@ right:30px;
 }
 @media (max-width: 480px){
   .profile-container {
-    width: 89%;
+    width: 91%;
     left: 3em;
     top: -2rem;}
 .poste{
@@ -1717,7 +1717,7 @@ min-width: 380px;
     width: 50%;
   }
   .sidebar{
-    height: 212px;
+    height: 230px;
   }
   .profilepic__text {
     font-size: 9px;
@@ -1766,7 +1766,7 @@ min-width: 380px;
 }
 
 .profile-card-ctr {
-  top: 176px;
+  top: 181px;
   right: 6px;
   z-index: 10;
 }
@@ -2054,7 +2054,8 @@ left: -3rem;
   }
   .select-trigger{
     margin: 1.5rem 2rem 2rem 3rem;
-  }
+  }+
+
   .profile-card-ctr{
 
     top:10rem;
