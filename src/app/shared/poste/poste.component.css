@@ -2399,7 +2399,10 @@ top: -8.5em;
   .card-list .btnIte {
   left: 7%;
   }
+  .card-container .card-list {
 
+    width: 95%;
+  }
   .delete-icon {
   top: 5px;
   right: 5px;
