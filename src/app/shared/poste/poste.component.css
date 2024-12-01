@@ -2325,18 +2325,18 @@ left: -3em;
 
   .card-user button {
 width: 36%;
-height: 40px;
-top: -2em;
-left: 16em;
-font-size: 12px;
+height: 38px;
+top: -1.5em;
+left: 20.5em;
+font-size: 10px;
   }
 
   .card-user .select-menu button {
 width: 41%;
-top: -5.5em;
-left: 4.5em;
-height: 40px;
-font-size: 12px;
+top: -5em;
+left: 6em;
+height: 37px;
+font-size: 10px;
   }
 
   .popupPoste .card-list .btnIte {
@@ -2352,12 +2352,17 @@ height: 120px;
 left: 2em;
 top: 12em;
   }
+.toggle-button{
 
+  margin-top: -0.5em;
+  left:2px;
+}
   .card-user .upload-image button {
-width: 39px;
-top: -9em;
+width: 37px;
+top: -8.5em;
   left: -0.5em;
-  height: 40px;
+  height: 35px;
+  font-size: 10px;
   }
 
  
