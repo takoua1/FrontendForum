@@ -370,7 +370,8 @@ export class PosteComponent implements OnInit {
                 })
               );
             } else {
-              return of(poste); // Poste non bloqué
+              const matchingIcons = this.categories.filter(catIcon => catIcon.name === poste.category);
+              return of({ ...poste, icons: matchingIcons }); // Poste non bloqué
             }
           });
   
