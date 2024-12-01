@@ -1253,7 +1253,7 @@ justify-content: center;
 .popupValider {
 	position: fixed;
 	top: 50%;
-	left: 40%;
+	left: 32%;
 	transform: translate(-50%, -50%);
 	padding: 20px;
    display: none;
@@ -1989,7 +1989,7 @@ p{
 @media (max-width: 490px) {
 	.chat-container .chat .message {
 		
-		width: 70%;
+		width: 100%;
 		
 	}
 
@@ -2002,6 +2002,10 @@ audio{
 }
 video{
 	width: 100px;
+}
+
+.chat-container .chat .message.left{
+	left: 0px;
 }
 }
 @media (max-width: 1350px) {
