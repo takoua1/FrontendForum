@@ -1703,6 +1703,7 @@ min-width: 380px;
  left: -27rem;
 }
 .img-area{
+  top:1rem;
   width:95px;
   height:95px;
   left: 0rem;
