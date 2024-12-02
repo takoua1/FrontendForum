@@ -991,7 +991,13 @@ justify-content: center;
             }
 
             .popupGroupe .cardGroupe .input-field{
-                font-size: 11px;
+                font-size: 10px;
+                width: 112%;
+          }
+          .img-area .inner-area{
+           width: 88%;
+           height: 88%;
+
           }
 
         
