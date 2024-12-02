@@ -1816,7 +1816,11 @@ font-size: 23px;
 
 				left: 16%;
 			  }
-			  
+			  .detailGroup .detail {
+               flex-direction: column;
+				height: 110px;
+			  }
+
   }
 
   
@@ -2011,25 +2015,10 @@ p{
    }
 }
 
-@media (max-width: 475px) {
 
-	.detailGroup .detail .info{
-		font-size: 13px;
-	   margin-right: 3rem;
-	   margin-left: -2rem;
-	   
-   }
-}
 
-@media (max-width: 475px) {
 
-	.detailGroup .detail .info{
-		font-size: 13px;
-	   margin-right: 3rem;
-	   margin-left: -3rem;
-	   
-   }
-}
+
 /*@media (max-width: 608px) {
 
 	.detailGroup .detail .info{
@@ -2153,23 +2142,40 @@ video{
 
 
 
-@media (max-width: 488px) {
-  
-	.detailGroup .list ul li {
-  font-size: 11px;
-		
-	}}
 
-	@media (max-width: 383px) {
-  
-		.detailGroup .list ul li {
-	  font-size: 9px;
-			
-		}}
+	
 
-		@media (max-width: 439px) {
+		@media (max-width: 490px) {
   
-			.detailGroup .list ul li {
-		  font-size: 8px;
-				
-			}}
+			.detailGroup .detail .info{
+				margin-top: 0.5rem;
+				font-size: 13px;
+				margin-left: 1rem;
+				margin-bottom: -0.6rem;
+			   
+		   }
+
+		   .modifer button{
+            top: 62px;
+             width: 109px;
+             line-height: 3px;
+             right: 14px;
+
+		   }
+		   .detailGroup .list ul li {
+			font-size: 11px;
+		}
+		.searchBx {
+
+			width: 86%;
+		}
+		.searchBx input{
+
+        top:-20px;
+		height: 41px;
+		}
+		.searchBx i{
+       top:23px;
+		}
+		   
+		}

@@ -178,7 +178,7 @@ selectedMessageElement: HTMLElement | null = null;
   console.log('groupe chat id', groupId);
   if (groupId) {
     this.groupId = groupId.toString();}
-    this.subscribeToGroupMessages(this.groupe.id);
+    this.subscribeToGroupMessages(groupId!);
 
    this.updateCombinedMessages()
   
@@ -1330,7 +1330,7 @@ popupValiderQuitter( groupId : number,userId:number): void {
 
   this.groupeId=groupId;
   this.userId=userId;
-  console.log( "this.messageId", this.messageId)
+  console.log( "this.messageId", groupId)
   if (!this.popupVal || !this.overlay) {
     console.error('popupVal or overlay is not defined');
     return;
