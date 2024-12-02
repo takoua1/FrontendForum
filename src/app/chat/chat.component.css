@@ -976,13 +976,13 @@ justify-content: center;
 
           .popupGroupe  .cardGroupe {
           margin-left: -15rem;
-          width: 386px;
+          width: 384px;
           height: 188px;
           }
           .popupGroupe .cardGroupe .img-area{
           height: 72px;
-          width: 90px;
-          left: 16px;
+          width: 72px;
+          left: 5px;
           }
           .img-area .inner-area
             .icon-camera{
