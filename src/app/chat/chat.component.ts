@@ -922,7 +922,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         // Afficher le panneau gauche et masquer le panneau droit
         if (leftPanel) {
           leftPanel.style.transition = 'width 0.5s ease, opacity 0.5s ease';
-          leftPanel.style.width = '84%';
+          leftPanel.style.width = '88%';
           leftPanel.style.display = 'block'; // Corrigez 'blok' en 'block'
         }
         if (rightPanel) {
@@ -935,11 +935,62 @@ export class ChatComponent implements OnInit, OnDestroy {
           }, 500);
         }
         if (rightMessage) {
-          rightMessage.style.width = '84%';
+          rightMessage.style.width = '88%';
           rightMessage.style.transition = 'width 0.5s ease';
         }
       }
     }
+    
+      if (window.innerWidth <= 480) {
+        console.log("Window width is <= 780"); // Ajoutez ceci
+        const leftPanel = document.querySelector('.left') as HTMLElement;
+        const rightPanel = document.querySelector('.right') as HTMLElement;
+        const rightMessage = document.querySelector('.right .message') as HTMLElement;
+  
+        console.log("this.actif", this.actif); // Vérifiez la valeur de this.actif
+  
+        if (this.actif === true) {
+          console.log("this.actif is true"); // Ajoutez ceci
+          // Masquer le panneau gauche et afficher le panneau droit
+          if (leftPanel) {
+            leftPanel.style.transition = 'width 0.5s ease, opacity 0.5s ease';
+            leftPanel.style.width = '0';
+            leftPanel.style.display = 'none';
+          }
+          if (rightPanel) {
+            rightPanel.style.display = 'block';
+            rightPanel.style.transition = 'width 0.5s ease';
+            rightPanel.style.width = '88%';
+          }
+          if (rightMessage) {
+            rightMessage.style.width = '90%';
+            rightMessage.style.transition = 'width 0.5s ease';
+          }
+        } else {
+          console.log("this.actif is false"); // Ajoutez ceci
+          // Afficher le panneau gauche et masquer le panneau droit
+          if (leftPanel) {
+            leftPanel.style.transition = 'width 0.5s ease, opacity 0.5s ease';
+            leftPanel.style.width = '81%';
+            leftPanel.style.display = 'block'; // Corrigez 'blok' en 'block'
+          }
+          if (rightPanel) {
+            rightPanel.style.transition = 'none';
+            rightPanel.style.width = '0';
+            rightPanel.style.opacity = '0';
+  
+            setTimeout(() => {
+              rightPanel.style.display = 'none';
+            }, 500);
+          }
+          if (rightMessage) {
+            rightMessage.style.width = '88%';
+            rightMessage.style.transition = 'width 0.5s ease';
+          }
+        }
+      }
+
+    
   }
   setupInitialDisplay(): void {
     const leftPanel = document.querySelector('.left') as HTMLElement;
