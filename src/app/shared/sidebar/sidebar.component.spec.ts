@@ -11,7 +11,7 @@ describe('SidebarComponent', () => {
       declarations: [ SidebarComponent ]
     })
     .compileComponents();
-  });
+  });                                   
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SidebarComponent);
