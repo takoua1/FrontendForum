@@ -1803,7 +1803,7 @@ font-size: 23px;
 		  left: 16%;
 		}
 	  
-	  }
+	  
 	  .popupModifierGroupe .cardGroupe {
 	  
 			  margin-left: -15rem;
@@ -1812,7 +1812,13 @@ font-size: 23px;
 			height: 188px;
 	   
 			}
-		
+			.popupValider{
+
+				left: 16%;
+			  }
+			  
+  }
+
   
 
   @media (max-width: 955px) {
