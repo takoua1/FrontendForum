@@ -212,7 +212,8 @@ cursor: pointer;
 }
  video{
 
-max-width: 200px;
+max-width: 230px;
+height: 120px;
 padding:0;
 }
  .uploaded_image{
@@ -223,7 +224,8 @@ padding:0;
 }
  video{
 
-max-width: 200px;
+max-width: 213px;
+height: 120px;
 padding:0;
 }
 audio{
@@ -1770,12 +1772,48 @@ font-size: 23px;
 	.footer .right{
 		right: 2rem;
 	}
-	.popupModifierGroupe  .cardGroupe {
-        
-		margin-left: -13rem;
-        width: 442px;
+	
+	  .popupModifierGroupe .cardGroupe {
+		margin-left: -15rem;
+		width: 384px;
+		height: 188px;
+		}
+		.popupModifierGroupe .cardGroupe .img-area{
+		height: 64px;
+		width: 90px;
+		left: 15px;
+		}
+		.img-area .inner-area
+		  .icon-camera{
+			top:0px;
+
+		  }
+
+		  .popupModifierGroupe.cardGroupe .input-field{
+			  font-size: 10px;
+			  width: 112%;
+		}
+		.img-area .inner-area{
+		 width: 88%;
+		 height: 88%;
+
+		}
+		.popupValider{
+
+		  left: 16%;
+		}
+	  
 	  }
-  }
+	  .popupModifierGroupe .cardGroupe {
+	  
+			  margin-left: -15rem;
+		  
+			width: 386px;
+			height: 188px;
+	   
+			}
+		
+  
 
   @media (max-width: 955px) {
 
