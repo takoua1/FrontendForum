@@ -360,18 +360,36 @@ export class PosteComponent implements OnInit {
                 this.blockService.isUserBlocked(this.user.id, poste.user.id),
                 this.blockService.isUserBlocked(poste.user.id, this.user.id)
               ]).pipe(
-                map(([isBlockedByCurrentUser, isBlockedByPostOwner]) => {
+                switchMap(([isBlockedByCurrentUser, isBlockedByPostOwner]) => {
                   if (!isBlockedByCurrentUser && !isBlockedByPostOwner) {
                     const matchingIcons = this.categories.filter(catIcon => catIcon.name === poste.category);
-                    return { ...poste, icons: matchingIcons };
+                    const postWithIcons = { ...poste, icons: matchingIcons };
+  
+                    // Charger les interactions de type "like" et "dislike"
+                    return this.findUser(this.currentUser.username).then(() => {
+                      this.loadLikeInteraction(postWithIcons);
+                      this.loadDislikeInteraction(postWithIcons);
+                      this.getTotalLikes(postWithIcons);
+                      this.getTotalDislikes(postWithIcons);
+                      return postWithIcons; // Retourner le poste mis à jour
+                    });
                   } else {
-                    return null; // Poste bloqué
+                    return of(null); // Poste bloqué
                   }
                 })
               );
             } else {
               const matchingIcons = this.categories.filter(catIcon => catIcon.name === poste.category);
-              return of({ ...poste, icons: matchingIcons }); // Poste non bloqué
+              const postWithIcons = { ...poste, icons: matchingIcons };
+  
+              // Charger les interactions pour le poste de l'utilisateur actuel
+              return this.findUser(this.currentUser.username).then(() => {
+                this.loadLikeInteraction(postWithIcons);
+                this.loadDislikeInteraction(postWithIcons);
+                this.getTotalLikes(postWithIcons);
+                this.getTotalDislikes(postWithIcons);
+                return postWithIcons; // Retourner le poste mis à jour
+              });
             }
           });
   
@@ -396,6 +414,7 @@ export class PosteComponent implements OnInit {
       }
     );
   }
+  
   
 
   
