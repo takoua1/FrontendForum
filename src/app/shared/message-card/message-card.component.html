@@ -79,8 +79,7 @@
               
                     <img class="logo" [src]="message.sender.image ? message.sender.image : '/assets/image/user.png'" alt="User Image" (click)="navProfile(message.sender)">
                   
-                    <p *ngIf="message.content" [innerHTML]="parseMessage(message.content)" (click)="handleLinkClick
-($event)"></p>
+                    <p *ngIf="message.content" [innerHTML]="parseMessage(message.content)" (click)="handleLinkClick($event)"></p>
                    
                   
                      

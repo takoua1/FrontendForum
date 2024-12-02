@@ -2162,6 +2162,11 @@ video{
              right: 14px;
 
 		   }
+		   .svg-valider{
+			width: 25px;
+            height: 25px;
+			margin-right: 0.3em;
+		   }
 		   .detailGroup .list ul li {
 			font-size: 11px;
 		}

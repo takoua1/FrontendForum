@@ -1061,9 +1061,9 @@ copyGroupLink() {
     this.membres = []; // Exemple, remplissez ce tableau selon votre source de données
     this.filteredMembers = this.membres;
   
-    const groupLinkPattern = /http:\/\/localhost:4200\/join-group\/(\d+)/g;
-    const profileLinkPattern = /http:\/\/localhost:4200\/profile\/(\d+)/g;
-    const postDetailLinkPattern = /http:\/\/localhost:4200\/detail\/(\d+)/g; // Expression régulière pour les liens vers les détails de poste
+    const groupLinkPattern = /https:\/\/forum-socialx.vercel.app\/join-group\/(\d+)/g;
+    const profileLinkPattern = /https:\/\/forum-socialx.vercel.app\/profile\/(\d+)/g;
+    const postDetailLinkPattern = /https:\/\/forum-socialx.vercel.app\/detail\/(\d+)/g; // Expression régulière pour les liens vers les détails de poste
   
     // Traitement des liens de groupe
     if (groupLinkPattern.test(message)) {
