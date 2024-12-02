@@ -688,8 +688,9 @@ sendGroup(message: Message, groupe:Groupe ,msg: any, file: File | null, audioBlo
 }
 getChatsForMember(userId:number):Observable<any[]>{
   let headers = new HttpHeaders({'Content-Type': 'application/json', Authorization:'Bearer '+ this.token.getToken() })
+  console.log("this.token.getToken()",this.token.getToken());
   const url=`${this.apiUrl}/chat/member/${userId}`;
-  return this.http.get<any[]>(url, { headers });
+  return this.http.get<any[]>(url,{headers:headers});
 }
 getChatMembers(chatId:number):Observable<any>
 {

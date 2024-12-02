@@ -2330,7 +2330,10 @@ top: -1.5em;
 left: 20.5em;
 font-size: 10px;
   }
-
+.card-list .btnIte button {
+width:23%;
+margin-left: 3%;
+}
   .card-user .select-menu button {
 width: 41%;
 top: -5.2em;
