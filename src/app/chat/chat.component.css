@@ -481,8 +481,8 @@ justify-content: center;
         display: flex;
         top: 45px;
       left:-210px;
-        width: 120px;
-      
+        width: 125px;
+      line-height: 20px;
         background: linear-gradient(to bottom, #aab7d392 0%, #95a1ba92 100%);
         color: white;
       
@@ -632,8 +632,9 @@ justify-content: center;
   
     top: 120px;
     padding: 10px;
-    width: 30%;
+    width: 32%;
     right: 10%;
+    line-height:14px ;
     background: linear-gradient(to bottom, #4dc7d9 0%, #66a6ff 100%);
     color: white;
     padding: 0.5em 1em;
@@ -974,12 +975,27 @@ justify-content: center;
         @media (max-width: 480px) {
 
           .popupGroupe  .cardGroupe {
-        
-            margin-left: -15rem;
-        
+          margin-left: -15rem;
           width: 386px;
+          height: 188px;
+          }
+          .popupGroupe .cardGroupe .img-area{
+          height: 72px;
+          width: 90px;
+          left: 16px;
+          }
+          .img-area .inner-area
+            .icon-camera{
+              top:0px;
+
+            }
+
+            .popupGroupe .cardGroupe .input-field{
+                font-size: 11px;
+          }
+
         
-          }}
+        }
 
           @media (max-width: 402px) {
 
@@ -990,7 +1006,7 @@ justify-content: center;
                 margin-left: -15rem;
             
               width: 386px;
-          
+              height: 188px;
          
               }
           }
