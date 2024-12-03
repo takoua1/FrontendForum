@@ -40,7 +40,7 @@ export class MessageCardComponent  implements OnInit, OnDestroy,AfterViewChecked
   @Input() userReciver:User[];
   @Input() actifNew:boolean= false;
   @Input() groupe:any;
- @ Input() groupes: Groupe[]=[];
+ @Input() groupes: Groupe[]=[];
   @Input() actifDetail:boolean=false;
   @Input() chat:any;
  @Input ()key:number;

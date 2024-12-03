@@ -286,8 +286,7 @@
                          [src]="item.imageProfile ? item.imageProfile : '/assets/image/user.png'" 
                          alt="User Image" (click)="navProfileId(item.senderId)">
                          <p class="sender-username">{{ item.senderNom}} {{item.senderPrenom}} </p>
-                    <p *ngIf="item.content" [innerHTML]="parseMessage(item.content)" (click)="handleLinkClick
-($event)"></p>
+                    <p *ngIf="item.content" [innerHTML]="parseMessage(item.content)" (click)="handleLinkClick($event)"></p>
                 </div>
                     <img *ngIf="item.image" [src]="item.image"   class="uploaded_image">
                     <video *ngIf="item.video"  controls>
