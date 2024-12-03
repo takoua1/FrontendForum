@@ -1070,7 +1070,7 @@ copyGroupLink() {
       const replacedMessage = message.replace(groupLinkPattern, (match, groupId) => {
         const group = this.getGroupById(parseInt(groupId, 10)); // Récupérer le groupe par son ID
         const groupName = group ? group.groupName : 'Groupe inconnu';
-        return `<a href="#" data-group-id="${groupId}" class="group-link"> <span class="group-name">${groupName}</span></a>`;
+        return `<a href="#" data-group-id="${groupId}" class="group-link">${groupName}</a>`;
       });
       return this.sanitizer.bypassSecurityTrustHtml(replacedMessage);
     }
