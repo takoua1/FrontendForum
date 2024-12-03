@@ -37,10 +37,7 @@ img{
 	background-color: rgba(0, 0, 0, 0.1)
   } 
 
-  .edit-member:hover   .tooltip{
-	cursor: pointer;
-		opacity: 1;
-	  }
+  
 .edit-delette{
 
 	position: absolute;
@@ -74,7 +71,7 @@ img{
 	line-height: 1.8rem;
 	z-index:20;
 	flex-direction: column;
-	opacity: 0;
+	display: none;
  width: 150px;
  margin-bottom: 0.5rem;
   background-color: #fff;
@@ -102,9 +99,10 @@ padding: 0.6rem;
 	color:blue;
 		font-size: 16px;
   }
-  .edit-delette:hover   .tooltip{
+    .tooltip.active{
 cursor: pointer;
-	opacity: 1;
+	display: block;
+
   }
   
 .chat-container {
@@ -1105,11 +1103,54 @@ justify-content: center;
 	top:3px;
 	left: 3px;
    }
-   .edit:hover .tooltip{
-	cursor: pointer;
-		opacity: 1;
-	  }
-	 .tooltip ul li {
+
+   .tooltip-member {
+  
+	position: relative;
+	right: 80px;
+	top: -60px;
+	transform: translate(-50%,50%);
+	box-shadow: 0 0.5rem 0.8rem rgba(0,0,0,0.2);
+	border-radius: .6rem;
+	
+	line-height: 1.8rem;
+	z-index:20;
+	flex-direction: column;
+	display: none;
+ width: 150px;
+ margin-bottom: 0.5rem;
+  background-color: #fff;
+  }
+ 
+  
+
+  .tooltip-member .bx-trash{
+padding: 0.6rem;
+	color:rgb(238, 63, 63);
+	font-size: 16px;
+  }
+  .bx-edit-alt{
+	padding: 0.6rem;
+	color:rgb(107, 239, 107);
+	font-size: 16px;
+  }
+
+  .tooltip-member  span{
+	
+	font-size: 16px;
+  }
+  .tooltip-member .bx-exit{
+	padding: 0.6rem;
+	color:blue;
+		font-size: 16px;
+  }
+    .tooltip-member.active{
+cursor: pointer;
+	display: block;
+
+  }
+  
+  .tooltip ul li,	 .tooltip-member ul li {
      flex-direction: row;
       margin-top: -10px;
 		list-style: none;
@@ -1120,7 +1161,7 @@ justify-content: center;
 	color:rgb(238, 63, 63);
 	font-size: 16px;
 	 }
-	 .tooltip .bx-crown{
+	 .tooltip-member .bx-crown{
 		padding: 0.6rem;
 			color:blue;
 			font-size: 16px;

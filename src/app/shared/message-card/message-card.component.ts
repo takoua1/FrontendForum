@@ -1940,5 +1940,15 @@ async  navProfileId(id:number)
         this.renderer.listen(link, 'click', (event: Event) => this. handleLinkClick(event));
       });
     }
-  
+  clickToolp(){
+
+    const tooltip = document.querySelector('.tooltip');
+    tooltip?.classList.toggle('active');
+  }
+
+  clickToolpMember(){
+
+    const tooltip = document.querySelector('.tooltip-member');
+    tooltip?.classList.toggle('active');
+  }
 }  

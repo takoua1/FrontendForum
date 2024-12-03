@@ -13,7 +13,7 @@
     <div class="receiver" *ngIf="userProfile && !groupe" >
         <img class="profile" [src]="userProfile.image ? userProfile.image : '/assets/image/user.png'" alt="User Image" (click)="navProfile(userProfile)">
     <p>   {{userProfile.nom}} {{userProfile.prenom}}</p>
-    <div class="edit-delette">
+    <div class="edit-delette" (click)="clickToolp()">
       <i class='bx bx-dots-vertical-rounded'></i>
       
 
@@ -36,7 +36,7 @@
     <div class="receiver" *ngIf=" groupe && isMemberBlock(groupe) ">
         <img class="profile" [src]="groupe.groupImage ? groupe.groupImage : '/assets/image/group.png'" alt="User Image" (click)="toggleDetail(groupe)">
     <p>   {{groupe.groupName}}</p>
-    <div  class="edit-delette">
+    <div  class="edit-delette" (click)="clickToolp()">
         <i class='bx bx-dots-vertical-rounded'></i>
        <div class="tooltip">  
       <ul>
@@ -247,10 +247,10 @@
                           <p class="timestamp" >{{formatTimestamp(message.time)}}</p>
                           
                           <button  class="delete-btn" *ngIf="message.sender.id === user.id" (click)="popupValider(message.id)"><i class='bx bx-trash' ></i> </button>
-                          <div  class="edit-member" *ngIf="user.username === groupe.userCreature.username && message.sender.username !== user.username">
+                          <div  class="edit-member" *ngIf="user.username === groupe.userCreature.username && message.sender.username !== user.username" (click)="clickToolpMember()">
                             <i class='bx bx-dots-vertical-rounded'></i>
                            
-                            <div  class="tooltip">
+                            <div  class="tooltip-member">
                               <ul>
                                 <li (click)="popupGetAdmin(groupe.id,message.sender.username)">
                                   <i class='bx bx-crown'></i>
@@ -430,9 +430,9 @@
                         <img [src]="member.image ? member.image : '/assets/image/user.png'" class="imgMember" (click)="navProfileMemeber(member)">
                         <p class="name">{{member.nom}} {{member.prenom}} </p>
                         <p class="date">{{ groupe.userJoinDates[member.id] | date:'medium' }}</p>
-                        <div class="edit"   *ngIf="user.username === groupe.userCreature.username && user.username !== member.username"  > 
+                        <div class="edit"   *ngIf="user.username === groupe.userCreature.username && user.username !== member.username" (click)="clickToolpMember()" > 
                           <i class='bx bx-dots-vertical-rounded'></i>
-                        <div  class="tooltip">
+                        <div  class="tooltip-member">
                           <ul>
                             <li (click)="popupGetAdmin(groupe.id,member.username)">
                               <i class='bx bx-crown'></i>
@@ -513,7 +513,7 @@
                 <p class="name">{{member.nom}}  {{member.prenom}}</p>
                 <div class="edit"   *ngIf="user.username === groupe.userCreature.username"  > 
                   <i class='bx bx-dots-vertical-rounded'></i>
-                <div  class="tooltip">
+                <div  class="tooltip-member">
                   <ul>
                    
                     <li (click)="popupValiderDeblouqer(groupe.id, member.username)" >
