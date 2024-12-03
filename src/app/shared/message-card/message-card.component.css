@@ -2111,8 +2111,8 @@ video{
 	margin-left: 2rem;
 }
 
-.chat-container .chat .message.left{
-	left: -0.3rem;
+.chat-container .chat .message .left{
+	left: -1.5rem;
 }
 }
 @media (max-width: 1350px) {
