@@ -176,9 +176,9 @@ clickEdit(active: boolean) {
   toggleReplyVisibility(comment:Comment) {
     if(this.isUserAuthenticated)
   {  this.isReplyVisible[comment.id] = !this.isReplyVisible[comment.id];
-    if (this.isReplyVisible[comment.id]) {
+   /* if (this.isReplyVisible[comment.id]) {
           this.addTagToTextarea(comment);
-    }}
+    }*/}
     else{
     this.openVerifierconnect()}
     }
