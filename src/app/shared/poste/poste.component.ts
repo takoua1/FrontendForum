@@ -1650,6 +1650,8 @@ notif.message = `${this.user.nom} a commenté « ${commentText} » sur votre pos
 console.error('Error fetching poste:', error);
 });
     this.textareaVisibility[poste.message]=false;
+    this.messageComment='';
+    this.commentForm.reset();
     
   }
  

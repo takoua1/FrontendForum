@@ -154,8 +154,8 @@
          
         </div>
        <div  *ngIf="isTextareaVisible(poste)" [formGroup]="commentForm"  class="commentText">
-        <textarea id="textComm" rows="2" placeholder="" (click)="poste.showButton = true" [ngModel]="messageComment" (input)="adjustTextareaSize($event)" (keydown.enter)="addNewLine()" [formControl]="commentForm.get('messageComment')"></textarea>
-       <button *ngIf="poste.showButton" (click)="addCommentToPost(poste)">  <i class='bx bxs-send' ></i></button>
+        <textarea id="textComm" rows="2" placeholder=""  [(ngModel)]="messageComment" (input)="adjustTextareaSize($event)" (keydown.enter)="addNewLine()" [formControl]="commentForm.get('messageComment')"></textarea>
+       <button  (click)="addCommentToPost(poste)" *ngIf="messageComment?.trim().length > 0">  <i class='bx bxs-send' ></i></button>
     
         
       
@@ -354,8 +354,8 @@
         </div>
         </div>
       <div  *ngIf="isTextareaVisible(selectedPost)" [formGroup]="commentForm"  class="commentText">
-        <textarea id="textComm" rows="2" placeholder="" (click)="selectedPost.showButton = true" [ngModel]="messageComment" (input)="adjustTextareaSize($event)" (keydown.enter)="addNewLine()" [formControl]="commentForm.get('messageComment')"></textarea>
-      <button *ngIf="selectedPost.showButton" (click)="addCommentToPost(selectedPost)">  <i class='bx bxs-send' ></i></button>
+        <textarea id="textComm" rows="2" placeholder=""  [(ngModel)]="messageComment" (input)="adjustTextareaSize($event)" (keydown.enter)="addNewLine()" [formControl]="commentForm.get('messageComment')"></textarea>
+      <button  (click)="addCommentToPost(selectedPost)" *ngIf="messageComment?.trim()!=''">  <i class='bx bxs-send' ></i></button>
       </div>
     
         <div *ngFor="let comment of  filteredComments; let i = index">

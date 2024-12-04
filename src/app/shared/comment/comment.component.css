@@ -7,7 +7,7 @@
 
 .commentContainer .commentUser{
 position: relative;
- top:60px;
+ top:41px;
  left: 20px;
  width: 120px;
   float: left;
@@ -35,7 +35,7 @@ position: relative;
   }
   .commentContainer .commentUser p{
    position: relative;
- top:-65px;    
+ top:-23px;    
    
     font-size: 14px;
    left: 115px;

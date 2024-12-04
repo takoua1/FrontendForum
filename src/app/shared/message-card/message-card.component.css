@@ -158,9 +158,11 @@ cursor: pointer;
 		word-wrap: break-word;
 	}
 .sender-username {
-	font-weight: bold ;
-	font-size: 14px; /* Slightly larger font size */
-	color: #007bff; /* Distinct color to make it stand out */
+	position: relative;
+    top: -1em;
+    font-weight: bold;
+    font-size: 14px;
+    color: #007bff; 
   }
   
   /* Additional style if the sender is the current user */
@@ -1814,6 +1816,9 @@ transform: rotate(45deg);
 	.footer .joindre button{
 
 		width: 120px;
+	}
+	.sender-username{
+		font-size: 12px;
 	}
 	.footer .left i{
 left:-0.3rem;

@@ -41,7 +41,7 @@
 
   <div *ngIf="isReplyVisible[comment.id]"[formGroup]="repondForm" class="repText">
     <textarea id="textRep" rows="2" placeholder="" [(ngModel)]="replyText" [formControl]="repondForm.get('messageRepond')" (click)="comment.showButton = true" (input)="adjustTextareaSize($event)" (keydown.enter)="addNewLine()"></textarea>
-    <button *ngIf="comment.showButton">
+    <button *ngIf="replyText?.trim() !== ''">
       <i class='bx bxs-send' (click)="addCommentToComment(comment)"></i>
     </button>
   </div>
