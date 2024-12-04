@@ -1,6 +1,6 @@
 
 .commentContainer{
- margin:-0.5rem;
+ margin:0.5rem;
   display:flex;
   flex-direction: column;
 }
@@ -8,7 +8,7 @@
 .commentContainer .commentUser{
 position: relative;
  top:41px;
- left: 20px;
+ left: 21px;
  width: 120px;
   float: left;
 
@@ -19,7 +19,7 @@ position: relative;
  
  position: relative;
     width: 40px;
-  
+  top:-30px;
    left: 70px;
    float: left;
     border-radius: 50%;
@@ -38,7 +38,7 @@ position: relative;
  top:-23px;    
    
     font-size: 14px;
-   left: 115px;
+   left: 72px;
    float: left;
  
    
@@ -704,6 +704,7 @@ font-size: 11px;
   }
   .repond-taille p{
     right: 42px;
+    font-size: 10px;
   }
   .commentContainer .commentUser p{
   font-size: 14px;

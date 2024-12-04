@@ -184,13 +184,13 @@ clickEdit(active: boolean) {
     }
      formatComment(comment:any) {
       // Vérifie si le symbole @ suivi du nom d'utilisateur est présent dans la chaîne de caractères
-      const pattern = new RegExp(`@${comment.user.nom}\\s*`);
+      const pattern = new RegExp(`@${comment.user.nom} ${comment.user.prenom}\\s*`);
       if (!pattern.test(comment.user.nom)) {
          // Si le symbole @ suivi du nom d'utilisateur n'est pas présent, l'ajoute
-         return `@${comment.user.nom} `;
+         return `@${comment.user.nom} ${comment.user.prenom} `;
       }
       // Si le symbole @ suivi du nom d'utilisateur est déjà présent, retourne la chaîne telle quelle
-       return `@${comment.user.nom} `;
+       return `@${comment.user.nom} ${comment.user.prenom} `;
      }
    /* verifierEtAjouterNomUtilisateur(texte: string, comment: any) {
     // Vérifier si le nom d'utilisateur est présent
@@ -209,13 +209,13 @@ clickEdit(active: boolean) {
     return texte;
 }*/
 private verifierEtAjouterNomUtilisateur(texte: string, comment: any): string {
-  const usernameRegex = new RegExp(`@${comment.user.nom}`);
-  const usernameWithSpace = `@${comment.user.nom}`;
+  const usernameRegex = new RegExp(`@${comment.user.nom} ${comment.user.prenom}`);
+  const usernameWithSpace = `@${comment.user.nom} ${comment.user.prenom}`;
 
   if (!usernameRegex.test(texte)) {
-    texte = `@${comment.user.nom} ` + texte;
+    texte = `@${comment.user.nom} ${comment.user.prenom} ` + texte;
   } else {
-    const spaceAfterUsernameRegex = new RegExp(`@${comment.user.nom}\\b`);
+    const spaceAfterUsernameRegex = new RegExp(`@${comment.user.nom} ${comment.user.prenom}\\b`);
     if (!spaceAfterUsernameRegex.test(texte)) {
       texte = texte.replace(usernameRegex, usernameWithSpace);
     }
