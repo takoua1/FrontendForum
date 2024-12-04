@@ -2163,11 +2163,12 @@ height: 40px;
 
   }
   .popupPoste {
-    margin-left: 2%;
+    margin-left: 0%;
+    width: 97%;
   }
   .popupPoste .card-list{
 
-    width: 87%;
+    width: 100%;
   }
 
   .comment .commentTaille {
