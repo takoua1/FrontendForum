@@ -2354,7 +2354,8 @@ font-size: 10px;
     left: 3rem;
   }
   .comment .commentTaille {
-    margin-left: 11rem;
+    margin-top: 1rem;
+    margin-left: 9rem;
     font-size: 8px;
 }
   .card-user .select-menu .categs {
