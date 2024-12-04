@@ -2111,8 +2111,7 @@ justify-content: center;
 
 @media (max-width: 840px) {
   .card-container {
-  width: 88%;
-  margin-left: -1.3rem;
+  width: 100%;
   }
 
   .card-user {
@@ -2164,11 +2163,11 @@ height: 40px;
 
   }
   .popupPoste {
-    margin-left: 6%;
+    margin-left: 2%;
   }
   .popupPoste .card-list{
 
-    width: 90%;
+    width: 85%;
   }
 
   .comment .commentTaille {
