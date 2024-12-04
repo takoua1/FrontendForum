@@ -142,7 +142,7 @@ left: 20px;
     }
     .container .structure .left .contactChat .list .group{
       width: 100%;
-    max-height: 220px; /* Limite la hauteur pour chaque élément */
+    max-height: 237px; /* Limite la hauteur pour chaque élément */
     overflow-y: auto; /* Active le défilement vertical à l'intérieur de chaque élément */
     background: var(--mainBgClr);
     padding: 15px;
