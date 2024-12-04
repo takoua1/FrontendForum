@@ -16,6 +16,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BlockService } from '../../services/block.service';
 import { ChatComponent } from '../../chat/chat.component';
+import { AnySoaRecord } from 'dns';
 
 
 interface EmojiClickEvent extends CustomEvent {
@@ -118,6 +119,8 @@ export class MessageCardComponent  implements OnInit, OnDestroy,AfterViewChecked
 
   nameGroupe:string;
   filteredMembers: any[] = [];
+
+  membresGroupe: any[];
   @Input() filteredMessages :any[];
   filteredBlockedMembers: any[];
   categories = [
@@ -200,6 +203,7 @@ this.chatService.getTypingStatus().subscribe((typingStatus) => {
   }
 });
 if (this.groupe) {
+  this.membresGroupe = await this.chatService.getChatMembers(this.groupe.chat.id).toPromise();
   this.filteredBlockedMembers = await this.groupe.blockedMembers;
   await this.initializeBlockMembers();
  this.subscribeToTypingStatus(this.groupe.id)
@@ -919,6 +923,8 @@ async onFileSelectedGroup(event: any) {
 }
  
 }
+
+
 
 async showDetail(groupe: any) {
   this.actifNew = false;
@@ -1672,7 +1678,9 @@ isMemberBlock(groupe: any): boolean {
   // Vérifier si l'utilisateur est dans la liste des membres bloqués
   return !groupe.blockedMembers.some((member: any) => this.user.username === member.username);
 }
-
+isMemberGroupe(username:any):boolean{
+  return Array.isArray(this.membresGroupe) && this.membresGroupe.some((member: any) => username === member.username);
+}
 
 popupModifier(groupe: any, action: string) {
 
@@ -1946,9 +1954,7 @@ async  navProfileId(id:number)
     tooltip?.classList.toggle('active');
   }
 
-  clickToolpMember(){
-
-    const tooltip = document.querySelector('.tooltip-member');
-    tooltip?.classList.toggle('active');
+  clickToolpMember(tooltip: HTMLElement) {
+    tooltip.classList.toggle('active');
   }
 }  

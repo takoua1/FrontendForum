@@ -247,10 +247,9 @@
                           <p class="timestamp" >{{formatTimestamp(message.time)}}</p>
                           
                           <button  class="delete-btn" *ngIf="message.sender.id === user.id" (click)="popupValider(message.id)"><i class='bx bx-trash' ></i> </button>
-                          <div  class="edit-member" *ngIf="user.username === groupe.userCreature.username && message.sender.username !== user.username" (click)="clickToolpMember()">
+                          <div  class="edit-member" *ngIf="user.username === groupe.userCreature.username && message.sender.username !== user.username && membresGroupe && isMemberGroupe(message.sender.username)" (click)="clickToolpMember(tooltipMember)">
                             <i class='bx bx-dots-vertical-rounded'></i>
-                           
-                            <div  class="tooltip-member">
+                            <div  class="tooltip-member" #tooltipMember>
                               <ul>
                                 <li (click)="popupGetAdmin(groupe.id,message.sender.username)">
                                   <i class='bx bx-crown'></i>
@@ -265,10 +264,9 @@
                                 <span >Supprimer</span>
                               </li>
                              
-                             
                             </ul>
-                           </div>
-                           </div>
+                          </div>
+                            </div>
                         </li>
             </div>
                
@@ -297,6 +295,28 @@
               <p class="timestamp" >{{ formatTimestamp(convertToDate(item.times))  }}</p>
                   
                   <button  class="delete-btn" *ngIf="item.senderUsername === user.username" (click)="popupValider(convertToNumber(item.id))"><i class='bx bx-trash' ></i> </button>
+                  <div  class="edit-member" *ngIf="user.username === groupe.userCreature.username && item.senderUsername !== user.username && isMemberGroupe(item.senderUsername) " (click)="clickToolpMember(tooltipMember)">
+                    <i class='bx bx-dots-vertical-rounded'></i>
+                   
+                    <div  class="tooltip-member" #tooltipMember>
+                      <ul>
+                        <li (click)="popupGetAdmin(groupe.id,item.senderUsername)">
+                          <i class='bx bx-crown'></i>
+                          <span >Admin</span>
+                        </li>
+                        <li (click)="popupValiderBloquer(groupe.id, item.senderUsername)" >
+                          <i class='bx bx-block' ></i>
+                          <span >Bloquer</span>
+                        </li>
+                        <li (click)="popupDeleteMember(groupe.id,item.senderUsername)">
+                        <i class='bx bx-trash' ></i>
+                        <span >Supprimer</span>
+                      </li>
+                     
+                     
+                    </ul>
+                   </div>
+                   </div>
                 </div>
               </ng-container>
               <li *ngFor="let us of typingUsers">
@@ -379,12 +399,7 @@
                       <button (click)="stopRecording()" *ngIf="isRecording">
                         <i class='bx bx-stop-circle'></i>
                       </button>
-                 
-                   
-            
-                
-               
-            </div>
+                      </div>
          </div>
            
          
@@ -416,7 +431,7 @@
                 <li [class.active]="activeTab === 'images'" (click)="showImages()">Images</li>
                 <li [class.active]="activeTab === 'videos'" (click)="showVideos()">Vidéos</li>
                 <li [class.active]="activeTab === 'vocales'" (click)="showVocales()">Vocales</li>
-                <li  *ngIf="user.username === groupe.userCreature.username" [class.active]="activeTab === 'bloques'" (click)="showBloques()">Liste membres Bloqués</li>
+                <li  *ngIf="user.username === groupe.userCreature.username" [class.active]="activeTab === 'bloques'" (click)="showBloques()"> Bloqués</li>
                </ul>
                </div>
             
@@ -430,9 +445,9 @@
                         <img [src]="member.image ? member.image : '/assets/image/user.png'" class="imgMember" (click)="navProfileMemeber(member)">
                         <p class="name">{{member.nom}} {{member.prenom}} </p>
                         <p class="date">{{ groupe.userJoinDates[member.id] | date:'medium' }}</p>
-                        <div class="edit"   *ngIf="user.username === groupe.userCreature.username && user.username !== member.username" (click)="clickToolpMember()" > 
+                        <div class="edit"   *ngIf="user.username === groupe.userCreature.username && user.username !== member.username" (click)="clickToolpMember(toolipGroup)"  > 
                           <i class='bx bx-dots-vertical-rounded'></i>
-                        <div  class="tooltip-member">
+                        <div  class="tooltip-group" #toolipGroup>
                           <ul>
                             <li (click)="popupGetAdmin(groupe.id,member.username)">
                               <i class='bx bx-crown'></i>
@@ -511,9 +526,9 @@
                   <div class="grid-item" *ngFor="let member of filteredBlockedMembers">
                 <img [src]="member.image ? member.image : '/assets/image/user.png'" class="imgMember" (click)="navProfileMemeber(member)">
                 <p class="name">{{member.nom}}  {{member.prenom}}</p>
-                <div class="edit"   *ngIf="user.username === groupe.userCreature.username"  > 
+                <div class="edit"   *ngIf="user.username === groupe.userCreature.username" (click)="clickToolpMember(toolipBlock)"  > 
                   <i class='bx bx-dots-vertical-rounded'></i>
-                <div  class="tooltip-member">
+                <div  class="tooltip-block" #toolipBlock>
                   <ul>
                    
                     <li (click)="popupValiderDeblouqer(groupe.id, member.username)" >

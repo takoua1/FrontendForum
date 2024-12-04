@@ -1104,11 +1104,28 @@ justify-content: center;
 	left: 3px;
    }
 
-   .tooltip-member {
+    .tooltip-block, .tooltip-member {
   
 	position: relative;
 	right: 80px;
-	top: -60px;
+	top: -127px;
+	transform: translate(-50%,50%);
+	box-shadow: 0 0.5rem 0.8rem rgba(0,0,0,0.2);
+	border-radius: .6rem;
+	
+	line-height: 1.8rem;
+	z-index:20;
+	flex-direction: column;
+	display: none;
+ width: 150px;
+ margin-bottom: 0.5rem;
+  background-color: #fff;
+  }
+  .tooltip-group{
+
+	position: relative;
+	right: 80px;
+	top: -64px;
 	transform: translate(-50%,50%);
 	box-shadow: 0 0.5rem 0.8rem rgba(0,0,0,0.2);
 	border-radius: .6rem;
@@ -1124,7 +1141,7 @@ justify-content: center;
  
   
 
-  .tooltip-member .bx-trash{
+  .tooltip-group .bx-trash, .tooltip-block .bx-trash, .tooltip-member .bx-trash{
 padding: 0.6rem;
 	color:rgb(238, 63, 63);
 	font-size: 16px;
@@ -1135,22 +1152,22 @@ padding: 0.6rem;
 	font-size: 16px;
   }
 
-  .tooltip-member  span{
+  .tooltip-group span, .tooltip-block span,  .tooltip-member  span{
 	
 	font-size: 16px;
   }
-  .tooltip-member .bx-exit{
+ .tooltip-group .bx-exit, .tooltip-block .bx-exit, .tooltip-member .bx-exit{
 	padding: 0.6rem;
 	color:blue;
 		font-size: 16px;
   }
-    .tooltip-member.active{
+  .tooltip-group.active, .tooltip-block.active,  .tooltip-member.active{
 cursor: pointer;
 	display: block;
 
   }
   
-  .tooltip ul li,	 .tooltip-member ul li {
+  .tooltip-group ul li, .tooltip-block ul li, .tooltip ul li,	 .tooltip-member ul li {
      flex-direction: row;
       margin-top: -10px;
 		list-style: none;
@@ -1161,7 +1178,7 @@ cursor: pointer;
 	color:rgb(238, 63, 63);
 	font-size: 16px;
 	 }
-	 .tooltip-member .bx-crown{
+	.tooltip-group .bx-crown, .tooltip-block .bx-crown, .tooltip-member .bx-crown{
 		padding: 0.6rem;
 			color:blue;
 			font-size: 16px;
@@ -2111,8 +2128,12 @@ video{
 	margin-left: 2rem;
 }
 
-.chat-container .chat .message .left{
+.chat-container .chat .message.left{
 	left: -1.5rem;
+}
+.edit {
+
+	left: 109px;
 }
 }
 @media (max-width: 1350px) {
@@ -2134,6 +2155,8 @@ video{
 		margin-right: 0rem;
 		font-size: 15px;
 	}
+	
+	
 	
 }
 @media (max-width: 946px) {
@@ -2209,8 +2232,11 @@ video{
 			margin-right: 0.3em;
 		   }
 		   .detailGroup .list ul li {
-			font-size: 11px;
+			font-size: 12px;
+			padding: 19px;
+			margin-right: -1rem;
 		}
+		
 		.searchBx {
 
 			width: 86%;
