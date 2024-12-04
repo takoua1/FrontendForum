@@ -1738,15 +1738,15 @@ min-width: 379px;
 }
 
 .social-icons a{
-  width: 30px;
-  height: 30px;
+  width: 20px;
+  height: 20px;
 }
 .social-icons{
   top:1rem;
   left: -2rem;
 }
 .social-icons a i {
-  line-height: 30px;
+  line-height: 20px;
 }
 .name {
   position: relative;
@@ -1763,7 +1763,7 @@ min-width: 379px;
 }
 
 .profile-card__button {
-  min-width: 88px;
+  min-width: 90px;
   font-size:10px;
   min-height: 39px;
 }
