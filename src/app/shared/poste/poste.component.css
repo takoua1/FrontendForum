@@ -2312,7 +2312,7 @@ width: 100%;
   }
 
   .card-user {
-width: 98%;
+width: 95%;
 left: 2.5%;
 top: 5rem;
   }
@@ -2321,14 +2321,19 @@ top: 5rem;
 height: 6rem;
 width: 106%;
 left: -3em;
+font-size: 11px
   }
 
   .card-user button {
 width: 36%;
 height: 38px;
 top: -1.5em;
-left: 20.5em;
+left: 18.5em;
 font-size: 10px;
+  }
+  .popupCardUser .card-user button {
+
+    left: 16.5em;
   }
 .card-list .btnIte button {
 width:20%;
@@ -2337,7 +2342,7 @@ margin-left: 4%;
   .card-user .select-menu button {
 width: 41%;
 top: -5.2em;
-left: 6.3em;
+left: 5.3em;
 height: 37px;
 font-size: 10px;
   }
@@ -2363,7 +2368,7 @@ top: 12em;
   .card-user .upload-image button {
 width: 37px;
 top: -8.5em;
-  left: -0.5em;
+  left: -1em;
   height: 35px;
   font-size: 10px;
   }
