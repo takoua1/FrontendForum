@@ -11,6 +11,8 @@ position: relative;
  left: 21px;
  width: 120px;
   float: left;
+  flex-direction: row;
+ 
 
 
 }
@@ -34,15 +36,12 @@ position: relative;
     border-radius: 50%;
   }
   .commentContainer .commentUser p{
-   position: relative;
- top:-23px;    
-   
+    text-align: left;
     font-size: 14px;
-   left: 72px;
-   float: left;
- 
+    margin-top: -2em;
+    margin-left: 7.5rem;
+    width: 400px
    
-  
   }
  /* .commentContainer  .container{
 position: relative;
