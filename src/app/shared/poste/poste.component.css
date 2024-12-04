@@ -1532,8 +1532,10 @@ app-comment {
   color: #090909;
   float: right;
   font-size: 12px;
-  margin-left: 35rem;
-  width: 150px;
+  left: 3rem;
+  width: 100%;
+  display: flex;
+  text-align: left;
 }
 
 
@@ -2164,7 +2166,7 @@ height: 40px;
   }
   .popupPoste {
     margin-left: 0%;
-    width: 97%;
+    width: 100%;
   }
   .popupPoste .card-list{
 
