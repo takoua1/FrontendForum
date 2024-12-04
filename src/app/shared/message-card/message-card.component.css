@@ -1188,10 +1188,11 @@ cursor: pointer;
 			font-size:20px ;
 		 left: 6px;
 		   top:18px;
-		 
+		   z-index: 10;
 		  color: #fff;
 		  }
-		  .profile-card__button {
+
+.contact .profile-card__button {
       
 			background: none;
 			border: none;
