@@ -6,7 +6,7 @@
     font-family: 'Poppins', sans-serif;
   }
 
-body {
+/*body {
   
     margin: 0;
     padding: 0;
@@ -14,22 +14,24 @@ body {
     background-color: #f4f4f9;
     color: #333;
     line-height: 1.6;
-}
-body, html {
+}*/
+/*body, html {
   height: 100%;
   margin: 0;
   padding: 0;
-  overflow-y: hidden; /* Empêche tout défilement */
-}
+  overflow-y: hidden; 
+}*/
 /* Container */
 .container {
   position: relative;
     width: 100%;
     left: 20%;
+    overflow-y: auto;
+    height: 91vh;
     top: 6rem;
     max-width: 1000px;
-    margin: 1.5rem;
-    padding: 6.5rem;
+   
+    padding: 5rem;
     max-height: 100%;
     background: #fff;
     border-radius: 12px;
@@ -429,4 +431,26 @@ keyframes fadeInUp {
     display: block;
   }
 
- 
+ @media (max-width: 480px) {
+  .container{
+  width: 82%;
+    margin: 3.5rem 0rem 0rem -0.5rem;
+    padding: 0;
+  }
+  .sender{
+    font-size: 12px;
+  }
+  .date{
+    font-size: 11px;
+    right: 2rem;
+  }
+  .mail-body h2{
+      font-size: 11px;
+  }
+  .mail-body p{
+    font-size: 12px;
+  }
+  .header h1 {
+    font-size: 20px;
+  }
+ }
