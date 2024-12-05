@@ -1868,7 +1868,10 @@ font-size: 23px;
 
 		  left: 16%;
 		}
-	  
+		.popupModifierGroupe .cardGroupe .select-menu .categs{
+
+            left: 24px;
+          }
 	  
 	  .popupModifierGroupe .cardGroupe {
 	  
