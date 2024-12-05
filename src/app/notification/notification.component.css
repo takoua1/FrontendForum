@@ -149,7 +149,8 @@ float: right;
   .title{
     position: relative;
     top:150px;
-
+     width: 100px;
+     display: flex;
     left: 260px;
    
   }
@@ -159,6 +160,7 @@ float: right;
   .content{
     
     padding: 20px;
+
     color: black;
     vertical-align: middle;
     text-align: left;
@@ -1168,6 +1170,18 @@ display: flex;
           padding-left:-2px;
           width: 100%;
           line-height: 1;
+        }
+        .popupDelete{
+          left:17% ;
+        }
+        .notification .notification-container {
+
+          width:90%;
+        }
+        .notification .notification-container .notification-text{
+          padding-right: 48px;
+          font-size: 15px;
+
         }
       }
 

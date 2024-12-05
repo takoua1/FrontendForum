@@ -1458,9 +1458,8 @@ margin-top: 10px;
         height: 8px;
         font-size: 8px;
       }
-      .notificationList
-       .notification-container .notification-content .notification-text{
-        font-size: 11px;
+      .notificationList .notification-container .notification-text {
+          font-size: 13px;
       }
 
       .notificationList   .notification-container .notification-content  .notification-timer {
@@ -1504,6 +1503,11 @@ margin-top: 10px;
 
      .notification .notification-container .notification-content .notification-text{
         font-size: 13px;
+      }
+
+
+      .popupSupp{
+      left: 15%;
       }
     }
     
