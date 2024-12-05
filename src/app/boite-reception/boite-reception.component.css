@@ -47,7 +47,7 @@
 
 .container::-webkit-scrollbar
 {
-	width: 10px;
+	width: 0px;
 	background-color: #F5F5F5;
   border-radius: 5px
 }
@@ -434,7 +434,7 @@ keyframes fadeInUp {
  @media (max-width: 480px) {
   .container{
   width: 82%;
-    margin: 3.5rem 0rem 0rem -0.5rem;
+    margin: 3.5rem 0rem 0rem -0.6rem;
     padding: 0;
   }
   .sender{
@@ -452,5 +452,8 @@ keyframes fadeInUp {
   }
   .header h1 {
     font-size: 20px;
+  }
+  .popupDelete{
+   left: 1%;
   }
  }
