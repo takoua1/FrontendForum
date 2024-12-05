@@ -1532,7 +1532,7 @@ app-comment {
   color: #090909;
   float: right;
   font-size: 12px;
-  left: 3rem;
+  left: 40rem;
   width: 100%;
   display: flex;
   text-align: left;
@@ -2175,7 +2175,7 @@ height: 40px;
 
   .comment .commentTaille {
 
-    margin-left: 28rem;
+    margin-left: 7rem;
   }
   }
 
@@ -2355,7 +2355,7 @@ font-size: 10px;
   }
   .comment .commentTaille {
     
-    margin-left: 13rem;
+    margin-left: -24rem;
     font-size: 8px;
 }
   .card-user .select-menu .categs {

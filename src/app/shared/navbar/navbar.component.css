@@ -254,10 +254,10 @@ justify-content: center;
 	border-radius: 16px;
 	position: fixed;
 	bottom: 15px;
-	left: 88px;
+	left: -2px;
   background-color: rgba(0, 0, 0, 0.1);
 	transform: translateY(200%);
-	animation: noti 3s  forwards  ease-in;
+	animation: noti 180s  forwards  ease-in;
 z-index: 1000;}
 	.notification .notification-header {
     
@@ -320,7 +320,7 @@ z-index: 1000;}
     padding-left: 20px;
     line-height: 1;
 	}
-	 .notification .notification-container .notification-text {
+	 .notification .notification-container .notification-content .notification-text {
     margin-bottom: 5px;            /* Adds space below the element */
     display: -webkit-box;          /* Old flexbox syntax */
     display: -webkit-flex;         /* Flexbox for WebKit browsers */
@@ -333,8 +333,7 @@ z-index: 1000;}
     line-clamp: 3;       /* Limit to 3 lines of text */
     overflow: hidden;              /* Hide overflow */
     text-overflow: ellipsis;       /* Ellipsis (...) for overflow text */
-    
-    padding-right: 50px;
+
 
 	}
 	.notification .notification-container .notification-content  .notification-timer {
@@ -406,7 +405,7 @@ z-index: 1000;}
 }
 
 .box-notif{
-  width: 400px;
+ width: 400px;
  
   border-radius: 10px;
   transition: 0.5s;
@@ -634,7 +633,7 @@ color:rgba(207, 142, 20, 0.664);}
   overflow: hidden;              /* Hide overflow */
   text-overflow: ellipsis;       /* Ellipsis (...) for overflow text */
   
-  padding-right: 50px;
+ 
 
 }
 .notificationList .notification-container .notification-content  .notification-timer {
@@ -1425,6 +1424,86 @@ margin-top: 10px;
       }
       .main-content .search .bx-search {
         left:1em;
+      }
+      .box-notif{
+        width: 100%;
+      }
+      .notificationList{
+        width: 100%;
+      }
+      .cont{
+        width:90%;
+        height:40%;
+      }
+      .notificationList .notification-container .notification-media .notification-user-avatar{
+       width:30px;
+      height: 30px;
+       margin-left: -1rem;
+      }
+
+      .notificationList   .notification-container .notification-media  .notification-reaction{
+
+        width: 10px;
+        height: 10px;
+        bottom: 0.3rem;
+        
+      }
+      .notificationList     .notification-container .notification-media .notification-status{
+        width: 5px;
+        height: 5px;
+      }
+      .notificationList   .notification-container .notification-media .notification-status  .bxs-circle{
+        left: 8px;
+        width: 8px;
+        height: 8px;
+        font-size: 8px;
+      }
+      .notificationList
+       .notification-container .notification-content .notification-text{
+        font-size: 11px;
+      }
+
+      .notificationList   .notification-container .notification-content  .notification-timer {
+        font-size: 4px;
+        font-weight: 200;
+      }
+    .notification{
+      width:84%;
+    }
+
+
+    .notification .notification-container .notification-status{
+
+      right:26px;
+      width:10px;
+      height: 10px;
+      top:88%
+    }
+    .notification .notification-container.notification-content .notification-timer{
+
+      font-size: 11px;
+    }
+
+    
+     .notification .notification-header .notification-title{
+      margin-top: 1rem;
+      font-size: 12px;
+     }
+     .notification .notification-container .notification-media .notification-user-avatar{
+      width:30px;
+     height: 30px;
+      margin-left: -1rem;
+     }
+
+     .notification  .notification-container .notification-media  .notification-reaction{
+
+       width: 10px;
+       height: 10px;
+       bottom: 0.3rem;
+     }
+
+     .notification .notification-container .notification-content .notification-text{
+        font-size: 13px;
       }
     }
     

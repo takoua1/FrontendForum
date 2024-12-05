@@ -30,8 +30,8 @@ import { MessageMailService } from '../../services/message-mail.service';
                 style({ opacity: 0, transform: 'translateY(-100%)' }),
                 animate('2000ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
             ]),
-            transition(':leave', [
-                animate('2000ms ease-in', style({ opacity: 0, transform: 'translateY(100%)' }))
+           transition(':leave', [
+                animate('3000ms ease-in', style({ opacity: 0, transform: 'translateY(100%)' }))
             ])
         ])
     ],

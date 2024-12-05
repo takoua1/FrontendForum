@@ -98,7 +98,7 @@ getCommentById(id: number): Observable<any> {
 }
 
 getCommentsByPostId(postId: number): Observable<Comment[]> {
-  return this.http.get<Comment[]>(`${this.apiUrl}/comment/poste${this.apiUrl}/comments/${postId}`);
+  return this.http.get<Comment[]>(`${this.apiUrl}/comment/poste/comments/${postId}`);
 }
 
 getChildById(commentId: number): Observable<Comment[]> {
