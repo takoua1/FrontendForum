@@ -6,46 +6,8 @@
     font-family: 'Poppins', sans-serif;
   }
 
-  .card-list .containerPoste{
-  
-    position: relative;
-  border-radius: 10px;
-  width: 80%;
-  margin: 51px;
-  display: inline-block;
-  border: 1px solid white;
-      
-    }
-    .card-list .containerPoste .post-text {
-      color: black;
-      padding: 10px;
-      white-space: pre-wrap;
-      /* Conserve les sauts de ligne et les espaces comme dans le texte d'origine */
-      word-wrap: break-word;
-      font-size: 25px;
-      font: 1em sans-serif;
-      font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-      margin-top: 5%;
-      cursor: text;
-      text-align: left;
-    
-    }
-  .post-text.expanded {
-   max-height: none; /* Supprime la limite lorsque l'élément est étendu */
-   white-space: normal;
-   overflow: visible;
-  }
-  
-  .toggle-button {
-  
-   position: absolute;
-   background-color: transparent;
-   border: none;
-   color:#6d80c5;
-   cursor: pointer;
-   margin-top: 5px;
-   left: 20px;
-  }
+   
+ 
   .card-list  .containerPoste .post-image {
     max-width: 31%;
     margin-top: 5%;
@@ -62,26 +24,12 @@
   right: 0px;
   }
   
-  .card-list .btnIte {
-    position: relative;
-    width: 74%;
-    top: -3em;
-    display: flex;
-    left: 4rem;
-    margin-top: 10px;
-  }
+ 
   .card-list .btnIte  button:nth-child(3) {
    background-color: #007bff; /* Change la couleur de fond du bouton en bleu */
    color: white; /* Change la couleur du texte en blanc */
   }
-  .comment .commentLenght p {
-    position: relative;
-    top: -47px;
-    color: #7e7e7e;
-    float: right;
-    font-size: 12px;
-     right: 3rem; 
-  }
+  
   .bx.bxs-like {
    color: white;
   }
@@ -161,31 +109,7 @@ flex-direction: column;
     
        
        
-         .detail-Poste  .card-list {
-          position: relative;
-          box-sizing: border-box;
-          max-width: 1000px;
-          width: 90%;
-          top: 10rem;
-          padding: 19px;
-          background: rgba(217, 217, 217, 0.58);
-          border: 1px solid white;
-          box-shadow: 12px 17px 51px rgba(0, 0, 0, 0.22);
-          -webkit-backdrop-filter: blur(6px);
-          backdrop-filter: blur(6px);
-          border-radius: 17px;
-          text-align: center;
-          cursor: pointer;
-          transition: all 0.5s;
-          align-items: center;
-          justify-content: center;
-          -webkit-user-select: none;
-          user-select: none;
-          font-weight: bolder;
-          color: black;
-          margin-bottom: 50px;
-                }
-        
+       
         
         
        .detail-Poste  .card-list:hover {
@@ -215,7 +139,7 @@ flex-direction: column;
         max-width: 1000px;
         width: 90%;
         top: 10rem;
-        padding: 19px;
+        padding: 6px;
         background: rgba(217, 217, 217, 0.58);
         border: 1px solid white;
         box-shadow: 12px 17px 51px rgba(0, 0, 0, 0.22);
@@ -260,10 +184,11 @@ flex-direction: column;
           position: relative;
           border-radius: 10px;
           width: 80%;
-          margin: 51px;
+          top: 2rem;
+          margin: 29px;
           display: inline-block;
           border: 1px solid white;
-              
+      
             }
         
             .card-list .containerPoste .post-text {
@@ -377,11 +302,11 @@ flex-direction: column;
         
       .card-list .btnIte {
         position: relative;
-  width: 74%;
-  top: -3em;
-  display: flex;
-  left: 4rem;
-  margin-top: 10px;
+        width: 73%;
+        top: 0em;
+        display: flex;
+        left: 12rem;
+        margin-top: 10px;
       }
       .card-list .btnIte  button:nth-child(3) {
         background-color: #007bff; /* Change la couleur de fond du bouton en bleu */
@@ -592,11 +517,11 @@ flex-direction: column;
          
          .comment .commentLenght p
         {position: relative;
-         top: -47px;
+         top: -4px;
          color: #7e7e7e;
          float: right;
          font-size: 12px;
-          right: 3rem; 
+          right: 7rem; 
          }
          
         
@@ -1681,7 +1606,7 @@ top: -8.5em;
   }
 
   .card-list .btnIte {
-  left: 7%;
+  left: 19%;
   }
   .card-container .card-list {
 
