@@ -202,11 +202,37 @@ flex-direction: column;
           color: #9a9a9a;
         }
         .card-list .user-profile p {
-            position: absolute;
-            top: 5px;
-            margin-left: 7%;
-        }
-
+          position: absolute;
+          top: 5px;
+          left: 1rem;
+          display: flex;
+      
+          margin-left: 7%;
+      }
+   .detail-Poste   .card-list {
+        position: relative;
+        box-sizing: border-box;
+        max-width: 1000px;
+        width: 90%;
+        top: 10rem;
+        padding: 19px;
+        background: rgba(217, 217, 217, 0.58);
+        border: 1px solid white;
+        box-shadow: 12px 17px 51px rgba(0, 0, 0, 0.22);
+        -webkit-backdrop-filter: blur(6px);
+        backdrop-filter: blur(6px);
+        border-radius: 17px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.5s;
+        align-items: center;
+        justify-content: center;
+        -webkit-user-select: none;
+        user-select: none;
+        font-weight: bolder;
+        color: black;
+        margin-bottom: 50px;
+    }
         .comment .commentText button {
           position: relative;
           width: 40px;
@@ -1759,5 +1785,8 @@ color: #676767;
   width: 173%;
   left: -5rem;
 }
-
+.detail-Poste .card-list {
+  width: 95%;
+  left: .5rem;
+}
 }
