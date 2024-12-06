@@ -1604,7 +1604,10 @@ top: -8.5em;
   cursor: pointer;
   color: #007bff;
   }
+  .card-list .containerPoste .post-image{
 
+    max-width: 52%;
+  }
   .card-list .btnIte {
   left: 19%;
   }

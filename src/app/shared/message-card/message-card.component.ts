@@ -237,7 +237,7 @@ this.chatService.groupDeleted$.subscribe(deletedGroupId => {
   if (this.groupe && this.groupe.id === deletedGroupId) {
     console.log('Vous avez été bloqué du groupe:', deletedGroupId);
     this.groupService.triggerGroupeListUpdated();
-     
+    location.reload();
   } 
 })
 this.chatService.groupBlock$.subscribe(blockedGroupId => {
@@ -247,7 +247,7 @@ this.chatService.groupBlock$.subscribe(blockedGroupId => {
   if (this.groupe && this.groupe.id === blockedGroupId) {
     console.log('Vous avez été bloqué du groupe:', blockedGroupId);
     this.groupService.triggerGroupeListUpdated();
- 
+    //location.reload();
   } 
 });
 

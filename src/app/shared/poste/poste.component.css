@@ -2335,13 +2335,18 @@ left: 5.3em;
 height: 37px;
 font-size: 10px;
   }
+  .card-list .containerPoste .post-image{
 
+    max-width: 52%;
+  }
   .popupPoste .card-list .btnIte {
     left: 3rem;
   }
+
+
   .comment .commentTaille {
     
-    margin-left: -24rem;
+    margin-left: -27rem;
     font-size: 8px;
 }
   .card-user .select-menu .categs {
