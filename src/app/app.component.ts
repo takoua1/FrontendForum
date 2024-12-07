@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
     standalone: false
 })
 export class AppComponent implements OnInit{
-  title = 'TunisiaForum';
+  title = 'ForumSocialX';
   isAuthenticated: boolean = false;
   private userId: string;
   user:any;
