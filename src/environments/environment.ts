@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'https://mathematical-noell-takoua-70bd4654.koyeb.app'
+  apiUrl: 'https://backendforum-ovbi.onrender.com'
 };
 
 /*
