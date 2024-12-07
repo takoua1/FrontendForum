@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'backendforum-production.up.railway.app'
+  apiUrl: 'https://mathematical-noell-takoua-70bd4654.koyeb.app'
 };
 
 /*
