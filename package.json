@@ -28,7 +28,7 @@
     "@capacitor/core": "^6.2.0",
     "@capacitor/filesystem": "^6.0.2",
     "@capacitor/ios": "^6.2.0",
-    "@capacitor/storage": "^1.2.5",
+    "@capacitor/preferences": "^6.0.3",
     "@ctrl/ngx-emoji-mart": "^9.2.0",
     "@ionic-native/core": "^5.36.0",
     "@ionic-native/http": "^5.36.0",

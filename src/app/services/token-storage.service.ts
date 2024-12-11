@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Storage } from '@capacitor/storage';
+import { Preferences } from '@capacitor/preferences';
 import { BehaviorSubject } from 'rxjs';
 
 
@@ -29,7 +29,7 @@ export class TokenStorageService {
       this.tokenCache = window.localStorage.getItem(TOKEN_KEY);
       this.tokenSubject.next(this.tokenCache);
     } else {
-      const { value } = await Storage.get({ key: TOKEN_KEY });
+      const { value } = await Preferences .get({ key: TOKEN_KEY });
       this.tokenCache = value;
       this.tokenSubject.next(this.tokenCache);
     }
@@ -40,7 +40,7 @@ export class TokenStorageService {
     if (this.isWeb()) {
       window.localStorage.clear();
     } else {
-      Storage.clear();
+      Preferences.clear();
     }
     this.tokenCache = null;
     this.tokenSubject.next(null);
@@ -51,7 +51,7 @@ export class TokenStorageService {
     if (this.isWeb()) {
       window.localStorage.setItem(TOKEN_KEY, token);
     } else {
-      Storage.set({ key: TOKEN_KEY, value: token });
+      Preferences.set({ key: TOKEN_KEY, value: token });
     }
     this.tokenCache = token;
     this.tokenSubject.next(token);
@@ -67,7 +67,7 @@ export class TokenStorageService {
     if (this.isWeb()) {
       window.localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
     } else {
-      Storage.set({ key: REFRESH_TOKEN_KEY, value: refreshToken });
+      Preferences.set({ key: REFRESH_TOKEN_KEY, value: refreshToken });
     }
   }
 
@@ -84,7 +84,7 @@ export class TokenStorageService {
     if (this.isWeb()) {
       window.localStorage.setItem(USER_KEY, JSON.stringify(user));
     } else {
-      Storage.set({ key: USER_KEY, value: JSON.stringify(user) });
+      Preferences.set({ key: USER_KEY, value: JSON.stringify(user) });
     }
   }
 
