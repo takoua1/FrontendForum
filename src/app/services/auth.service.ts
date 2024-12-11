@@ -38,10 +38,14 @@ export class AuthService implements OnDestroy{
     this.isAuthenticatedSubject.next(isAuthenticated);
   }
   login(username:string,password:string):Observable<any>
-  {
+  {const headers = {
+    'Content-Type': 'application/json',
+    // Ajoutez ici d'autres en-têtes si nécessaire, comme Authorization
+  };
+  
    
   return this.http.post<any>(`${this.apiUrl}/auth/signin`,
- {username,password}).pipe(map(response=>{
+ {username,password},{headers}).pipe(map(response=>{
  if(response.message_Error!=null)
  {
  this.startHeartbeat();
