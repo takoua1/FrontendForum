@@ -29,11 +29,13 @@ export class TokenStorageService {
       this.tokenCache = window.localStorage.getItem(TOKEN_KEY);
       this.tokenSubject.next(this.tokenCache);
     } else {
-      const { value } = await Preferences .get({ key: TOKEN_KEY });
+      const { value } = await Preferences.get({ key: TOKEN_KEY });
       this.tokenCache = value;
       this.tokenSubject.next(this.tokenCache);
+      console.log('Token chargé depuis les préférences :', this.tokenCache);
     }
   }
+  
 
   // Se déconnecter et effacer les tokens
   signOut(): void {
