@@ -1,70 +1,88 @@
-import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HTTP } from '@ionic-native/http/ngx';
-import { Platform } from '@ionic/angular';
-import { from, Observable } from 'rxjs';
+import {
+  HttpEvent,
+  HttpHandler,
+  HttpInterceptor,
+  HttpRequest,
+  HttpResponse,
+} from '@angular/common/http';
+import { Observable, from } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
+import { Http } from '@capacitor-community/http';
+import { Capacitor } from '@capacitor/core';
 import { TokenStorageService } from '../token-storage.service';
-type HttpMethod = 'get' | 'post' | 'put' | 'patch' | 'head' | 'delete' | 'upload' | 'download';
+import { AuthService } from '../auth.service';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class NativeService implements HttpInterceptor{
-
+@Injectable()
+export class NativeService implements HttpInterceptor {
   constructor(
-    private nativeHttp: HTTP, // Pour utiliser les requêtes natives
-    private platform: Platform,
-    private tokenStorageService: TokenStorageService // Pour récupérer le token
-  ) { }
+    private tokenStorageService: TokenStorageService,
+    private authService: AuthService
+  ) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (!this.platform.is('capacitor')) {
-      // Si on n'est pas sur un appareil mobile (Capacitor), on passe la requête comme d'habitude
-      return next.handle(req);
+    let token = this.tokenStorageService.getToken();
+    if (token) {
+      req = req.clone({
+        setHeaders: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
     }
 
-    return from(this.handleNativeRequest(req));
+    if (Capacitor.isNativePlatform() && req.url.startsWith('http')) {
+      const options = this.createOptions(req);
+      return from(Http.request(options)).pipe(
+        map((response) => {
+          return new HttpResponse({
+            body: response.data || response,
+            status: response.status,
+            url: req.url,
+          });
+        }),
+        catchError((error) => {
+          if (error.status === 401) {
+            return this.refreshAndRetry(options);
+          }
+          throw error;
+        })
+      );
+    }
+
+    return next.handle(req);
   }
 
-  private async handleNativeRequest(request: HttpRequest<any>): Promise<HttpEvent<any>> {
-    const token = this.tokenStorageService.getToken();
-    const headers: { [key: string]: string } = {};
+  private createOptions(req: HttpRequest<any>) {
+    return {
+      url: req.url,
+      method: req.method,
+      headers: req.headers.keys().reduce((acc, key) => {
+        acc[key] = req.headers.get(key)!;
+        return acc;
+      }, {} as Record<string, string>),
+      params: req.params.keys().reduce((acc, key) => {
+        acc[key] = req.params.get(key)!;
+        return acc;
+      }, {} as Record<string, string>),
+      data: req.body,
+    };
+  }
 
-    // Ajouter le token aux en-têtes si disponible
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
-    }
-
-    // Ajouter les autres en-têtes de la requête
-    request.headers.keys().forEach(key => {
-      headers[key] = request.headers.get(key) || '';
-    });
-
-    try {
-      // Attendre que la plateforme soit prête
-      await this.platform.ready();
-
-      // Utilisation de `@ionic-native/http` pour envoyer la requête native
-      const response = await this.nativeHttp.sendRequest(request.url, {
-        method: <HttpMethod>request.method.toLowerCase(),
-        headers: headers,
-        data: request.body,
-        serializer: 'json',
-      });
-
-      // Créer la réponse et la retourner
-      return {
-        body: JSON.parse(response.data),
-        status: response.status,
-        url: response.url
-      } as HttpEvent<any>;
-    } catch (error: any) {
-      // Gérer les erreurs et les renvoyer sous forme de HttpEvent
-      return Promise.reject({
-        body: error.error ? JSON.parse(error.error) : 'Error',
-        status: error.status || 500,
-        url: request.url
-      } as HttpEvent<any>);
-    }
+  private refreshAndRetry(options: any) {
+    return this.authService.refreshToken().pipe(
+      switchMap(() => {
+        const newToken = this.tokenStorageService.getToken();
+        options.headers['Authorization'] = `Bearer ${newToken}`;
+        return from(Http.request(options)).pipe(
+          map((response) => {
+            return new HttpResponse({
+              body: response.data || response,
+              status: response.status,
+              url: options.url,
+            });
+          })
+        );
+      })
+    );
   }
 }

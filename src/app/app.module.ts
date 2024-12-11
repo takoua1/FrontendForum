@@ -44,8 +44,8 @@ import { ErrorComponent } from './error/error.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { DetailPosteComponent } from './detail-poste/detail-poste.component';
 import { NativeService } from './services/interceptors/native.service';
-import { IonicModule } from '@ionic/angular';
-import { HTTP } from '@ionic-native/http/ngx';
+
+
 
 
 registerLocaleData(localeFr);
@@ -69,11 +69,11 @@ registerLocaleData(localeFr);
     bootstrap: [AppComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA], imports: [BrowserModule,
         AppRoutingModule,
-        IonicModule.forRoot(),
+        
         BrowserAnimationsModule,
         FormsModule,
         ReactiveFormsModule,
         CommonModule,
         RouterModule,
-        BrowserAnimationsModule], providers: [{ provide: LOCALE_ID, useValue: 'fr-FR' }, PosteService, authInterceptorProviders,HTTP, { provide: HTTP_INTERCEPTORS, useClass: NativeService, multi: true },TokenStorageService, AuthService, ChatService, NotificationService, SignaleService, MessageMailService, provideHttpClient(withInterceptorsFromDi())] })
+        BrowserAnimationsModule], providers: [{ provide: LOCALE_ID, useValue: 'fr-FR' }, PosteService, authInterceptorProviders, { provide: HTTP_INTERCEPTORS, useClass: NativeService, multi: true },TokenStorageService, AuthService, ChatService, NotificationService, SignaleService, MessageMailService, provideHttpClient(withInterceptorsFromDi())] })
 export class AppModule { }

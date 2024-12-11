@@ -1433,7 +1433,7 @@ validerInform()
   }
  
 
-  removeChildComment(parentComment: any, commentId: number) {
+  removeChildComment(parentComment: any, commentId: number):any{
     console.log("Liste des sous-commentaires du parent :", parentComment.childComments);
 
     const childIndex = parentComment.childComments.findIndex((child: any) => {

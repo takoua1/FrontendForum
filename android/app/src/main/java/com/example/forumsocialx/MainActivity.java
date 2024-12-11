@@ -1,4 +1,4 @@
-package com.example.app;
+package com.example.forumsocialx;
 
 import com.getcapacitor.BridgeActivity;
 

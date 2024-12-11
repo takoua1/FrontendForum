@@ -5,7 +5,7 @@ import { Chat } from '../model/chat';
 import { TokenStorageService } from './token-storage.service';
 import { User } from '../model/user';
 import { Message } from '../model/message';
-import { BehaviorSubject, catchError, map, Observable, of, Subject, tap, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, of, Subject, Subscriber, tap, throwError } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ChatNotification } from '../model/chat-notification';
 import { Groupe } from '../model/groupe';
@@ -903,7 +903,7 @@ updateGroupe(groupeId: number, name:string,category:string, file: File | null): 
 }
 
 listenForBlock(userId: string): Observable<any> {
-  return new Observable<any>((observer) => {
+  return new Observable<any>((observer: Subscriber<any>) => {
     // Vérifier si la connexion WebSocket est déjà établie
     if (!this.isConnected) {
       // Si la connexion n'est pas établie, essayez de la rétablir ou attendez la connexion
@@ -923,9 +923,7 @@ listenForBlock(userId: string): Observable<any> {
           });
 
           // Nettoyage de l'abonnement lorsque l'observable est détruit
-          return () => {
-            subscription.unsubscribe();
-          };
+          return;
         }
       }, 500);  // Attendre 500ms entre chaque tentative de connexion
     } else {
@@ -941,6 +939,7 @@ listenForBlock(userId: string): Observable<any> {
         subscription.unsubscribe();
       };
     }
+    return; // Add this line to ensure all paths return a value
   });
 }
 
