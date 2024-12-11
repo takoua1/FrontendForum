@@ -793,7 +793,7 @@ else{
 
   getTotalLikes(poste:Poste): void {
     this.posteService.getTotalLikes(poste.id)
-      .subscribe(totalLikes => {
+      .subscribe((totalLikes:number) => {
         this.totalLikesMap[poste.id] = totalLikes;
       
         console.log("Total likes for post with ID " + poste.id + ": " + totalLikes);
@@ -801,7 +801,7 @@ else{
   }
   getTotalDislikes(poste:Poste): void {
     this.posteService.getTotalDislikes(poste.id)
-      .subscribe(totalDislikes => {
+      .subscribe((totalDislikes:number) => {
         this.totalDislikesMap[poste.id] = totalDislikes;
       
         console.log("Total likes for post with ID " + poste.id + ": " +totalDislikes);

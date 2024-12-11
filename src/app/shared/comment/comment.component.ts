@@ -768,7 +768,7 @@ this.openVerifierconnect()}
 
           getTotalLikes(comment:Comment): void {
             this.commentService.getTotalLikes(comment.id)
-              .subscribe(totalLikes => {
+              .subscribe((totalLikes:number) => {
                 this.totalLikesMap[comment.id] = totalLikes;
               
                 console.log("Total likes for post with ID " + comment.id + ": " + totalLikes);
@@ -776,7 +776,7 @@ this.openVerifierconnect()}
           }
           getTotalDislikes(comment:Comment): void {
             this.commentService.getTotalDislikes(comment.id)
-              .subscribe(totalDislikes => {
+              .subscribe((totalDislikes:number) => {
                 this.totalDislikesMap[comment.id] = totalDislikes;
               
                 console.log("Total likes for post with ID " + comment.id + ": " +totalDislikes);
