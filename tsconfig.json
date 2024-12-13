@@ -34,8 +34,8 @@
      "paths": {
       "@angular/*": ["node_modules/@angular/*"],
       "@capacitor/core": ["node_modules/@capacitor/core"],
-      "@capacitor/*": ["node_modules/@capacitor/*"],
-      "@capacitor-community/http": ["node_modules/@capacitor-community/http"] 
+      "@capacitor/*": ["node_modules/@capacitor/*"]
+     
       },                                      
     // "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */
     "typeRoots": ["node_modules/@types"],                                 /* Specify multiple folders that act like './node_modules/@types'. */

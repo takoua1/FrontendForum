@@ -43,7 +43,7 @@ import { SuccessComponent } from './success/success.component';
 import { ErrorComponent } from './error/error.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { DetailPosteComponent } from './detail-poste/detail-poste.component';
-import { NativeService } from './services/interceptors/native.service';
+import { NativeHttpInterceptor } from './services/interceptors/nativeHttp.service';
 
 
 
@@ -75,5 +75,5 @@ registerLocaleData(localeFr);
         ReactiveFormsModule,
         CommonModule,
         RouterModule,
-        BrowserAnimationsModule], providers: [{ provide: LOCALE_ID, useValue: 'fr-FR' }, PosteService, authInterceptorProviders, { provide: HTTP_INTERCEPTORS, useClass: NativeService, multi: true },TokenStorageService, AuthService, ChatService, NotificationService, SignaleService, MessageMailService, provideHttpClient(withInterceptorsFromDi())] })
+        BrowserAnimationsModule], providers: [{ provide: LOCALE_ID, useValue: 'fr-FR' }, PosteService, authInterceptorProviders, { provide: HTTP_INTERCEPTORS, useClass: NativeHttpInterceptor, multi: true },TokenStorageService, AuthService, ChatService, NotificationService, SignaleService, MessageMailService, provideHttpClient(withInterceptorsFromDi())] })
 export class AppModule { }
