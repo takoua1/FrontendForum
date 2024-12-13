@@ -48,7 +48,7 @@
     "ngx-socket-io": "^4.8.1",
     "rimraf": "^6.0.1",
     "rollup": "^4.28.1",
-    "rxjs": "^7.8.1",
+    "rxjs": "^6.5.5",
     "socket.io-client": "^4.8.1",
     "sockjs-client": "^1.6.1",
     "stream": "^0.0.3",
