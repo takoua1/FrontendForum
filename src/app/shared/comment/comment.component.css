@@ -4,6 +4,15 @@
   display:flex;
   flex-direction: column;
 }
+.commentContainer label{
+  position: relative;
+  margin-top: -18px;
+  right: -41rem;
+  float: right;
+  color: #545353;
+  font-size: 12px;
+  width: 100px;
+}
 
 .commentContainer .commentUser{
 position: relative;
@@ -21,6 +30,7 @@ position: relative;
  
  position: relative;
     width: 40px;
+    height: 40px;
   top:-30px;
    left: 70px;
    float: left;
@@ -228,11 +238,11 @@ margin-top:-75px;
   { position: relative;
  
    margin-top: -20px;
-    right: 150px;
+    right: 122px;
   float:right;
    color: #545353;
    font-size: 12px;
-   
+   width:166px;
   }
   .childContainer {
     margin-left: 20px;
@@ -684,10 +694,23 @@ float: right;
   
 }
 @media (max-width: 480px) {
-
+  .commentContainer label{
+    font-size:10;
+    right:-14rem;
+  }
   .commentContainer .commentUser {
   left: -83px;
   
+  }
+  .commentContainer .container   .bx-error-alt{
+
+    right :-1%;
+
+  }
+  .commentContainer .container   .bx-trash{
+
+    right :-1%;
+    
   }
   .commentContainer .repText button{
   right: -92%;

@@ -30,7 +30,7 @@ export class UserService {
     var url=`${this.apiUrl}/user/findById/${id}`;
      console.log("//////////");
     
-    return this.http.get<User>(url ,{headers:headers});
+    return this.http.get<User>(url);
   }
   updateUser(id: number, user: User): Observable<any> {
     const url = `${this.apiUrl}/user/update/${id}`;

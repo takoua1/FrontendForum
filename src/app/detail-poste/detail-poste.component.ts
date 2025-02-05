@@ -97,7 +97,18 @@ export class DetailPosteComponent implements OnInit {
     { name: 'Musique', icon: 'bx bx-music', selected: false },
     { name: 'Politique', icon: 'bx bxs-user-voice', selected: false },
     { name: 'Sport', icon: 'bx bx-football', selected: false },
-  ] 
+    { name: 'Technologie', icon: 'bx bx-atom', selected: false },
+    { name: 'Animaux', icon: 'bx bxs-cat', selected: false },
+    { name: 'Voyage', icon: 'bx bxs-plane-alt', selected: false },
+    { name: 'Culture', icon: 'bx bx-landscape', selected: false },
+    { name: 'Science', icon: 'bx bxs-flask', selected: false },
+    { name: 'Santé', icon: 'bx bxs-briefcase', selected: false },
+    { name: 'Cuisine', icon: 'bx bxs-dish', selected: false },
+    { name: 'Histoire', icon: 'bx bx-history', selected: false },
+    { name: 'Art', icon: 'bx bxs-palette', selected: false },
+    { name: 'Environnement', icon: 'bx bxs-leaf', selected: false }
+  ];
+  
   reportTypes = [
     'Contenu à caractère sexuel',
     'Contenu violent ou abject',
@@ -1528,6 +1539,12 @@ copyPosteLink(poste:any)
       duration: 3000,
     });
   });
+  }
+  onOverlayClick() {
+    this. closePopupOverlay();
+   this.popupSignale.nativeElement.style.display = 'none'; 
+   
+   
   }
   }
   

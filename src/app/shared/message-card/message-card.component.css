@@ -447,7 +447,7 @@ audio{
   /* Styles pour le statut de vue */
   .viewed-blue {
 	font-size: small;
-	color: rgb(98, 98, 230);
+	color: rgb(140 230 98);
   }
   
   .viewed-gray {
@@ -1110,7 +1110,7 @@ justify-content: center;
   
 	position: relative;
 	right: 80px;
-	top: -127px;
+	top: -25px;
 	transform: translate(-50%,50%);
 	box-shadow: 0 0.5rem 0.8rem rgba(0,0,0,0.2);
 	border-radius: .6rem;
@@ -1817,26 +1817,47 @@ transform: rotate(45deg);
 
 		width: 120px;
 	}
+	.tooltip-group
+{
+  right:40px;
+  top:-24px;
+}
+.tooltip-group span, .tooltip-block span, .tooltip-member span
+{ font-size: 13px;}
+.tooltip-block{
+	top:19px;
+	right:48px ;
+}
 	.sender-username{
 		font-size: 12px;
 	}
+	button i {
+		width: 13px;
+		height:10px ;
+		font-size: 18px;
+	}
 	.footer .left i{
 left:-0.3rem;
-font-size: 23px;
+font-size: 18px;
 	}
 	footer .right button
 	{
 		position: relative;
 		left: 1.5rem;
-		font-size: 23px;
+		font-size: 13px;
 	}
 	.footer input{
-		width: 75%;
+		
 		left: -1.5rem;
 		position: relative;
 	}
 	.footer .right{
 		right: 2rem;
+	}
+	.footer .input .send {
+       position: relative;
+		width: 25px;
+		right:53px
 	}
 	
 	  .popupModifierGroupe .cardGroupe {

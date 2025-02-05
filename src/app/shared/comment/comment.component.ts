@@ -15,9 +15,10 @@ import { Comment } from '../../model/comment';
 import { Notification } from '../../model/notification';
 import { NotificationService } from '../../services/notification.service';
 import { BlockService } from '../../services/block.service';
-import { forkJoin, map, Observable, tap } from 'rxjs';
+import { catchError, forkJoin, map, Observable, of, tap } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
-
+import { formatDate } from '@angular/common';
+import { UserService } from 'src/app/services/user.service';
 @Component({
     selector: 'app-comment',
     templateUrl: './comment.component.html',
@@ -49,7 +50,7 @@ export class CommentComponent implements OnInit,AfterViewChecked{
  
 
   id:number;
-  
+  formattedText: string = '';
   commentDelete:Comment;
   isPopupConnectVisible: boolean = false;
   isOverlayVisible:boolean=false;
@@ -94,18 +95,27 @@ export class CommentComponent implements OnInit,AfterViewChecked{
  
   constructor(private sharedService:SharedService,private router: Router,private  interaService: InteractionService,
     private route: ActivatedRoute,private commentService:CommentService,private renderer: Renderer2,private cdr: ChangeDetectorRef,
-     private elementRef: ElementRef,private dialog: MatDialog, private authService: AuthService, private notifService:NotificationService,private blockService: BlockService){
+     private elementRef: ElementRef,private dialog: MatDialog, private authService: AuthService, private notifService:NotificationService,private blockService: BlockService, private userService:UserService){
     this.totalLikesMap = {};
     this.totalDislikesMap={};
   
   }
+
   ngOnInit(): void {
+    this.getFormattedText(this.comment);
    console.log("this.isUserAuthenticated",this.isUserAuthenticated)
  
     console.log("id:",this.id);
     this.repondForm= new FormGroup({
       messageRepond: new FormControl('')
     });
+    
+      
+    
+    
+      
+    
+    
    
     this.loadLikeInteraction(this.comment);
     this.loadDislikeInteraction(this.comment);
@@ -246,10 +256,67 @@ adjustTextareaSize() {
     }
   }
 
-  getCommentText(text: string ,comment:Comment): string {
-   
-    return text.replace(/@(\w+ \w+)/g,  `<a href="/profile/${comment.idtag}">@$1</a>`);
+  async getCommentText(text: string, comment: Comment): Promise<string> {
+  // Vérifier que comment et comment.idtag sont valides
+  if (!comment || !comment.idtag) {
+    console.warn("comment ou idtag est undefined");
+    return text; // Retourner le texte inchangé si idtag est manquant
   }
+
+  // Récupérer l'utilisateur avec comment.idtag de manière asynchrone
+  const user = await this.userService.findById(comment.idtag).toPromise();
+
+  // Vérifier si l'utilisateur existe et que nom et prénom sont présents
+  if (!user || !user.nom || !user.prenom) {
+    console.warn("Utilisateur non trouvé ou invalide :", user);
+    return text; // Retourner le texte inchangé si l'utilisateur est invalide
+  }
+
+  // Construire le nom complet
+  const fullName = `${user.nom} ${user.prenom}`.replace(/\s+/g, " ").trim();
+
+  // Créer la regex dynamique en fonction du nom complet
+  const regexPattern = `@\\s*(${fullName.replace(/\s+/g, "\\s+")})\\b`;
+  const regex = new RegExp(regexPattern, "gi");
+
+  // Remplacer le texte avec un lien vers le profil
+  return text.replace(regex, `<a href="/profile/${comment.idtag}">@${fullName}</a>`);
+}
+
+  
+
+
+  
+
+
+
+  // Fonction pour récupérer et formater le texte du commentaire
+  getFormattedText(comment: Comment): void {
+    if (!comment || !comment.idtag) {
+      console.warn("comment ou idtag est undefined");
+      this.formattedText = comment.text; // Retourner le texte inchangé si idtag est manquant
+    }
+   
+    this.userService.findById(comment.idtag).subscribe(user => {
+      let fullName = `${user.nom} ${user.prenom}`.trim();
+      let text = comment.text;
+      console.log("fullName",fullName)
+      // Créer la regex dynamique et remplacer dans le texte
+      const regexPattern = `@\\s*(${fullName.replace(/\s+/g, "\\s+")})\\b`;
+      const regex = new RegExp(regexPattern, "gi");
+
+      // Appliquer le remplacement du texte
+      this.formattedText = text.replace(regex, `<a href="/profile/${comment.idtag}">@${fullName}</a>`);
+    });}
+  
+
+
+  
+  
+  
+  
+  
+  
 
   goToProfile(id: number): void {
     this.router.navigate(['/profile', id]).then(() => {
@@ -258,7 +325,7 @@ adjustTextareaSize() {
   }
   
   handleLinkClick(event: MouseEvent, id: number): void {
-    event.preventDefault(); // Empêche le comportement par défaut du lien
+   // event.preventDefault(); 
     this.goToProfile(id);
   }
 
@@ -304,7 +371,7 @@ adjustTextareaSize() {
     }
   
     newComment.text = this.verifierEtAjouterNomUtilisateur(messageRepondValue, this.comment);
-    newComment.idtag = this.id;
+    newComment.idtag = parentComment.user.id ;
   
     let notif = new Notification();
     notif.actor = this.user;
@@ -849,6 +916,7 @@ closeSignale() {
 }
 loadFilteredChildComments(parentComment: Comment): Promise<Comment[]> {
   if (!this.isUserAuthenticated) {
+    
     // Si non authentifié, renvoyez tous les sous-commentaires activés et triés par date
     this.filteredChildComments = parentComment.childComments
       .filter(childComment => childComment.enabled) // Filtrer par 'enabled'
@@ -1005,5 +1073,37 @@ navProfile(user:User)
     login(){
       this.router.navigate(['/login']);  
   
+    }
+
+    formatDateRelative(dateCreate: Date): string {
+      if (!dateCreate) {
+        return 'Date inconnue';
+      }
+    
+      const now = new Date();
+      const commentDate = new Date(dateCreate);
+      const diffInSeconds = Math.floor((now.getTime() - commentDate.getTime()) / 1000);
+    
+      if (diffInSeconds < 60) {
+        return `${diffInSeconds} sec`;
+      } else if (diffInSeconds < 3600) {
+        const minutes = Math.floor(diffInSeconds / 60);
+        return `${minutes} min`;
+      } else if (diffInSeconds < 86400) {
+        const hours = Math.floor(diffInSeconds / 3600);
+        return `${hours} h`;
+      } else if (diffInSeconds < 604800) { // Moins de 7 jours
+        const days = Math.floor(diffInSeconds / 86400);
+        return `${days} jour${days > 1 ? 's' : ''}`;
+      } else if (diffInSeconds < 2592000) { // Moins de 30 jours
+        const weeks = Math.floor(diffInSeconds / 604800);
+        return `${weeks} semaine${weeks > 1 ? 's' : ''}`;
+      } else if (diffInSeconds < 31536000) { // Moins d'un an
+        const months = Math.floor(diffInSeconds / 2592000);
+        return `${months} mois`;
+      } else {
+        // Si plus d'un an, retourner une date complète (par exemple, 25 janvier 2025)
+        return formatDate(commentDate, 'dd MMMM yyyy', 'fr-FR'); // Nécessite le module de formatage Angular
+      }
     }
 }

@@ -21,10 +21,10 @@
   </div>
     <div *ngIf="isUserAuthenticated" class="nom">
       <p class="blod">{{user.nom}}</p>
-      <p>{{user.email}}</p>
+      <!--p>{{user.email}}</p-->
     
   </div>
-     
+  <div class="scroll-wrapper">
       <ul  >
         <!--li>
           <i class='bx bx-search' ></i>
@@ -32,15 +32,31 @@
         </li-->
           <li *ngFor="let menuItem of menuItems" routerLinkActive="active" class="{{menuItem.class}}">
               <a [routerLink]="[menuItem.path]">
-                <i class={{menuItem.icon}}></i>
-                  <span class="nav-item">{{menuItem.title}}</span>
+                <i class="{{menuItem.icon}}"></i>
+                <span 
+                  class="nav-item" 
+                  [class.scroll]="isLongText(menuItem.title)">
+                  {{menuItem.title}}
+                </span>
                   
               </a>
               <!--span class="tooltip" *ngIf="isHomePage()">{{menuItem.title}}</span-->
           </li>
+          <li *ngFor="let menuItem of menuItems" routerLinkActive="active" class="{{menuItem.class}}">
+            <a [routerLink]="[menuItem.path]">
+              <i class="{{menuItem.icon}}"></i>
+              <span 
+                class="nav-item" 
+                [class.scroll]="isLongText(menuItem.title)">
+                {{menuItem.title}}
+              </span>
+                
+            </a>
+            <!--span class="tooltip" *ngIf="isHomePage()">{{menuItem.title}}</span-->
+        </li>
           
       </ul>
-   
+  </div>
   </div>
  
 </body>

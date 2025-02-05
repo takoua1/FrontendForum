@@ -44,6 +44,16 @@ import { ErrorComponent } from './error/error.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { DetailPosteComponent } from './detail-poste/detail-poste.component';
 import { NativeHttpInterceptor } from './services/interceptors/nativeHttp.service';
+import { TechnologieComponent } from './technologie/technologie.component';
+import { AnimaleComponent } from './animale/animale.component';
+import { ArtComponent } from './art/art.component';
+import { CuisineComponent } from './cuisine/cuisine.component';
+import { CultureComponent } from './culture/culture.component';
+import { EnvironnementComponent } from './environnement/environnement.component';
+import { HistoireComponent } from './histoire/histoire.component';
+import { SanteComponent } from './sante/sante.component';
+import { ScienceComponent } from './science/science.component';
+import { VoyageComponent } from './voyage/voyage.component';
 
 
 
@@ -64,7 +74,9 @@ registerLocaleData(localeFr);
         MusiqueComponent,
         PolitiqueComponent,
         EducationComponent, SportComponent, ProfileComponent, ChatComponent, MessageCardComponent, BoiteReceptionComponent, EmojiPickerComponent,
-        SuccessComponent, ErrorComponent, ResetPasswordComponent, DetailPosteComponent
+        SuccessComponent, ErrorComponent, ResetPasswordComponent, DetailPosteComponent,TechnologieComponent,
+        AnimaleComponent,ArtComponent,CuisineComponent,CultureComponent,EnvironnementComponent,HistoireComponent,SanteComponent,
+        ScienceComponent,VoyageComponent
     ],
     bootstrap: [AppComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA], imports: [BrowserModule,

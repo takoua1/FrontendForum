@@ -273,7 +273,7 @@
     <div  class="user-profile">
       <div>
        
-        <p >{{selectedPost.user.nom}} {{selectedPost.user.prenom}}</p>
+        <p>{{selectedPost.user.nom}} {{selectedPost.user.prenom}}</p>
         <span> {{selectedPost.dateCreate | date:'dd-MM-yy HH:mm'}}</span>
         <img [src]="selectedPost.user.image ? selectedPost.user.image : '/assets/image/user.png'" class="profile-img" (click)="navProfile(selectedPost.user)"  class="profile-img">
        

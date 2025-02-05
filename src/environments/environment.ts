@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'https://backendforum-ovbi.onrender.com'
+  apiUrl: 'http://192.168.1.14:8084'
 };
 
 /*

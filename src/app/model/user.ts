@@ -15,7 +15,7 @@ export class User {
     password: string;
     email: string;
     pays:string;
-    tel:number;
+    tel:string;
     status:string;
     lastActive:string;
     role:string;

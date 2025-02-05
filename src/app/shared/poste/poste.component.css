@@ -114,6 +114,7 @@
   top: 0;
   left: 0;
   width: 45px;
+  height:45px;
   border-radius: 50%;
   margin-right: 10px;
 }
@@ -224,11 +225,11 @@
   position: relative;
   font-size: 12px;
   top: -5.5em;
-  left: 34%;
+  left:90%;
   height: 3.3em;
   padding: 10px;
   width: 90%;
-  max-width: 135px;
+  max-width: 168px;
   background: linear-gradient(to bottom, #aab7d392 0%, #95a1ba92 100%);
   color: white;
 
@@ -257,7 +258,7 @@
   height: 30px;
   display: flex;
   border-radius: 50%;
-  margin-right: -80px;
+  margin-right: -117px;
   background-color: rgba(255, 255, 255, 0.2);
 
   transition: all 0.3s;
@@ -268,7 +269,7 @@
 .card-user .select-menu button .sbtn-btn span {
   display: block;
   float: left;
-  margin-left: -70px;
+  margin-left: -96px;
   transition: all 0.3s;
   margin-top: 3px;
   align-items: center;
@@ -406,14 +407,17 @@
 
 
 }
-
+.card-user .select-menu{
+  width: 250px;
+}
 .card-user .select-menu .categs {
-  
+ 
   display: none;
+  
 }
 
-.card-user .select-menu.active .categs {
-
+.card-user .select-menu.active .categs{
+   
   display: block;
 }
 
@@ -446,7 +450,7 @@
   max-width: 1500px;
   justify-content: center;
   align-items: center;
-  left: 5%;
+  left: 8%;
   padding: 20px;
   color: #626262;
   display: flex;
@@ -566,7 +570,7 @@
 }
 
 .card-list .containerPoste .post-image {
-  max-width: 31%;
+  max-width: 80%;
 
   margin-top: 5%;
   border-radius: 4px;
@@ -734,7 +738,7 @@
 .popupCardUser {
   position: fixed;
   top: 20%;
-  left: 26%;
+  left: 35%;
   transform: translate(-50%, -50%);
   pointer-events: auto;
   padding: 20px;
@@ -789,6 +793,7 @@
   top: 0;
   left: 0;
   width: 45px;
+  height: 45px;
   border-radius: 50%;
   margin-right: 10px;
 }
@@ -824,6 +829,7 @@ align-items: center;
 .popupCardUser .drag-text {
   position: absolute;
   margin-top: 50px;
+  margin-left: 128px;
   color: white;
   display: flex;
   font-size: 13px;
@@ -844,7 +850,7 @@ align-items: center;
   cursor: pointer;
   display: flex;
   margin-top: 45px;
-  margin-left: 244px;
+  margin-left: 380px;
   transition: background-color 0.3s ease;
 }
 
@@ -966,7 +972,7 @@ align-items: center;
   display: flex;
   top: 370px;
   left: 150px;
-  width: 30%;
+  width: 168px;
 
   background: linear-gradient(to bottom, #9ca8c192 0%, #95a1ba92 100%);
   color: white;
@@ -1430,9 +1436,12 @@ body.no-scroll {
   top: 0;
   left: 0;
   width: 45px;
-
+  height: 45px;
   border-radius: 50%;
   margin-right: 10px;
+}
+.popupPoste .card-list p{
+width: 100%;
 }
 
 .popupPoste .card-list .containerPopupPoste {
@@ -2123,7 +2132,8 @@ max-width: 132px;
 width: 100%;
 top: -5.5em;
 left: 15em;
-height: 38px;
+height: 38px
+;
 font-size: 12px;
   }
 
@@ -2299,7 +2309,24 @@ visibility: hidden;
   .card-container {
 width: 100%;
   }
+  .popupPoste .card-list .containerPopupPoste .toggle-button{
 
+    margin-top: -8px;
+    left: -72px;
+  }
+  .card-user .select-menu button .sbtn-btn{
+    width: 18px;
+    height: 18px;
+    margin-right: -79px;
+  }
+
+  .card-user .select-menu button .sbtn-btn i {
+    font-size: 18px;
+    margin-left: 0px;
+  }
+  .card-user .select-menu button .sbtn-btn span{
+    margin-left: -76px;
+  }
   .card-user {
 width: 94.5%;
 left: 2.5%;
@@ -2322,7 +2349,7 @@ font-size: 10px;
   }
   .popupCardUser .card-user button {
 
-    left: 16.5em;
+    left: 14.5em;
   }
 .card-list .btnIte button {
 width:20%;
@@ -2346,7 +2373,7 @@ font-size: 10px;
 
   .comment .commentTaille {
     
-    margin-left: -27rem;
+    margin-left: -24rem;
     font-size: 8px;
 }
   .card-user .select-menu .categs {
@@ -2439,8 +2466,8 @@ top: -8.5em;
 
 .popupCardUser .upload-button{
 
-  top:3rem;
-  left: -9rem;
+  top: 5rem;
+  left: -17rem;
 }
 
 .popupCardUser {
@@ -2449,7 +2476,7 @@ top: -8.5em;
 }
 
 .popupCardUser .select-menu-popup button {
-  left:42px ;
+  left:31px ;
 }
 .popupCardUser .card-user .select-menu-popup .categs {
   left: -2px;

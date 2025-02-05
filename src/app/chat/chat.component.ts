@@ -80,7 +80,18 @@ export class ChatComponent implements OnInit, OnDestroy {
     { name: 'Musique', icon: 'bx bx-music', selected: false },
     { name: 'Politique', icon: 'bx bxs-user-voice', selected: false },
     { name: 'Sport', icon: 'bx bx-football', selected: false },
-  ]
+    { name: 'Technologie', icon: 'bx bx-atom', selected: false },
+    { name: 'Animaux', icon: 'bx bxs-cat', selected: false },
+    { name: 'Voyage', icon: 'bx bxs-plane-alt', selected: false },
+    { name: 'Culture', icon: 'bx bx-landscape', selected: false },
+    { name: 'Science', icon: 'bx bxs-flask', selected: false },
+    { name: 'Santé', icon: 'bx bxs-briefcase', selected: false },
+    { name: 'Cuisine', icon: 'bx bxs-dish', selected: false },
+    { name: 'Histoire', icon: 'bx bx-history', selected: false },
+    { name: 'Art', icon: 'bx bxs-palette', selected: false },
+    { name: 'Environnement', icon: 'bx bxs-leaf', selected: false }
+  ];
+  
   constructor(private token: TokenStorageService,
     private cdr: ChangeDetectorRef, private userService: UserService, private router: Router, private chatService: ChatService, private messageService: MessageService,
     private routeActif: ActivatedRoute, private groupeService: GroupService, private blockService: BlockService, private followService: FollowService) {
@@ -98,7 +109,7 @@ export class ChatComponent implements OnInit, OnDestroy {
       message: new FormControl('')
     });
 
-
+    this.categories.sort((a, b) => a.name.localeCompare(b.name));
     window.addEventListener('btnEvent', this.checkSidebarStatus);
     this.userId = this.routeActif.snapshot.params["id"];
 

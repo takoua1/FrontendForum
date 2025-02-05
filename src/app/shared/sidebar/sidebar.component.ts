@@ -11,12 +11,23 @@ export interface RouteInfo {
 }
 
 export const ROUTES: RouteInfo[] = [
-  { path: '/home',     title: 'Accueil',         icon:'bx bx-home',       class: '' },
+  { path: '/home',     title: 'Accueil',        icon:'bx bx-home',       class: '' },
+  {path:'/animal',title:'Animaux',icon:'bx bxs-cat',class:''},
+  {path:'/art',title:'Art',icon:'bx bxs-palette',class:''},
+  {path:'/kitchen',title:'Cuisine',icon:'bx bxs-dish',class:''},
+  {path:'/culture',title:'Culture',icon:'bx bx-landscape',class:''},
   { path: '/education',         title: 'Education',        icon:'bx bxs-pen',    class: '' },
+  {path:'/environment',title:'Environnement',icon:'bx bxs-leaf',class:''},
+  {path:'/history',title:'Histoire',icon:'bx bx-history',class:''},
+  
   { path: '/game',         title: 'Jeux',             icon:'bx bxs-game',    class: '' },
   { path: '/music',          title: 'Musique',       icon:'bx bx-music',  class: '' },
   { path: '/policy',      title: 'Politique',         icon:'bx bxs-user-voice',    class: '' },
+  {path:'/health',title:'Santé',icon:'bx bxs-briefcase',class:''},
+  {path:'/science',title:'Science',icon:'bx bxs-flask',class:''},
   { path: '/sport',          title: 'Sport',              icon:'bx bx-football',      class: '' },
+  {path:'/technology',title:'Technologie',icon:'bx bx-atom',class:''},
+  {path:'/travel',title:'Voyage',icon:'bx bxs-plane-alt',class:''},
  
   
  
@@ -35,16 +46,23 @@ export class SidebarComponent implements OnInit {
   user: User= new User();
   constructor(private token:TokenStorageService,private userService:UserService, private router :Router) { }
   public menuItems: any[];
+  public extendedMenuItems: any[];
+  private sidebar: HTMLElement | null = null; // Élément de la barre latérale
+  private topSection: HTMLElement | null = null; // Section `.top` à protéger
   ngOnInit() {
   
 
       this.menuItems = ROUTES.filter(menuItem => menuItem);
       this.currentUser = this.token.getUser();
-   
+      this.extendedMenuItems = [...this.menuItems, ...this.menuItems];
       this.onIconClick();
        this.findUser(this.currentUser.username);
        this.isAuthenticated();
            
+    }
+    isLongText(title: string): boolean {
+      const maxLength = 15; // Limite de caractères
+      return title.length > maxLength;
     }
     isAuthenticated(){
       const user = this.token.getToken(); 

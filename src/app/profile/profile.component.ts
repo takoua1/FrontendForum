@@ -19,6 +19,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Notification } from '../model/notification';
 import { NotificationService } from '../services/notification.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AuthService } from '../services/auth.service';
 @Component({
     selector: 'app-profile',
     templateUrl: './profile.component.html',
@@ -104,7 +105,7 @@ dropdownOpen = false;
     private userService: UserService,private formBuilder:FormBuilder,private snackBar: MatSnackBar,
     private messageService:MessageService, private chatService :ChatService,
     private router: Router,private renderer: Renderer2,private posteService:PosteService,
-    private followService: FollowService, private blockService:BlockService,
+    private followService: FollowService, private blockService:BlockService,private authService:AuthService,
     private el: ElementRef,private cdRef: ChangeDetectorRef,private notifService:NotificationService
   ) {
     
@@ -395,17 +396,17 @@ onSelectCountry(country: string) {
    }
 
    updateProfile(): void {
-    if (!this.profileForm.controls['tel'].value) {
+   /* if (!this.profileForm.controls['tel'].value) {
       this.profileForm.controls['tel'].clearValidators(); // Retirer la validation si tel est vide
       this.profileForm.controls['tel'].updateValueAndValidity();
-    }
+    }*/
     
     if (this.profileForm.invalid) {
-      console.log('Le formulaire contient des erreurs');
+     /* console.log('Le formulaire contient des erreurs');
       Object.keys(this.profileForm.controls).forEach(key => {
         console.log(key, this.profileForm.controls[key].errors);
-      });
-      this.errorUpdate = 'Une erreur est survenue lors de la mise à jour du profil';
+      });*/
+      //this.errorUpdate = 'Une erreur est survenue lors de la mise à jour du profil';
       this.profileForm.markAllAsTouched();
       return;
     }
@@ -424,7 +425,10 @@ onSelectCountry(country: string) {
     updatedUser.compteTwitter = this.profileForm.controls['twitter'].value;
     updatedUser.compteInstagram = this.profileForm.controls['instagram'].value;
     updatedUser.compteLinked = this.profileForm.controls['linked'].value;
-  
+    console.log('updatedUser.username', updatedUser.username)
+    
+      
+    
     // Appel au service pour mettre à jour l'utilisateur
     this.userService.updateUser(this.user.id, updatedUser)
     .subscribe({
@@ -433,7 +437,22 @@ onSelectCountry(country: string) {
         this.user = response;
         
         this.user = { ...this.user, ...response }; 
-        this.ShowMenu('overview');
+        if(this.user.username !== updatedUser.username){
+          console.log(this.user);
+          this.authService.logout().subscribe((response) =>{
+             
+              console.log('Logout successful:', response);
+             // Redirection vers la page d'accueil
+            },
+             (err) => {
+              console.error('Logout failed', err);
+              // Gérer l'erreur de déconnexion
+            }
+          );
+          this.token.signOut(); // Supprimez toutes les données du session storage
+          this.router.navigate(['/home']);
+          location.reload();
+        }
       },
       error: (error: HttpErrorResponse) => {
         this.errorUpdate = 'Une erreur est survenue lors de la mise à jour du profil';

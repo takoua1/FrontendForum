@@ -1,10 +1,10 @@
 {
-  "/api/*": {
-    "target": "https://backendforum-8dpz.onrender.com",
+  "/api": {
+    "target": "http://192.168.1.14:8084/",
     "secure": false,
-    "changeOrigin": true,  
+    "changeOrigin": true,
     "pathRewrite": {
-      "^/api": ""  
+      "^/api": ""
+    }
   }
-}}
-
+}

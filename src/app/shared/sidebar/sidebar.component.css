@@ -10,11 +10,12 @@
 
 
 .sidebar{
-   position: fixed;
+   
    top: 0;
    left: 0;
    width: 88px;
-   height: 100%;
+   height: 110vh;
+   overflow-y: hidden;
     border-right: 1px solid #fff;
     background-color: rgba(0,0,0,0.1);
     backdrop-filter: blur(10px);
@@ -23,9 +24,13 @@
     transition: all 0.5s ease;
     border-bottom-right-radius: 15px;
     z-index: 1000;
-  
-}
-
+    overflow-y: auto; /* Ajoute un défilement vertical */
+    scrollbar-width: none; /* Masque la scrollbar sur Firefox */
+ }
+ 
+ .sidebar::-webkit-scrollbar {
+    display: none; /* Masque la scrollbar sur Chrome, Edge, et Safari */
+ }
 
 
 .sidebar.active
@@ -36,20 +41,18 @@
 .profile-img
 {
     width: 50px;
+    height:50px;
     border-radius: 100%;
     border: 1px solid #eee;
 }
 
 
-.profile-img
-{
-    width: 50px;
-    border-radius: 100%;
-    border: 5px solid #eee;
-}
+
  .sidebar.active .profile-img
  {
+
     width: 88px;
+    height: 88px;
  }
 .sidebar .top .logo
 {
@@ -90,10 +93,21 @@ opacity: 0;
 .sidebar.active p{
     opacity: 1;
 }
-.sidebar ul {
+.scroll-wrapper {
+    top:0px;
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+  }
+.scroll-wrapper ul  {
+   
     margin-top: 90px;
+    animation: scrollVertical 80s linear infinite;
+    display: flex; 
+    flex-direction: column; 
 }
-.sidebar ul li{
+
+.scroll-wrapper ul li{
    position: relative;
     list-style-type:none;
     height: 100%;
@@ -102,8 +116,32 @@ opacity: 0;
     line-height: 20px;
     
 }
+.scroll-wrapperul li :hover {
+    animation: scrollLi 5s linear infinite; /* Défilement horizontal en boucle infinie au survol */
+}
+@keyframes scrollVertical {
+    0% {
+        transform: translateY(0); /* Début du défilement */
+    }
+    50% {
+        transform: translateY(-100%); /* Défiler jusqu'à la fin */
+    }
+    100% {
+        transform: translateY(0); /* Revenir au début */
+    }
+}
 
-.sidebar ul li a{
+/* Animation de défilement */
+@keyframes scrollLi {
+    0% {
+        transform: translatey(0); /* Début du défilement */
+    }
+    100% {
+        transform: translatey(-100%); /* Défilement complet */
+    }
+}
+
+.scroll-wrapper ul li a{
    
     color:#b1c0fa;
     display: flex;
@@ -114,14 +152,38 @@ opacity: 0;
      background-color: #fff;
      font-size: 15px;
 }
-.sidebar ul li a:hover
+
+.scroll-wrapper ul li a .nav-item {
+    display: inline-block; /* Permet le défilement horizontal */
+    overflow: hidden; /* Cache le texte débordant */
+    white-space: nowrap; /* Empêche les retours à la ligne */
+    text-overflow: ellipsis; /* Ajoute des points de suspension si le texte dépasse */
+    position: relative;
+    width: 100px; /* Largeur limitée pour forcer le défilement */
+    transition: all 0.3s ease;
+}
+
+.scroll-wrapper ul li a .nav-item:hover {
+    animation: scrollText 3s linear infinite; /* Animation continue */
+}
+
+/* Animation de défilement */
+@keyframes scrollText {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-100%);
+    }}
+    
+.scroll-wrapper ul li a:hover
 {
 
     background-color:#b1c0fa;
     color: #12171e;
 
 }
-.sidebar ul li a i{
+.scroll-wrapper ul li a i{
      min-width: 50px;
      text-align: center;
      height: 50px;
@@ -129,8 +191,12 @@ opacity: 0;
      line-height: 50px;
      font-size: 20px;
 }
+.nav-item.scroll:hover {
+    animation: scrollText 3s linear infinite;
+}
 
-.sidebar ul li  input{
+
+.scroll-wrapper ul li  input{
 
     position: absolute;
     height: 75%;
@@ -146,7 +212,7 @@ opacity: 0;
     color: #fff;
 } 
 
-.sidebar ul li .bx-search{
+.scroll-wrapper ul li .bx-search{
     position: relative;
     z-index: 50;
     color: #fff;
@@ -155,12 +221,12 @@ opacity: 0;
     height: 50px;
     
 } 
-.sidebar .nav-item{
+.sidebar .scroll-wrapper .nav-item{
 
     opacity: 0;
 }
 
-.sidebar.active .nav-item{
+.sidebar.active .scroll-wrapper .nav-item{
     opacity: 1;
 }
 

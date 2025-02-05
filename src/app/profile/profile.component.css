@@ -1,13 +1,6 @@
 
-
-
- 
-
-   
 .profile-container {
  position: absolute;
-
-
 display: flex;
 width: 77%;
    
@@ -314,8 +307,7 @@ z-index: 125;
 }
 .name{
 position: relative;
-left: 2rem;
- 
+left: 3.5rem;
   font-size: 18px;
   font-weight: 500;
   color: #fff;
@@ -1291,6 +1283,7 @@ box-shadow: 5px 5px 20px #b8babe;
   position:  relative;
   margin-top: 1rem;
   left: 20rem;
+  flex-direction: column;
   transform: translateX(100%); /* Hors de la vue initialement */
   opacity: 0; 
  display: none;
@@ -1681,7 +1674,7 @@ right:30px;
   left:20px;
 }
 .info{
-  margin-left: -20rem;
+  margin-left: -21rem;
 
 }
 .popup-content {
@@ -1701,6 +1694,9 @@ min-width: 379px;
 
   width:100% ;
  left: -28rem;
+}
+.popupBlock .cardBlock{
+  left: -100px;
 }
 .img-area{
   top:1rem;
@@ -1734,7 +1730,7 @@ min-width: 379px;
   position: absolute;
   width: 48%;
   top: 10px;
-  right: 16px;
+  right: -3px;
 }
 
 .social-icons a{
@@ -1751,7 +1747,7 @@ min-width: 379px;
 .name {
   position: relative;
   top:1rem;
-   left: 1rem; 
+  left: -1rem;
   font-size: 15px;
   font-weight: 500;
   color: #fff;
@@ -1791,6 +1787,7 @@ min-height: 39px;
   left: 108px;
   font-size: 16px;
 }
+
 .user-info .name {
   width: 8rem;
   top: -2rem;
@@ -1821,7 +1818,7 @@ left: -3rem;
  font-size: 11px;
 }
 .nav-tabs .nav-link{
-  width: 5rem;
+  width: 4rem;
   font-size: 12px;
 }
 .info {

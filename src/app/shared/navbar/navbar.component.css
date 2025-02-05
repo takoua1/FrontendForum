@@ -64,7 +64,7 @@
     padding-left: 50px ;
     font-size: 18px;
     color: #fff;
-   
+    z-index: 10;  
   
 } 
 .main-content .search .bx-search{
@@ -257,7 +257,7 @@ justify-content: center;
 	left: -2px;
   background-color: rgba(0, 0, 0, 0.1);
 	transform: translateY(200%);
-	animation: noti 180s  forwards  ease-in;
+	animation: noti 10s  forwards  ease-in;
 z-index: 1000;}
 	.notification .notification-header {
     
@@ -333,7 +333,7 @@ z-index: 1000;}
     line-clamp: 3;       /* Limit to 3 lines of text */
     overflow: hidden;              /* Hide overflow */
     text-overflow: ellipsis;       /* Ellipsis (...) for overflow text */
-
+  padding-right: 50px;
 
 	}
 	.notification .notification-container .notification-content  .notification-timer {
@@ -632,7 +632,7 @@ color:rgba(207, 142, 20, 0.664);}
   line-clamp: 3;        /* Limit to 3 lines of text */
   overflow: hidden;              /* Hide overflow */
   text-overflow: ellipsis;       /* Ellipsis (...) for overflow text */
-  
+  padding-right: 50px;
  
 
 }

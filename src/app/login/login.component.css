@@ -25,7 +25,68 @@ body{
    
 }
 
-
+.nav{
+    position: fixed;
+    top: 0;
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    height: 100px;
+    line-height: 100px;
+    background: linear-gradient(rgba(39,39,39, 0.6), transparent);
+    z-index: 100;
+}
+.nav-logo p{
+    position: relative;
+    color: white;
+    font-size: 25px;
+   left: -50px;
+    font-weight: 600;
+}
+.nav-menu ul{
+    position: relative;
+    display: flex;
+    float: right;
+     left: -140px;
+}
+.nav-menu ul li{
+    list-style-type: none;
+}
+.nav-menu ul li .link{
+    text-decoration: none;
+    font-weight: 500;
+    color: #fff;
+    padding-bottom: 15px;
+    margin: 0 25px;
+}
+.link:hover, .active{
+    border-bottom: 2px solid #fff;
+}
+.nav-button .btn{
+    width: 130px;
+    height: 40px;
+    font-weight: 500;
+    background: rgba(255, 255, 255, 0.4);
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: .3s ease;
+}
+.btn:hover{
+    background: rgba(255, 255, 255, 0.3);
+}
+#registerBtn{
+    margin-left: 15px;
+}
+.btn.white-btn{
+    background: rgba(255, 255, 255, 0.7);
+}
+.btn.btn.white-btn:hover{
+    background: rgba(255, 255, 255, 0.5);
+}
+.nav-menu-btn{
+    display: none;
+}
 .form-box{
     position: relative;
     display: flex;
@@ -163,13 +224,27 @@ header{
 .message{
     color:#fff;
 }
-@media (max-width: 786px){
+@media (max-width: 820px){
     .nav-button{
         display: none;
     }
-    .nav-menu.responsive{
+    .nav-menu{
+        position: relative;
+        display: flex;
+        float: right;
+            left: 150px;
+    }
+    .nav-logo p{
+        position: relative;
+        color: white;
+        font-size: 25px;
+       left: 30px;
+        font-weight: 600;
+    }
+  /*  .nav-menu.responsive{
         top: 100px;
     }
+        
     .nav-menu{
         position: absolute;
         top: -800px;
@@ -199,7 +274,8 @@ header{
     }
     .nav-menu-btn i:hover{
         background: rgba(255, 255, 255, 0.15);
-    }
+    }*/
+
 }
 @media (max-width: 540px) {
     .wrapper{

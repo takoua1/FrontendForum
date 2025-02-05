@@ -18,7 +18,24 @@
 <body>
  <div class="wrapper">
    
-        
+    <nav class="nav">
+        <div class="nav-logo">
+            <p>FORUMSOCIALX</p>
+        </div>
+        <div class="nav-menu" id="navMenu">
+            <ul>
+                <li><a href="#" class="link active">Home</a></li>
+                
+            </ul>
+        </div>
+        <div class="nav-button">
+            <button class="btn white-btn" id="loginBtn" (click)="linkLogin()">Se connecter</button>
+            <button class="btn" id="registerBtn" (click)="linkRegister()">S'inscrire</button>
+        </div>
+        <div class="nav-menu-btn">
+            <i class="bx bx-menu" (click)="myMenuFunction()"></i>
+        </div>
+    </nav>
 <!----------------------------- Form box ----------------------------------->    
     <div   class="form-box">
         

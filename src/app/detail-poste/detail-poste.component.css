@@ -800,25 +800,26 @@ flex-direction: column;
             box-sizing: border-box;
             margin-top: 30px;
             margin-left: -100px;
-            display: flex;
+            display: flex
+        ;
             width: 700px;
-            height: 522px;
+            height: 420px;
             background: rgba(217, 217, 217, 0.58);
             border: 1px solid white;
             box-shadow: 12px 17px 51px rgba(0, 0, 0, 0.22);
+            -webkit-backdrop-filter: blur(6px);
             backdrop-filter: blur(6px);
             border-radius: 17px;
             text-align: center;
             cursor: pointer;
             transition: all 0.5s;
-          
             align-items: center;
             justify-content: center;
+            -webkit-user-select: none;
             user-select: none;
             font-weight: bolder;
             color: black;
             top: 10px;
-          
           }
           
           .popupCardUser .card-user:hover {
@@ -848,15 +849,15 @@ flex-direction: column;
           
           .popupCardUser .card-user textarea {
             position: absolute;
-          
+            top: 2rem;
             border-radius: 10px;
             outline: none;
             transition: .2s ease;
-            width: 600px;
+            width: 624px;
             display: flex;
-            left: 69px;
-            height: 27%;
-            top:16px;
+            align-items: center;
+            left: 53px;
+            height: 25%;
             resize: none;
             border: none;
           
@@ -864,21 +865,21 @@ flex-direction: column;
           
           .popupCardUser .drop-area {
             position: absolute;
-            top: 167px;
-            left: 66px;
+            top: 155px;
+            left: 62px;
             border: 2px dashed #ccc;
             border-radius: 5px;
             padding: 20px;
-            width: 572px;
-            height: 56%;
+            width: 600px;
+            height: 50%;
             text-align: center;
-          
             justify-content: center;
           }
           
           .popupCardUser .drag-text {
             position: absolute;
             margin-top: 50px;
+            margin-left: 128px;
             color: white;
             display: flex;
             font-size: 13px;
@@ -899,7 +900,7 @@ flex-direction: column;
             cursor: pointer;
             display: flex;
             margin-top: 45px;
-            margin-left: 233px;
+            margin-left: 380px;
             transition: background-color 0.3s ease;
           }
           
@@ -1020,7 +1021,7 @@ flex-direction: column;
             position: absolute;
             font-size: 12px;
             display: flex;
-            width: 168px;
+            width: 138px;
             bottom:10px;
             left:220px;
           
@@ -1063,7 +1064,7 @@ flex-direction: column;
           .popupCardUser .card-user .select-menu-popup button .sbtn-btn span {
             display: block;
             float: left;
-            margin-left: -70px;
+            margin-left: -98px;
             transition: all 0.3s;
             margin-top: 3px;
             align-items: center;
@@ -1573,7 +1574,9 @@ top: -8.5em;
   height: 35px;
   font-size: 10px;
   }
-
+  .popupCardUser .card-user .select-menu-popup button{
+    left: 6px;
+  }
  
  
   .card-list .comment .commentText button {
@@ -1583,6 +1586,10 @@ top: -8.5em;
 .popupPoste .card-list .comment .commentText button {
   left: 40%;
   top: -25px;
+}
+.popupCardUser .upload-button {
+  top: 5rem;
+  left: -17rem;
 }
 
   .card-list .comment .commentText .image-preview {
@@ -1632,8 +1639,8 @@ top: -8.5em;
 
   .popupCardUser .card-user textarea{
 
-    top: 0.5em;
-    left: 0em;
+    top: 2.5em;
+    left: 2em;
 
   }
   .popupCardUser .card-user .drop-area {
@@ -1646,11 +1653,7 @@ top: -8.5em;
   margin-left: 1rem;
 }
 
-.popupCardUser .upload-button{
 
-  top:3rem;
-  left: -9rem;
-}
 
 .popupCardUser {
   width: 90%;
@@ -1658,7 +1661,7 @@ top: -8.5em;
 }
 
 .popupCardUser .select-menu-popup button {
-  left:42px ;
+  left:31px ;
 }
 .popupCardUser .card-user .select-menu-popup .categs {
   left: -2px;
@@ -1717,4 +1720,404 @@ color: #676767;
   width: 95%;
   left: .5rem;
 }
+.card-container {
+  width: 100%;
+    }
+  
+    .card-user {
+  width: 94.5%;
+  left: 2.5%;
+  top: 5rem;
+    }
+  
+    .card-user textarea {
+  height: 6rem;
+  width: 106%;
+  left: -3em;
+  font-size: 11px
+    }
+  
+    .card-user button {
+  width: 36%;
+  height: 38px;
+  top: -1.5em;
+  left: 18.5em;
+  font-size: 10px;
+    }
+    .popupCardUser .card-user button {
+      left: 14.5em;
+          width: 120px;
+    }
+  .card-list .btnIte button {
+  width:20%;
+  margin-left: 4%;
+  }
+    .card-user .select-menu button {
+  width: 41%;
+  top: -5.2em;
+  left: 5.3em;
+  height: 37px;
+  font-size: 10px;
+    }
+    .card-list .containerPoste .post-image{
+  
+      max-width: 52%;
+    }
+    .popupPoste .card-list .btnIte {
+      left: 3rem;
+    }
+  
+  
+    .comment .commentTaille {
+      
+      margin-left: -27rem;
+      font-size: 8px;
+  }
+    .card-user .select-menu .categs {
+  width: 200px;
+  height: 120px;
+  left: 2em;
+  top: 12em;
+    }
+  .toggle-button{
+  
+    margin-top: -0.5em;
+    left:2px;
+  }
+    .card-user .upload-image button {
+  width: 37px;
+  top: -8.5em;
+    left: -1em;
+    height: 35px;
+    font-size: 10px;
+    }
+  
+   
+   
+    .card-list .comment .commentText button {
+      left: 38%;
+      top: -28px;
+  }
+  .popupPoste .card-list .comment .commentText button {
+    left: 40%;
+    top: -25px;
+  }
+  
+    .card-list .comment .commentText .image-preview {
+     width: 200px;
+    height: 150px;
+    }
+  
+    .card-list .comment .commentText .bx-camera {
+     right: 100px;
+    }
+  
+    .card-list .comment .commentLenght p {
+    right: 0rem;
+    font-size: 10px;}
+  
+    .card-list .comment .commentInfo p {
+     margin-left: -3px;
+    margin-bottom: 40px;
+    cursor: pointer;
+    color: #007bff;
+    }
+  
+    .card-list .btnIte {
+    left: 7%;
+    }
+    .card-container .card-list {
+  
+      width: 95%;
+      left: 0.5rem;
+    }
+    .delete-icon {
+    top: 5px;
+    right: 5px;
+    cursor: pointer;
+    visibility: hidden;
+    }
+    .popupConnect {
+  
+      left: 17%;
+    }
+    .popupDelete {
+      left: 18%;
+    }
+  
+   
+    .popupCardUser .card-user .drop-area {
+      width: 88%;
+      left: 23px;
+      top: 169px;
+    
+  }
+  .popupCardUser .drag-text{
+    margin-left: 1rem;
+  }
+  
+  
+  
+  .popupCardUser {
+    width: 60%;
+    left: 50%;
+  }
+  
+  .popupCardUser .select-menu-popup button {
+    left:42px ;
+  }
+  .popupCardUser .card-user .select-menu-popup .categs {
+    left: -2px;
+  }
+  
+   .alert-poste{
+    margin-left: -2rem;
+  }
+  .card-list .user-profile p {
+    left: 2.3rem;
+  }
+  .popupCardUser .drop-area .image-preview {
+  
+    left: 4%;
+  }
+  
+  .card-list .user-profile p {
+    left: 2.3rem;
+    width: 227px;
+    font-size: 12px;
+  }
+  
+     .popupPoste .card-list .user-profile span {
+  position: fixed;
+  top: 10px;
+  margin-left: 39%;
+  width: 29%;
+  font-size: 13px;
+  color: #676767;
+  }
+  .card-list .comment .commentText #textComm {
+    top: -49px;
+    width: 90%;
+    left: 17px;
+    padding-right: 51px;
+    font-size: 10px;
+    margin-bottom: -3rem;
+  }
+  .popupPoste .card-list .comment .commentText #textComm {
+    left: 35px;
+    top: 18px;
+    width: 88%;
+  }
+  .popupSignale {
+  
+    left: 1%;
+  }
+  .popupSignale .cardSignale{
+    width: 104%;
+  }
+  .popupSignale .cardSignale textarea {
+    width: 173%;
+    left: -5rem;
+  }
 }
+
+
+
+
+/*@media (max-width: 840px) {
+  .card-container {
+  width: 100%;
+  }
+
+  .card-user {
+  width: 84%;
+ 
+  top: 5rem;
+  height: 15rem;
+  }
+
+  .card-user button {
+  width: 112px;
+  top: -2.5em;
+  height: 37px;
+  left: 40em;
+  font-size: 12px;
+  }
+
+  .card-user .select-menu button {
+
+max-width: 132px;
+width: 100%;
+top: -5.5em;
+left: 15em;
+height: 38px;
+font-size: 12px;
+  }
+
+  .card-user .upload-image button {
+width: 39px;
+top: -9em;
+height: 40px;
+  }
+  .popupCardUser {
+   width: 100%;
+   left: 66%;
+  }
+  .popupCardUser .card-user {
+   width: 100%;
+  }
+  
+  
+   
+   .popupCardUser .card-user textarea {
+    width: 90%;
+   height: 8rem;
+   }
+.popupCardUser .card-user .drop-area {
+  width: 90%;
+
+  }
+  .popupPoste {
+    margin-left: 0%;
+    width: 100%;
+  }
+  .popupPoste .card-list{
+
+    width: 100%;
+  }
+
+  .comment .commentTaille {
+
+    margin-left: 7rem;
+  }
+  }
+*/
+@media (max-width:768px) {
+  .card-container {
+width: 100%;
+  }
+
+  .card-user {
+width: 84%;
+/* left: 0.5%; */
+top: 5rem;
+height: 13rem;
+  }
+
+  .card-user textarea {
+height: 6rem;
+  }
+
+  .card-user button {
+width: 112px;
+height: 37px;
+left: 36em;
+font-size: 12px;
+  }
+
+  .card-user .select-menu button {
+max-width: 132px;
+width: 100%;
+top: -5.5em;
+width: 50%;
+left: 15em;
+height: 38px;
+font-size: 12px;
+
+  }
+
+  .card-user .upload-image button {
+width: 39px;
+top: -9em;
+height: 39px;
+
+  }
+
+   .alert-poste{
+    left: 8rem;
+  }
+
+
+  .card-user .select-menu .categs {
+
+width: 200px;
+ height: 120px;
+left: 10em;
+top: 12em;
+  }
+
+
+  .card-list .comment .commentText button {
+ left: 37%;
+  }
+
+  .card-list .comment .commentText .image-preview {
+width: 200px;
+height: 150px;
+  }
+
+  .card-list .comment .commentText .bx-camera {
+right: 100px;
+  }
+
+  .card-list .comment .commentLenght p {
+right: 0rem;
+  }
+
+  .card-list .comment .commentInfo p {
+margin-left: -3px;
+margin-bottom: 40px;
+cursor: pointer;
+color: #007bff;
+  }
+
+  .delete-icon {
+top: 5px;
+  right: 5px;
+  cursor: pointer;
+visibility: hidden;
+  }
+  .popupCardUser .card-user {
+    width:94%;
+    height:436px ;
+  }
+
+  .popupCardUser .drop-area{
+    height: 48%;
+    top: 176px;
+    left: 47px;
+  }
+
+  .popupCardUser .select-menu-popup button{
+
+    top:388px;
+  }
+  .popupCardUser .card-user button{
+
+    top:388px; 
+  }
+  .card-user .select-menu-popup .categs{
+
+    top:420px;
+  }
+
+  .popupPoste .card-list .comment .commentText #textComm {
+    left: 125px;
+    top: 33px;
+}
+.card-list .comment .commentText #textComm {
+  left: 108px;
+  top: -11px;
+}
+  .popupPoste .card-list .comment .commentText button {
+  left: 38%;
+  top: -15px;
+}
+.popupSignale {
+
+  left: 11%;
+}
+}
+
+
+

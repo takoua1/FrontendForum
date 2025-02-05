@@ -16,7 +16,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BlockService } from '../../services/block.service';
 import { ChatComponent } from '../../chat/chat.component';
-import { AnySoaRecord } from 'dns';
+
 
 
 interface EmojiClickEvent extends CustomEvent {
@@ -129,7 +129,17 @@ export class MessageCardComponent  implements OnInit, OnDestroy,AfterViewChecked
     { name: 'Musique', icon: 'bx bx-music', selected: false },
     { name: 'Politique', icon: 'bx bxs-user-voice', selected: false },
     { name: 'Sport', icon: 'bx bx-football', selected: false },
-  ]
+    { name: 'Technologie', icon: 'bx bx-atom', selected: false },
+    { name: 'Animaux', icon: 'bx bxs-cat', selected: false },
+    { name: 'Voyage', icon: 'bx bxs-plane-alt', selected: false },
+    { name: 'Culture', icon: 'bx bx-landscape', selected: false },
+    { name: 'Science', icon: 'bx bxs-flask', selected: false },
+    { name: 'Santé', icon: 'bx bxs-briefcase', selected: false },
+    { name: 'Cuisine', icon: 'bx bxs-dish', selected: false },
+    { name: 'Histoire', icon: 'bx bx-history', selected: false },
+    { name: 'Art', icon: 'bx bxs-palette', selected: false },
+    { name: 'Environnement', icon: 'bx bxs-leaf', selected: false }
+  ];
   imageGroupe: string | ArrayBuffer | null = null;
 
   errorMessage :string | null = null;
@@ -160,7 +170,7 @@ selectedMessageElement: HTMLElement | null = null;
 
  
   this.scrollToBottom();
- 
+  this.categories.sort((a, b) => a.name.localeCompare(b.name));
   this.chatService.connecter().then(() => {
     // Abonnez-vous aux événements de vue des messages
     this.chatService.subscribe(`/user/${this.user.username}/queue/view`, (message) => {
@@ -1067,9 +1077,9 @@ copyGroupLink() {
     this.membres = []; // Exemple, remplissez ce tableau selon votre source de données
     this.filteredMembers = this.membres;
   
-    const groupLinkPattern = /https:\/\/forum-socialx.vercel.app\/join-group\/(\d+)/g;
-    const profileLinkPattern = /https:\/\/forum-socialx.vercel.app\/profile\/(\d+)/g;
-    const postDetailLinkPattern = /https:\/\/forum-socialx.vercel.app\/detail\/(\d+)/g; // Expression régulière pour les liens vers les détails de poste
+    const groupLinkPattern = /http:\/\/localhost:4200\/join-group\/(\d+)/g;
+    const profileLinkPattern = /http:\/\/localhost:4200\/profile\/(\d+)/g;
+    const postDetailLinkPattern = /http:\/\/localhost:4200\/detail\/(\d+)/g; // Expression régulière pour les liens vers les détails de poste
   
     // Traitement des liens de groupe
     if (groupLinkPattern.test(message)) {
