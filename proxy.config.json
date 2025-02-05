@@ -1,6 +1,6 @@
 {
   "/api": {
-    "target": "http://192.168.1.14:8084/",
+    "target": "https://backendforum-ovbi.onrender.com/",
     "secure": false,
     "changeOrigin": true,
     "pathRewrite": {
